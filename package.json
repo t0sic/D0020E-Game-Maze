@@ -4,7 +4,8 @@
   "description": "A maze game for the D0020E course",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "start-dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/t0sic/D0020E-Game-Maze/issues"
   },
-  "homepage": "https://github.com/t0sic/D0020E-Game-Maze#readme"
+  "homepage": "https://github.com/t0sic/D0020E-Game-Maze#readme",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }
