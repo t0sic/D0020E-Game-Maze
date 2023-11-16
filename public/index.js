@@ -16,7 +16,7 @@
   \***********************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\nalert(\"Hello\")//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9nYW1lL2luZGV4LmpzIiwibWFwcGluZ3MiOiI7QUFBQSIsInNvdXJjZXMiOlsid2VicGFjazovL2QwMDIwZS1nYW1lLW1hemUvLi9nYW1lL2luZGV4LmpzPzhiN2EiXSwic291cmNlc0NvbnRlbnQiOlsiYWxlcnQoXCJIZWxsb1wiKSJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./game/index.js\n");
+eval("__webpack_require__.r(__webpack_exports__);\nalert(\"Hello\")//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9nYW1lL2luZGV4LmpzIiwibWFwcGluZ3MiOiI7QUFBQSIsInNvdXJjZXMiOlsid2VicGFjazovL2QwMDIwZS1nYW1lLW1hemUvLi9nYW1lL2luZGV4LmpzPzNhOGYiXSwic291cmNlc0NvbnRlbnQiOlsiYWxlcnQoXCJIZWxsb1wiKSJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./game/index.js\n");
 
 /***/ })
 
