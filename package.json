@@ -2,11 +2,11 @@
   "name": "d0020e-game-maze",
   "version": "1.0.0",
   "description": "A maze game for the D0020E course",
-  "main": "./src/index.js",
+  "main": "./backend/index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js",
-    "dev:backend": "nodemon src/index.js",
+    "start": "node backend/index.js",
+    "dev:backend": "nodemon backend/index.js",
     "dev:frontend": "webpack --mode development --watch",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
   },

@@ -10,13 +10,13 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./game/index.js":
-/*!***********************!*\
-  !*** ./game/index.js ***!
-  \***********************/
+/***/ "./frontend/index.js":
+/*!***************************!*\
+  !*** ./frontend/index.js ***!
+  \***************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\nalert(\"Hello\")//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9nYW1lL2luZGV4LmpzIiwibWFwcGluZ3MiOiI7QUFBQSIsInNvdXJjZXMiOlsid2VicGFjazovL2QwMDIwZS1nYW1lLW1hemUvLi9nYW1lL2luZGV4LmpzPzNhOGYiXSwic291cmNlc0NvbnRlbnQiOlsiYWxlcnQoXCJIZWxsb1wiKSJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./game/index.js\n");
+eval("__webpack_require__.r(__webpack_exports__);\nalert(\"Hello\")//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9mcm9udGVuZC9pbmRleC5qcyIsIm1hcHBpbmdzIjoiO0FBQUEiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9kMDAyMGUtZ2FtZS1tYXplLy4vZnJvbnRlbmQvaW5kZXguanM/ZTI3OCJdLCJzb3VyY2VzQ29udGVudCI6WyJhbGVydChcIkhlbGxvXCIpIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./frontend/index.js\n");
 
 /***/ })
 
@@ -43,7 +43,7 @@ eval("__webpack_require__.r(__webpack_exports__);\nalert(\"Hello\")//# sourceURL
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval-source-map devtool is used.
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./game/index.js"](0, __webpack_exports__, __webpack_require__);
+/******/ 	__webpack_modules__["./frontend/index.js"](0, __webpack_exports__, __webpack_require__);
 /******/ 	
 /******/ })()
 ;

@@ -5,7 +5,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default {
-    entry: "./game/index.js",
+    entry: "./frontend/index.js",
     watch: true,
     mode: "development",
     devtool: "eval-source-map",
