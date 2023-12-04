@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 
 // Load environment variables for development
 if (process.env.NODE_ENV !== "production") {
-  dotenv.config()
+    dotenv.config()
 }
 
 const app = express() // Create webserver
@@ -14,5 +14,5 @@ app.use(express.static("public")) // Create static routes
 
 // Start listening on port for connections
 app.listen(PORT, () => {
-  console.log("Started webserver on port:", PORT)
+    console.log("Started webserver on port:", PORT)
 })

@@ -6,16 +6,16 @@ A multiplayer online game where two players compete in a 2D maze (top down view)
 
 ## Core Features
 
-- Players navigate the maze using arrow keys or swipe gestures.
-- Collectible magic runes appear randomly in the maze, which players can use to cast spells.
-- A spectator mode, where a user can connect to the session and see the players interact in the maze.
+-   Players navigate the maze using arrow keys or swipe gestures.
+-   Collectible magic runes appear randomly in the maze, which players can use to cast spells.
+-   A spectator mode, where a user can connect to the session and see the players interact in the maze.
 
 ## Spells and Runes
 
-- Speed Boost: Temporarily increases the player's movement speed.
-- Teleport: Moves the player to a random location in the maze.
-- Confuse: Temporarily reverses the opponent's controls.
-- Throw spell: You can throw spells at players to stun and steal their keys.
+-   Speed Boost: Temporarily increases the player's movement speed.
+-   Teleport: Moves the player to a random location in the maze.
+-   Confuse: Temporarily reverses the opponent's controls.
+-   Throw spell: You can throw spells at players to stun and steal their keys.
 
 ## Frontend
 
@@ -31,24 +31,24 @@ The session is the module that handles the game logic and players decisions.<br/
 
 **Session Variables**
 
-- Spectators
-- Game
-  - Map Layout
-    - Walls
-    - Doors
-    - Spawn Points
-  - Time
-  - Keys
-    - Positions
-    - Which player the key belongs to
-  - Runes
-    - Positions
-    - Types
-  - State (Not started, Started, Completed)
-  - Players
-    - Position
-    - Equiped Spells
-    - What spells the players are affected by and for how long
+-   Spectators
+-   Game
+    -   Map Layout
+        -   Walls
+        -   Doors
+        -   Spawn Points
+    -   Time
+    -   Keys
+        -   Positions
+        -   Which player the key belongs to
+    -   Runes
+        -   Positions
+        -   Types
+    -   State (Not started, Started, Completed)
+    -   Players
+        -   Position
+        -   Equiped Spells
+        -   What spells the players are affected by and for how long
 
 <br/>
 
@@ -56,13 +56,13 @@ The session is the module that handles the game logic and players decisions.<br/
 <br/>
 The game logic consists of multiple phases and handles decisions based on player interaction.
 
-- **Not Started**
-  During this phase users can join the game lobby as either spectators or players if there is room for players. Once two players have joined and pressed the ready button the game will commence into the **Started** phase. Players are also able to leave the lobby if they change their mind.
+-   **Not Started**
+    During this phase users can join the game lobby as either spectators or players if there is room for players. Once two players have joined and pressed the ready button the game will commence into the **Started** phase. Players are also able to leave the lobby if they change their mind.
 
-- **Started**
-  - Player spawns
-  - Key spawns
-  - Player actions
-  - Map selection
-- **Completed**
-  Sends data to users on the result of the game. Players will have the opportunity to rematch.
+-   **Started**
+    -   Player spawns
+    -   Key spawns
+    -   Player actions
+    -   Map selection
+-   **Completed**
+    Sends data to users on the result of the game. Players will have the opportunity to rematch.
