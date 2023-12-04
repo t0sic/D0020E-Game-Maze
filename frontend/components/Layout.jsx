@@ -2,25 +2,27 @@ import React, { useState } from "react"
 import Home from "./Home"
 import Guide from "./Guide"
 
-const Route = ({ path }) => {
+const Route = ({ path, setPath }) => {
     switch (path) {
-        case "Home":
-            return <Home />
+        case "Home": 
+            return <Home setPath={setPath} />
         case "Guide":
             return <Guide />
     }
     return <div>404</div>
 }
 
-const Layout = ({ path }) => {
+const Layout = ({ path, setPath }) => {
+
+
     return (
         <div className="layout">
             <div className="navbar">
-                <div className="logo"></div>
-                <div className="title">Magic Maze Quest</div>
+                <div onClick={()=> setPath("Home")} className="logo"></div>
+                <div onClick={()=> setPath("Home")} className="title">Magic Maze Quest</div>
             </div>
             <div className="content">
-                <Route path={path} />
+                <Route path={path} setPath={setPath} />
             </div>
         </div>
     )

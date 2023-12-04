@@ -2,11 +2,12 @@ import React, { useState } from "react"
 import Layout from "./components/Layout.jsx"
 
 const App = () => {
-    const [path, setPath] = useState("Guide")
+    const [path, setPath] = useState("Home")
 
     return (
         <>
-            <Layout path={path} />
+            <Layout setPath={setPath} path={path} />
+            
         </>
     )
 }

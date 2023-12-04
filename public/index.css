@@ -31,6 +31,7 @@ body {
     display: flex;
     align-items: center;
     background-color: #000017;
+    
 }
 .logo {
     width: 75px;
@@ -40,10 +41,10 @@ body {
 }
 
 .title {
-    margin-left: auto;
-    margin-right: auto;
     font-size: 2rem;
     color: white;
+    margin-left: 15px;
+    
 }
 .content {
     background-image: url(assets/background2.png);
@@ -52,4 +53,167 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-color: #000f12;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.home {
+
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.button {
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    margin: 7px;
+    border: none;
+    padding: 15px 30px;
+    min-width: 100px;
+    margin-top: 10%;
+
+    
 }
