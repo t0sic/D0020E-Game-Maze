@@ -1,8 +1,9 @@
 import React from "react"
+import "../styles/Guide.css"
 
 const Guide = () => {
     return (
-        <div>
+        <div className="guide">
             <div className="textbox">
                 <div className="header">Guide</div>
                 <div className="text">

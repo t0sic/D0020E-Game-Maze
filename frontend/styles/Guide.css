@@ -1,0 +1,40 @@
+.guide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+}
+
+.textbox {
+    width: 100%;
+    color: white;
+    background-color: #000017;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.header {
+    font-size: 1.5rem;
+}
+
+.text {
+    margin-top: 15px;
+    word-wrap: break-word;
+}
+
+.picture {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    width: 100%;
+    aspect-ratio: 1/1;
+    margin-top: 30px;
+}
+
+@media screen and (min-width: 1000px) {
+    .textbox {
+        width: 600px;
+    }
+}

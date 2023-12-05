@@ -1,4 +1,5 @@
 import React from "react"
+import "../styles/Leaderboard.css"
 
 const Leaderboard = ({ setPath }) => {
     return (
