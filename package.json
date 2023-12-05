@@ -9,7 +9,7 @@
         "dev:backend": "nodemon backend/index.js",
         "dev:frontend": "webpack --mode development --watch",
         "format": "npx prettier --write .",
-        "watch:format": "chokidar '**/*.{js,json,css,md,jsx}' -c 'npm run format'",
+        "watch:format": "chokidar \"**/*.{js,json,css,md,jsx}\" \"!public/**/*\" -c \"npm run format\"",
         "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run watch:format\""
     },
     "repository": {
