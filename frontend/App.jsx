@@ -7,7 +7,6 @@ const App = () => {
     return (
         <>
             <Layout setPath={setPath} path={path} />
-            
         </>
     )
 }

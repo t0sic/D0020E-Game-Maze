@@ -1,12 +1,22 @@
 import React from "react"
 
-const Home = ({setPath}) => {
+const Home = ({ setPath }) => {
     return (
         <div className="home">
-            <button className="button">Play</button>
-            <button onClick={() => setPath("Guide")} className="button">Guide</button>
-            
-            
+            <div className="buttons">
+                <div>
+                    <button className="button">Play</button>
+                    <button onClick={() => setPath("Guide")} className="button">
+                        Guide
+                    </button>
+                </div>
+                <button
+                    onClick={() => setPath("Leaderboard")}
+                    className="button"
+                >
+                    Leaderboard
+                </button>
+            </div>
         </div>
     )
 }
