@@ -59,3 +59,9 @@ body {
     background-position: center;
     background-color: #000f12;
 }
+
+@media screen and (min-width: 1000px) {
+    .content {
+        background-image: url(assets/background.png);
+    }
+}
