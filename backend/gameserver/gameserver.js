@@ -7,6 +7,7 @@ export default class Gameserver {
         this.sessions = []
         this.webserver = webserver
         this.io = new Server(webserver.server)
+
         this.websocketRoom = new WebsocketRoom(
             "gameserver",
             this.eventHandler,
@@ -14,8 +15,30 @@ export default class Gameserver {
         )
 
         console.log("Gameserver started")
-        console.log(webserver)
     }
 
-    eventHandler(event, data) {}
+    eventHandler = (event, data) => {
+        switch (event) {
+            case "connection":
+                this.onConnection(data)
+                break
+            case "disconnect":
+                this.onDisconnect(data)
+                break
+        }
+    }
+
+    onDisconnect = (userId) => {
+        this.queue = this.queue.filter((id) => userId !== id)
+
+        console.log(this.queue)
+    }
+
+    onConnection = (userId) => {
+        if (this.queue.includes(userId)) return
+
+        this.queue.push(userId)
+
+        console.log(this.queue)
+    }
 }

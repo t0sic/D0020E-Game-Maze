@@ -8,7 +8,7 @@
         "start": "node backend/index.js",
         "dev:backend": "nodemon backend/index.js",
         "dev:frontend": "webpack --mode development --watch",
-        "format": "npx prettier --write .",
+        "format": "npx prettier --log-level silent --write .",
         "watch:format": "chokidar \"**/*.{js,json,css,md,jsx}\" \"!public/**/*\" -c \"npm run format\"",
         "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run watch:format\""
     },
@@ -37,12 +37,14 @@
         "webpack-cli": "^5.1.4"
     },
     "dependencies": {
+        "cookie": "^0.6.0",
         "cookie-parser": "^1.4.6",
         "dotenv": "^16.3.1",
         "express": "^4.18.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "socket.io": "^4.7.2",
+        "socket.io-client": "^4.7.2",
         "uuid": "^9.0.1"
     }
 }

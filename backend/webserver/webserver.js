@@ -35,7 +35,6 @@ export default class Webserver {
     }
 
     routes() {
-        console.log("hello")
         this.app.get("/test", (req, res) => {
             console.log(req.user)
             res.sendStatus(200)
