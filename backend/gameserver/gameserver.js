@@ -1,5 +1,6 @@
 import WebsocketRoom from "./websocketRoom.js"
 import { v4 as uuid } from "uuid"
+import Session from "./session.js"
 
 export default class Gameserver {
     constructor(webserver) {
@@ -16,21 +17,21 @@ export default class Gameserver {
         console.log("Gameserver started")
     }
 
-    eventHandler = (userId, event, data) => {
-        console.log("new event", userId, event, data)
+    eventHandler = (socket, event, data) => {
+        console.log("new event", socket.id, event, data)
 
         switch (event) {
             case "connection":
-                this.onJoinQueue(userId)
+                this.onJoinQueue(socket)
                 break
             case "disconnect":
-                this.onLeaveQueue(userId)
+                this.onLeaveQueue(socket)
                 break
         }
     }
 
-    onLeaveQueue = (userId) => {
-        this.queue = this.queue.filter((id) => userId !== id)
+    onLeaveQueue = (socket) => {
+        this.queue = this.queue.filter((_socket) => socket.id !== _socket.id)
 
         console.log(this.queue)
     }
@@ -38,13 +39,16 @@ export default class Gameserver {
     createSession = () => {
         const pair = this.getPlayerPair()
         const id = uuid()
+        this.sessions.push(new Session(null, this, id))
+        pair.forEach((socket) => {
+            socket.emit("callToSession", id)
+        })
 
-        console.log("Creating new session", id, pair)
+        console.log("Creating new session", pair.length)
     }
 
-    onJoinQueue = (userId) => {
-        this.queue.push(userId)
-
+    onJoinQueue = (socket) => {
+        this.queue.push(socket)
         if (this.queue.length >= 2) this.createSession()
     }
 

@@ -19,12 +19,14 @@ export default class WebsocketRoom {
     }
 
     onConnection = (socket) => {
-        this.eventHandler(socket.id, "connection", socket.userId)
+        this.eventHandler(socket, "connection", socket.userId)
     }
     onDisconnect = (socket) => {
-        this.eventHandler(socket.id, "disconnect", socket.userId)
+        this.eventHandler(socket, "disconnect", socket.userId)
     }
     onEvent = (socket, event, data) => {
-        this.eventHandler(socket.id, event, data)
+        this.eventHandler(socket, event, data)
     }
+
+    sendEvent = (socket, event, data) => {}
 }

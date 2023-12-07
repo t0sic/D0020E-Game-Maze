@@ -6,12 +6,13 @@ import Queue from "./components/Queue.jsx"
 const App = () => {
     const [path, setPath] = useState("Home")
     const [queueState, setQueueState] = useState("Error")
-    const [websocketRoom, setWebsocketRoom] = useState()
+    const [gameWebsocketRoom, setGameWebsocketRoom] = useState()
+    const [sessionWebsocketRoom, setSessionWebsocketRoom] = useState()
 
     useEffect(() => {
-        if (!websocketRoom) return
-        websocketRoom.sendEvent("test", 123)
-    }, [websocketRoom])
+        if (!gameWebsocketRoom) return
+        gameWebsocketRoom.sendEvent("test", 123)
+    }, [gameWebsocketRoom])
 
     const eventHandler = (event, data) => {
         switch (event) {
@@ -20,22 +21,29 @@ const App = () => {
                 setQueueState("connected")
 
                 break
+            case "callToSession":
+                console.log("executing callToSession", data)
+                setQueueState("joining")
+                break
         }
     }
 
     const handlePlay = () => {
         setPath("Queue")
 
-        if (!websocketRoom) {
+        if (!gameWebsocketRoom) {
             setQueueState("connecting")
-            setWebsocketRoom(new WebsocketRoom("gameserver", eventHandler))
+            setGameWebsocketRoom(new WebsocketRoom("gameserver", eventHandler))
         }
     }
 
     return (
         <>
             {path === "Queue" ? (
-                <Queue websocketRoom={websocketRoom} queueState={queueState} />
+                <Queue
+                    gameWebsocketRoom={gameWebsocketRoom}
+                    queueState={queueState}
+                />
             ) : (
                 <Layout setPath={setPath} path={path} onPlay={handlePlay} />
             )}

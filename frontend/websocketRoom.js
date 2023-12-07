@@ -7,6 +7,7 @@ export default class WebsocketRoom {
 
         this.namespace = io("/" + name)
         this.namespace.on("connect", this.onConnect)
+        this.namespace.onAny(eventHandler)
     }
 
     sendEvent = (event, data) => {

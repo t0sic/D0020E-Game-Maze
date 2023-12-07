@@ -1,7 +1,7 @@
 import React from "react"
 import "../styles/Queue.css"
 
-const Queue = ({ queueState, websocketRoom }) => {
+const Queue = ({ queueState, gameWebsocketRoom }) => {
     let stateText
 
     switch (queueState) {
@@ -10,6 +10,9 @@ const Queue = ({ queueState, websocketRoom }) => {
             break
         case "connected":
             stateText = "Waiting for players"
+            break
+        case "joining":
+            stateText = "Joining"
             break
     }
 
