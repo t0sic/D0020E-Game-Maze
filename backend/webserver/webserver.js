@@ -1,6 +1,8 @@
+import Gameserver from "../gameserver/gameserver.js"
+import { Server } from "socket.io"
 import express from "express"
-import cookieParser from "cookie-parser"
-import { v4 as uuid } from "uuid"
+import * as url from "url"
+import path from "path"
 import http from "http"
 
 export default class Webserver {
@@ -9,46 +11,28 @@ export default class Webserver {
         this.app = express()
     }
 
-    start() {
-        this.middleware()
+    start = async () => {
         this.routes()
+        this.middleware()
+
         this.server = http.createServer(this.app).listen(this.port, () => {
             console.log("Started Webserver on port:", this.port)
+            console.log("Starting websocket server...")
+            this.io = new Server(this.server)
+            this.gameserver = new Gameserver(this)
         })
     }
 
-    middleware() {
+    middleware = () => {
         this.app.use(express.static("public"))
-        this.app.use(cookieParser())
-        this.app.use(this.setUser)
     }
 
-    setUser(req, res, next) {
-        let userId = req.cookies.userId
+    routes = () => {
+        const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
+        const options = { root: path.join(__dirname, "../../public") }
 
-        if (!userId) {
-            userId = uuid()
-            res.cookie("userId", userId)
-        }
-        req.user = userId
-        next()
-    }
-
-    routes() {
-        console.log("hello")
-        this.app.get("/test", (req, res) => {
-            console.log(req.user)
-            res.sendStatus(200)
+        this.app.get("/", (req, res) => {
+            res.sendFile("index.html", options)
         })
     }
 }
-
-// //const app = express() // Create webserver
-// //const PORT = process.env["PORT"] || 3000 // Define port
-
-// app.use(express.static("public")) // Create static routes
-
-// // Start listening on port for connections
-// app.listen(PORT, () => {
-//     console.log("Started webserver on port:", PORT)
-// })
