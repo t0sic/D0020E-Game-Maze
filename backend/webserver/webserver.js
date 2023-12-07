@@ -1,6 +1,7 @@
 import express from "express"
 import cookieParser from "cookie-parser"
 import { v4 as uuid } from "uuid"
+import http from "http"
 
 export default class Webserver {
     constructor(port) {
@@ -11,7 +12,7 @@ export default class Webserver {
     start() {
         this.middleware()
         this.routes()
-        this.app.listen(this.port, () => {
+        this.server = http.createServer(this.app).listen(this.port, () => {
             console.log("Started Webserver on port:", this.port)
         })
     }
@@ -34,7 +35,6 @@ export default class Webserver {
     }
 
     routes() {
-        console.log("hello")
         this.app.get("/test", (req, res) => {
             console.log(req.user)
             res.sendStatus(200)

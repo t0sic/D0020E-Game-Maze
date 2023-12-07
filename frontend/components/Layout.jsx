@@ -3,10 +3,10 @@ import Home from "./Home"
 import Guide from "./Guide"
 import Leaderboard from "./Leaderboard"
 
-const Route = ({ path, setPath }) => {
+const Route = ({ path, setPath, onPlay }) => {
     switch (path) {
         case "Home":
-            return <Home setPath={setPath} />
+            return <Home setPath={setPath} onPlay={onPlay} />
         case "Guide":
             return <Guide />
         case "Leaderboard":
@@ -15,7 +15,7 @@ const Route = ({ path, setPath }) => {
     return <div>404</div>
 }
 
-const Layout = ({ path, setPath }) => {
+const Layout = ({ path, setPath, onPlay }) => {
     return (
         <div className="layout">
             <div className="navbar">
@@ -25,7 +25,7 @@ const Layout = ({ path, setPath }) => {
                 </div>
             </div>
             <div className="content">
-                <Route path={path} setPath={setPath} />
+                <Route path={path} onPlay={onPlay} setPath={setPath} />
             </div>
         </div>
     )
