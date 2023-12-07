@@ -1,5 +1,3 @@
-import cookie from "cookie"
-
 export default class WebsocketRoom {
     constructor(name, eventHandler, io) {
         this.name = name
@@ -10,26 +8,23 @@ export default class WebsocketRoom {
         this.namespace.on("connection", (socket) => {
             this.onConnection(socket)
 
+            socket.onAny((event, data) => {
+                this.onEvent(socket, event, data)
+            })
+
             socket.on("disconnect", () => {
                 this.onDisconnect(socket)
             })
         })
-
-        this.namespace.use((socket, next) => {
-            const cookies = cookie.parse(socket.handshake.headers.cookie)
-
-            if (cookies.userId) {
-                socket.userId = cookies.userId
-                next()
-            }
-        })
     }
 
     onConnection = (socket) => {
-        this.eventHandler("connection", socket.userId)
+        this.eventHandler(socket.id, "connection", socket.userId)
     }
     onDisconnect = (socket) => {
-        this.eventHandler("disconnect", socket.userId)
+        this.eventHandler(socket.id, "disconnect", socket.userId)
     }
-    onEvent = () => {}
+    onEvent = (socket, event, data) => {
+        this.eventHandler(socket.id, event, data)
+    }
 }
