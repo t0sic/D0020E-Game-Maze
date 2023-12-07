@@ -4,12 +4,27 @@ export default class WebsocketRoom {
         this.eventHandler = eventHandler
         this.io = io
         this.namespace = io.of("/" + name)
-    }
-    onConnection() {
+
         this.namespace.on("connection", (socket) => {
-            console.log("connected", socket)
+            this.onConnection(socket)
+
+            socket.onAny((event, data) => {
+                this.onEvent(socket, event, data)
+            })
+
+            socket.on("disconnect", () => {
+                this.onDisconnect(socket)
+            })
         })
     }
-    onDisconnect() {}
-    onEvent() {}
+
+    onConnection = (socket) => {
+        this.eventHandler(socket.id, "connection", socket.userId)
+    }
+    onDisconnect = (socket) => {
+        this.eventHandler(socket.id, "disconnect", socket.userId)
+    }
+    onEvent = (socket, event, data) => {
+        this.eventHandler(socket.id, event, data)
+    }
 }
