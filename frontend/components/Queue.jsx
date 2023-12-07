@@ -1,12 +1,10 @@
 import React from "react"
 import "../styles/Queue.css"
 
-const Queue = ({ gameserver }) => {
+const Queue = ({ queueState, websocketRoom }) => {
     let stateText
 
-    const { state } = gameserver
-
-    switch (state) {
+    switch (queueState) {
         case "connecting":
             stateText = "Connecting to game server"
             break

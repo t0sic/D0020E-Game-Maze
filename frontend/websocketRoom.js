@@ -9,6 +9,11 @@ export default class WebsocketRoom {
         this.namespace.on("connect", this.onConnect)
     }
 
+    sendEvent = (event, data) => {
+        console.log("Sending event:", event, data)
+        this.namespace.emit(event, data)
+    }
+
     onConnect = (socket) => {
         this.eventHandler("connect", socket)
     }
