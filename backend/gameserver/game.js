@@ -1,5 +1,6 @@
 export default class Game {
-    constructor() {
+    constructor(playerIds) {
+        const randomDecimal = Math.random()
         const randomNumber = Math.floor(randomDecimal * 4) + 1
         this.map = randomNumber
         this.key = 1 // ska sättas till random koordinater av möjliga spawnpoints

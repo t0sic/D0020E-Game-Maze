@@ -30,5 +30,8 @@ export default class WebsocketRoom {
         this.eventHandler(socket, event, data)
     }
 
-    sendEvent = (socket, event, data) => {}
+    sendEvent = (event, data) => {
+        console.log("Sending event:", event, data)
+        this.namespace.emit(event, data)
+    }
 }

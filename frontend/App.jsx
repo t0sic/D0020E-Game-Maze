@@ -16,7 +16,7 @@ const App = () => {
 
     useEffect(() => {
         if (!sessionWebsocketRoom) return
-        sessionWebsocketRoom.sendEvent("test", 999)
+        sessionWebsocketRoom.sendEvent("playerReady", 999)
     }, [sessionWebsocketRoom])
 
     const eventHandler = (event, data) => {
@@ -30,6 +30,9 @@ const App = () => {
                 console.log("executing callToSession", data)
                 setQueueState("joining")
                 setSessionWebsocketRoom(new WebsocketRoom(data, eventHandler))
+                break
+            case "startGame":
+                console.log("recieved map object", data)
                 break
         }
     }
