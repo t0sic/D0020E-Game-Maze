@@ -18,7 +18,7 @@ export default class Gameserver {
     }
 
     eventHandler = (socket, event, data) => {
-        console.log("new event", socket.id, event, data)
+        console.log("new event in gameserver", socket.id, event, data)
 
         switch (event) {
             case "connection":

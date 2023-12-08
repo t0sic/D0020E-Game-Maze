@@ -9,6 +9,8 @@ export default class WebsocketRoom {
             this.onConnection(socket)
 
             socket.onAny((event, data) => {
+                console.log("In namespace: ", name, "sending event:", event)
+
                 this.onEvent(socket, event, data)
             })
 

@@ -14,6 +14,11 @@ const App = () => {
         gameWebsocketRoom.sendEvent("test", 123)
     }, [gameWebsocketRoom])
 
+    useEffect(() => {
+        if (!sessionWebsocketRoom) return
+        sessionWebsocketRoom.sendEvent("test", 999)
+    }, [sessionWebsocketRoom])
+
     const eventHandler = (event, data) => {
         switch (event) {
             case "connect":
@@ -24,6 +29,7 @@ const App = () => {
             case "callToSession":
                 console.log("executing callToSession", data)
                 setQueueState("joining")
+                setSessionWebsocketRoom(new WebsocketRoom(data, eventHandler))
                 break
         }
     }

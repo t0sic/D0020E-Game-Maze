@@ -13,6 +13,7 @@ export default {
         path: path.resolve(__dirname, "public"),
         filename: "index.js",
     },
+    stats: "errors-only",
     module: {
         rules: [
             {
