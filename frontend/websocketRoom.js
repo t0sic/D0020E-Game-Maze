@@ -6,7 +6,13 @@ export default class WebsocketRoom {
         this.name = name
 
         this.namespace = io("/" + name)
-        this.namespace.on("connect", this.onConnect)
+
+        if (this.name === "gameserver") {
+            console.log("calling onconnect in current namespace: /", name)
+            this.namespace.on("connect", this.onConnect)
+        }
+
+        this.namespace.onAny(eventHandler)
     }
 
     sendEvent = (event, data) => {
@@ -15,6 +21,7 @@ export default class WebsocketRoom {
     }
 
     onConnect = (socket) => {
+        console.log("Client side WSR onConnect")
         this.eventHandler("connect", socket)
     }
 }
