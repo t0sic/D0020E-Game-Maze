@@ -1,7 +1,7 @@
 import React from "react"
 import "../styles/Queue.css"
 
-const Queue = ({ queueState, gameWebsocketRoom }) => {
+const Queue = ({ queueState }) => {
     let stateText
 
     switch (queueState) {
