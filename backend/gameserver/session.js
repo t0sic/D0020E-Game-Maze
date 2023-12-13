@@ -9,14 +9,17 @@ export default class Session {
         this.websocketRoom = new WebsocketRoom(id, this.eventHandler, io) // needs to create websocket room with id
         this.state = "Not Started"
         this.id = id
-        this.readyPlayers = []
+        this.users = []
         this.game
     }
 
     eventHandler = (socket, event, data) => {
-        console.log("new event in Session", socket.id, event, data)
+        console.log("Session Event", socket.id, event, data)
 
         switch (event) {
+            case "disconnect":
+                this.onDisconnect(socket)
+                break
             case "movePlayer":
                 this.onPlayerMove()
                 break
@@ -29,17 +32,28 @@ export default class Session {
         }
     }
 
+    onDisconnect = (socket) => {
+        console.log("Session Disconnect", socket.id)
+
+        this.users.forEach((user) => {
+            if (user.id !== socket.id)
+                this.websocketRoom.sendEvent("endSession")
+        })
+
+        this.gameserver.endSession(this)
+    }
+
     onPlayerMove = () => {}
 
     onLeave = () => {}
 
     onPlayerReady = (socket) => {
         // Once both clients have sent a message stating they are ready The game object is created and passed back
-        this.readyPlayers.push(socket.id)
-        if (this.readyPlayers.length == 2) {
-            this.game = new Game(this.readyPlayers)
+        this.users.push(socket)
+        if (this.users.length == 2) {
+            this.game = new Game(this.users.map((user) => user.id))
             this.state = "Started"
-            console.log("Both Players ready, Starting Game")
+            console.log("Session Starting game, both players ready")
             this.websocketRoom.sendEvent("startGame", this.game)
         }
     }

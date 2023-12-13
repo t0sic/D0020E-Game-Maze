@@ -18,22 +18,60 @@ export default class Gameserver {
     }
 
     eventHandler = (socket, event, data) => {
-        console.log("new event in gameserver", socket.id, event, data)
+        console.log("Gameserver Event:", socket.id, event, data)
 
         switch (event) {
-            case "connection":
+            case "joinQueue":
                 this.onJoinQueue(socket)
                 break
+            case "leaveQueue":
+                if (this.isInQueue(socket)) {
+                    this.onLeaveQueue(socket)
+                }
+            case "connection":
+                console.log("Gameserver Player connected:", socket.id)
+                break
             case "disconnect":
-                this.onLeaveQueue(socket)
+                if (this.isInQueue(socket)) {
+                    this.onLeaveQueue(socket)
+                }
                 break
         }
     }
 
+    isInQueue = (socket) => {
+        return this.queue.some((_socket) => socket.id === _socket.id)
+    }
+
     onLeaveQueue = (socket) => {
         this.queue = this.queue.filter((_socket) => socket.id !== _socket.id)
+        console.log(
+            "Gameserver Player leaving queue: ",
+            socket.id,
+            "Queue size:",
+            this.queue.length,
+        )
+    }
 
-        console.log(this.queue)
+    onJoinQueue = (socket) => {
+        this.queue.push(socket)
+        console.log(
+            "Gameserver Player joining queue",
+            socket.id,
+            "Queue size:",
+            this.queue.length,
+        )
+        if (this.queue.length >= 2) this.createSession()
+    }
+
+    endSession = (session) => {
+        console.log("Gameserver Removing session, id:", session.id)
+
+        this.sessions = this.sessions.filter(
+            (_session) => session.id !== _session.id,
+        )
+
+        console.log(this.sessions)
     }
 
     createSession = () => {
@@ -42,14 +80,10 @@ export default class Gameserver {
         this.sessions.push(new Session(null, this, id))
         pair.forEach((socket) => {
             socket.emit("callToSession", id)
+            this.onLeaveQueue(socket)
         })
 
-        console.log("Creating new session", pair.length)
-    }
-
-    onJoinQueue = (socket) => {
-        this.queue.push(socket)
-        if (this.queue.length >= 2) this.createSession()
+        console.log("Gameserver Creating new session, id:", id)
     }
 
     getPlayerPair = () => {

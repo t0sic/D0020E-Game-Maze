@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import WebsocketRoom from "../websocketRoom.js"
 
-const Game = ({ sessionId }) => {
+const Game = ({ sessionId, onSessionEnd }) => {
     const [websocketRoom, setWebsocketRoom] = useState()
 
     useEffect(() => setWebsocketRoom(new WebsocketRoom(sessionId)), [])
@@ -16,6 +16,10 @@ const Game = ({ sessionId }) => {
                     break
                 case "startGame":
                     console.log("recieved map object", data)
+                    break
+                case "endSession":
+                    console.log("end session")
+                    onSessionEnd()
                     break
             }
         }

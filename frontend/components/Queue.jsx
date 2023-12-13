@@ -1,7 +1,7 @@
 import React from "react"
 import "../styles/Queue.css"
 
-const Queue = ({ queueState }) => {
+const Queue = ({ queueState, onLeave }) => {
     let stateText
 
     switch (queueState) {
@@ -14,6 +14,8 @@ const Queue = ({ queueState }) => {
         case "joining":
             stateText = "Joining"
             break
+        case "ended":
+            stateText = "Session ended"
     }
 
     return (
@@ -22,6 +24,9 @@ const Queue = ({ queueState }) => {
             style={{ background: "url(/assets/background3.png)" }}
         >
             <div className="state">{stateText}...</div>
+            <button onClick={onLeave} className="button">
+                Leave
+            </button>
         </div>
     )
 }
