@@ -1,0 +1,262 @@
+<mxfile host="app.diagrams.net" modified="2023-12-18T14:22:04.819Z" agent="Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0" etag="csKWbIU6EdK8Q-uv6gjH" version="22.1.11" type="github">
+  <diagram name="Page-1" id="prebd_JIiY-kdDSO8AeS">
+    <mxGraphModel dx="4841" dy="1596" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-1" target="CJL-ajY_PIazW_HbV9kq-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-1" value="Gameserver creates websocket room" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="400" y="140" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-2" target="CJL-ajY_PIazW_HbV9kq-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-2" value="Wait for connection" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-5" target="CJL-ajY_PIazW_HbV9kq-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-72" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-5" target="CJL-ajY_PIazW_HbV9kq-71">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-5" value="User presses play button" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="130" y="140" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-17" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-10" target="CJL-ajY_PIazW_HbV9kq-18">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="195" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-10" target="CJL-ajY_PIazW_HbV9kq-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-10" value="Is connected to gameserver?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="122.5" y="270" width="145" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-18" target="CJL-ajY_PIazW_HbV9kq-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-18">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="195.11111111111086" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-18" value="Connect to gameserver websocket room" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="122.5" y="440" width="145" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-24" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-20" target="CJL-ajY_PIazW_HbV9kq-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-20" value="User connects" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="410" y="430" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-40" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-37" target="CJL-ajY_PIazW_HbV9kq-44">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="640" as="sourcePoint" />
+            <mxPoint x="470" y="717.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-29" target="CJL-ajY_PIazW_HbV9kq-37">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="612.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-29" value="Send joinQueue event" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="127.5" y="700" width="125" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-42" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-37" target="CJL-ajY_PIazW_HbV9kq-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-37" value="Is player already&lt;br&gt;in queue?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="405" y="572.5" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-41" value="Do nothing" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="640" y="582.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-46" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-44" target="CJL-ajY_PIazW_HbV9kq-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-44" value="Add player to end of queue" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="410" y="740" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-49" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-45" target="CJL-ajY_PIazW_HbV9kq-69">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="990" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-70" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-45" target="CJL-ajY_PIazW_HbV9kq-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-45" value="2 Players &lt;br&gt;in queue?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="410" y="870" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-48" value="Do nothing" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="410" y="1040" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-56" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-50" target="CJL-ajY_PIazW_HbV9kq-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-50" value="User disconnect" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="-790" y="140" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-58" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-55" target="CJL-ajY_PIazW_HbV9kq-59">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-435" y="249.608695652174" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-60" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-55" target="CJL-ajY_PIazW_HbV9kq-61">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-524.8695652173913" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-55" value="Is player already &lt;br&gt;in queue?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="-598.75" y="200" width="147.5" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-59" value="Do nothing" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="-340" y="210" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-61" value="Remove player from queue" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;rounded=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="-585" y="350" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-67" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-64" target="CJL-ajY_PIazW_HbV9kq-66">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-64" value="User presses leave button" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="-970" y="300" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-66" target="CJL-ajY_PIazW_HbV9kq-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-66" value="Send leaveQueue event" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="-790" y="300" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-84" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-69" target="CJL-ajY_PIazW_HbV9kq-83">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-69" value="Create session" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1032.5" y="140" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-74" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-71" target="CJL-ajY_PIazW_HbV9kq-73">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-71" value="Set app path to queue" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="-100" y="140" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-73" value="Set queue state to connecting" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="-100" y="280" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-80" value="Set queue state to connected" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="145" y="552" width="100" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-82" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.547;entryY=-0.003;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-80" target="CJL-ajY_PIazW_HbV9kq-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-86" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-83" target="CJL-ajY_PIazW_HbV9kq-85">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-83" value="Get player pair" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1037.5" y="280" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-88" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-85" target="CJL-ajY_PIazW_HbV9kq-87">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-85" value="Generate unique id" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1037.5" y="410" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-90" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-87" target="CJL-ajY_PIazW_HbV9kq-89">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-93" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-87" target="CJL-ajY_PIazW_HbV9kq-92">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-87" value="Create session instance" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1037.5" y="540" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-89" value="Create websocket room with session id" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1241" y="535" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-95" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-92" target="CJL-ajY_PIazW_HbV9kq-94">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-103" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-92" target="CJL-ajY_PIazW_HbV9kq-102">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-92" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;Emit callToSession event with session id to player pair&lt;/font&gt;" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="670" width="165" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-97" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-94" target="CJL-ajY_PIazW_HbV9kq-96">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-99" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-94" target="CJL-ajY_PIazW_HbV9kq-98">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-94" value="Both players ready?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1017.5" y="800" width="130" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-96" value="Do nothing" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1022.5" y="970" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-98" value="Emit startGame event to players in session" style="whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1241" y="810" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-105" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-102" target="CJL-ajY_PIazW_HbV9kq-104">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-102" value="Client receives event with session id" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1241" y="670" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-107" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-104" target="CJL-ajY_PIazW_HbV9kq-106">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-104" value="Set queue state to joining" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="670" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-109" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-106" target="CJL-ajY_PIazW_HbV9kq-108">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-106" value="Connect to websocket room with session id" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1570" y="670" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-111" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-108" target="CJL-ajY_PIazW_HbV9kq-110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-108" value="Emit playerReady event to session" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="670" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-110" value="Set app path to Game" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="1900" y="670" width="99" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-115" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-112" target="CJL-ajY_PIazW_HbV9kq-114">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-112" value="User disconnect from session" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="140" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-117" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-114" target="CJL-ajY_PIazW_HbV9kq-116">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-119" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-114" target="CJL-ajY_PIazW_HbV9kq-118">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-114" value="Send endSession event to other player" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1440" y="140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-116" value="Remove session" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1640" y="140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-121" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="CJL-ajY_PIazW_HbV9kq-118" target="CJL-ajY_PIazW_HbV9kq-120">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-118" value="Set queue state to ended" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1455" y="280" width="90" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CJL-ajY_PIazW_HbV9kq-120" value="Set path to queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1455" y="420" width="90" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
