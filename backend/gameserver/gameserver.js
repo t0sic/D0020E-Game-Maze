@@ -22,7 +22,9 @@ export default class Gameserver {
 
         switch (event) {
             case "joinQueue":
-                this.onJoinQueue(socket)
+                if (!this.isInQueue(socket)) {
+                    this.onJoinQueue(socket)
+                }
                 break
             case "leaveQueue":
                 if (this.isInQueue(socket)) {

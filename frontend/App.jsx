@@ -36,6 +36,7 @@ const App = () => {
             setQueueState("connecting")
             setWebsocketRoom(new WebsocketRoom("gameserver"))
         } else {
+            setQueueState("connected")
             websocketRoom.sendEvent("joinQueue")
         }
     }
