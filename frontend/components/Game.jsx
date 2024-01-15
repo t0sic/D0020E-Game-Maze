@@ -1,10 +1,35 @@
 import React, { useState, useEffect } from "react"
 import WebsocketRoom from "../websocketRoom.js"
+import eventEmitter from "../eventEmitter.js"
+import GameScene from "../game/GameScene.js"
+import Phaser from "phaser"
 
 const Game = ({ sessionId, onSessionEnd }) => {
     const [websocketRoom, setWebsocketRoom] = useState()
 
-    useEffect(() => setWebsocketRoom(new WebsocketRoom(sessionId)), [])
+    useEffect(() => {
+        setWebsocketRoom(new WebsocketRoom(sessionId))
+
+        // PHASER config for phone in horizontal mode
+        const config = {
+            height: 1080,
+            width: 1920,
+            type: Phaser.AUTO,
+            parent: "phaser-game",
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH,
+            },
+            scene: [GameScene],
+            data: { websocketRoom },
+        }
+
+        const game = new Phaser.Game(config)
+
+        setTimeout(() => {
+            eventEmitter.emit("startGame")
+        }, 5000)
+    }, [])
 
     useEffect(() => {
         if (!websocketRoom) return
@@ -25,7 +50,7 @@ const Game = ({ sessionId, onSessionEnd }) => {
         }
     }, [websocketRoom])
 
-    return <div>Hello World</div>
+    return <div id="phaser-game"></div>
 }
 
 export default Game
