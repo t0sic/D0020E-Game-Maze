@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import WebsocketRoom from "../websocketRoom.js"
 import eventEmitter from "../eventEmitter.js"
 import GameScene from "../game/GameScene.js"
+import UIScene from "../game/UIScene.js"
 import Phaser from "phaser"
 
 const Game = ({ sessionId, onSessionEnd }) => {
@@ -26,7 +27,7 @@ const Game = ({ sessionId, onSessionEnd }) => {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH,
             },
-            scene: [GameScene],
+            scene: [GameScene, UIScene],
             data: { websocketRoom },
         }
 
