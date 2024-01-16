@@ -4,7 +4,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, spawnX, spawnY) {
         super(scene, spawnX, spawnY, "player")
 
-        this.maxSpeed = 600
+        this.maxSpeed = 200
 
         scene.add.existing(this)
         scene.physics.add.existing(this)

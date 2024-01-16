@@ -18,6 +18,9 @@ const Game = ({ sessionId, onSessionEnd }) => {
             parent: "phaser-game",
             physics: {
                 default: "arcade",
+                arcade: {
+                    fps: 60,
+                },
             },
             scale: {
                 mode: Phaser.Scale.FIT,
