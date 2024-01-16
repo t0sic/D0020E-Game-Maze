@@ -16,6 +16,9 @@ const Game = ({ sessionId, onSessionEnd }) => {
             width: 1920,
             type: Phaser.AUTO,
             parent: "phaser-game",
+            physics: {
+                default: "arcade",
+            },
             scale: {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -25,10 +28,6 @@ const Game = ({ sessionId, onSessionEnd }) => {
         }
 
         const game = new Phaser.Game(config)
-
-        setTimeout(() => {
-            eventEmitter.emit("startGame")
-        }, 5000)
     }, [])
 
     useEffect(() => {

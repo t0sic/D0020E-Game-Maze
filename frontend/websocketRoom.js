@@ -5,11 +5,15 @@ export default class WebsocketRoom {
         this.eventHandler = eventHandler
         this.name = name
 
-        this.namespace = io("/" + name)
+        setTimeout(() => {
+            this.namespace = io("/" + name)
 
-        this.namespace.on("connect", this.onConnect)
+            this.namespace.on("connect", this.onConnect)
 
-        this.namespace.onAny((event, data) => this.eventHandler(event, data))
+            this.namespace.onAny((event, data) =>
+                this.eventHandler(event, data)
+            )
+        }, 1000)
     }
 
     sendEvent = (event, data) => {
