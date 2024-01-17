@@ -17,7 +17,7 @@ class GameScene extends Phaser.Scene {
         this.load.image("player", "/assets/test.png")
         this.load.image("background", "/assets/background.png")
         this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap3.json")
+        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap4.json")
     }
 
     init = () => {
@@ -30,8 +30,14 @@ class GameScene extends Phaser.Scene {
         const tileset = map.addTilesetImage("dungeon_tiles", "tiles")
         const groundLayer = map.createLayer("Ground", tileset)
         const wallLayer = map.createLayer("Walls", tileset)
+        const doorLayer = map.createLayer("Door", tileset)
 
         wallLayer.setCollisionByProperty({ Collision: true })
+        doorLayer.setCollisionByProperty({ Collision: true })
+
+        this.wallLayer = wallLayer
+        this.doorLayer = doorLayer
+
         console.log(
             "Number of tiles with collision property:",
             wallLayer.getTilesWithin(0, 0, wallLayer.width, wallLayer.height, {
@@ -51,6 +57,15 @@ class GameScene extends Phaser.Scene {
         this.add.image(0, 0, "background").setOrigin(0, 0)
         this.createTilemap()
         this.player = new Player(this, 100, 100)
+        this.physics.add.collider(
+            this.player,
+            this.doorLayer,
+            this.handleDoorCollision,
+            null,
+            this
+        )
+        this.physics.add.collider(this.player, this.wallLayer)
+
         this.addCamera()
         this.createDebugInfo()
 
@@ -74,6 +89,15 @@ class GameScene extends Phaser.Scene {
             fill: "#ffffff",
         })
         this.debugText.setScrollFactor(0)
+    }
+
+    handleDoorCollision = (player, tile) => {
+        console.log(
+            "Player has collided with a door tile at position:",
+            tile.x,
+            tile.y
+        )
+        // Additional logic for door collision can be added here
     }
 
     updatePlayerPosition = (joystick) => {
