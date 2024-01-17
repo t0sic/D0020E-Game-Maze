@@ -10,12 +10,14 @@ const Game = ({ sessionId, onSessionEnd }) => {
 
     useEffect(() => {
         setWebsocketRoom(new WebsocketRoom(sessionId))
+    }, [])
 
-        // PHASER config for phone in horizontal mode
+    const startGame = (gameData) => {
         const config = {
             height: 1080,
             width: 1920,
             type: Phaser.AUTO,
+            pixelArt: true,
             parent: "phaser-game",
             physics: {
                 default: "arcade",
@@ -29,20 +31,15 @@ const Game = ({ sessionId, onSessionEnd }) => {
             },
             scene: [GameScene, UIScene],
         }
-
         const game = new Phaser.Game(config)
+        game.registry.set("websocketRoom", websocketRoom)
         eventEmitter.on("sceneCreated", () => {
-            eventEmitter.emit("emitGameObject",game)
-            console.log("emitted event")
+            eventEmitter.emit("setGameData", gameData)
         })
-
-
-
-    }, [])
+    }
 
     useEffect(() => {
         if (!websocketRoom) return
-
 
         websocketRoom.eventHandler = (event, data) => {
             switch (event) {
@@ -50,26 +47,20 @@ const Game = ({ sessionId, onSessionEnd }) => {
                     websocketRoom.sendEvent("playerReady")
                     break
                 case "startGame":
-                    console.log("recieved map object", data)
-                    eventEmitter.on("sceneCreated" , () => {
-                        eventEmitter.emit("emitWebsocketRoom",websocketRoom)
-                        eventEmitter.emit("emitMapObject",data)
-                    })
+                    startGame(data)
                     break
                 case "endSession":
                     console.log("end session")
                     onSessionEnd()
                     break
                 case "updatePlayerPosition":
-                    console.log("recieved position", data)
-                    eventEmitter.emit("moveOpponent",data)
+                    eventEmitter.emit("moveOpponent", data)
                     break
             }
         }
     }, [websocketRoom])
 
     return <div id="phaser-game"></div>
-
 }
 
 export default Game
