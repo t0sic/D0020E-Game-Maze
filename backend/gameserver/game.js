@@ -7,8 +7,8 @@ export default class Game {
         this.map = randomNumber
         this.key = 1 // ska sättas till random koordinater av möjliga spawnpoints
         this.players = {
-            [playerIds[0]]: "player1",
-            [playerIds[1]]: "player2",
+            [playerIds[0]]: { x: 600, y: 100 },
+            [playerIds[1]]: { x: 400, y: 100 },
         }
         this.time = new Date()
         this.spells = ["placeholder"] // listan ska fyllas med alla platser där spells har spawnat.

@@ -28,26 +28,21 @@ const Game = ({ sessionId, onSessionEnd }) => {
                 autoCenter: Phaser.Scale.CENTER_BOTH,
             },
             scene: [GameScene, UIScene],
-            data: { websocketRoom },
         }
 
         const game = new Phaser.Game(config)
-        eventEmitter.on('sceneCreated', () => {
-            eventEmitter.emit('emitGameObject',game)
+        eventEmitter.on("sceneCreated", () => {
+            eventEmitter.emit("emitGameObject",game)
             console.log("emitted event")
         })
 
-
-        eventEmitter.on('UIsceneCreated', () => {
-            eventEmitter.emit('emitGameObjectS',game)
-            console.log("emitted event")
-        })
 
 
     }, [])
 
     useEffect(() => {
         if (!websocketRoom) return
+
 
         websocketRoom.eventHandler = (event, data) => {
             switch (event) {
@@ -56,16 +51,25 @@ const Game = ({ sessionId, onSessionEnd }) => {
                     break
                 case "startGame":
                     console.log("recieved map object", data)
+                    eventEmitter.on("sceneCreated" , () => {
+                        eventEmitter.emit("emitWebsocketRoom",websocketRoom)
+                        eventEmitter.emit("emitMapObject",data)
+                    })
                     break
                 case "endSession":
                     console.log("end session")
                     onSessionEnd()
+                    break
+                case "updatePlayerPosition":
+                    console.log("recieved position", data)
+                    eventEmitter.emit("moveOpponent",data)
                     break
             }
         }
     }, [websocketRoom])
 
     return <div id="phaser-game"></div>
+
 }
 
 export default Game
