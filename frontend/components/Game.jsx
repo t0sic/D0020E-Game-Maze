@@ -32,6 +32,18 @@ const Game = ({ sessionId, onSessionEnd }) => {
         }
 
         const game = new Phaser.Game(config)
+        eventEmitter.on('sceneCreated', () => {
+            eventEmitter.emit('emitGameObject',game)
+            console.log("emitted event")
+        })
+
+
+        eventEmitter.on('UIsceneCreated', () => {
+            eventEmitter.emit('emitGameObjectS',game)
+            console.log("emitted event")
+        })
+
+
     }, [])
 
     useEffect(() => {

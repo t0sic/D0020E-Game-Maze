@@ -38,13 +38,10 @@ class GameScene extends Phaser.Scene {
             .events.on("joystickMove", this.updatePlayerPosition)
     }
 
-    updateFPS = () => {
-        this.fpsText.setText('FPS: ' + Math.floor(this.game.loop.actualFps));
-    }
+
 
 
     update = () => {
-        this.updateFPS()
     }
 
     addCamera = () => {
@@ -59,11 +56,6 @@ class GameScene extends Phaser.Scene {
             fill: "#ffffff",
         })
         this.debugText.setScrollFactor(0)
-        this.fpsText = this.add.text(16,16, 'FPS: 0', { 
-            font: '40px Arial', 
-            fill: '#ffffff',
-         })
-        //this.fpsText.setScrollFactor(0)
     }
 
     updatePlayerPosition = (joystick) => {
