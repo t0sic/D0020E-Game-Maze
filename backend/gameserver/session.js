@@ -20,8 +20,8 @@ export default class Session {
             case "disconnect":
                 this.onDisconnect(socket)
                 break
-            case "movePlayer":
-                this.onPlayerMove()
+            case "updatePlayerPosition":
+                this.updatePlayerPosition(socket, data)
                 break
             case "playerLeft":
                 this.onLeave()
@@ -43,7 +43,9 @@ export default class Session {
         this.gameserver.endSession(this)
     }
 
-    onPlayerMove = () => {}
+    updatePlayerPosition = (socket, data) => {
+        socket.broadcast.emit("updatePlayerPosition", data)
+    }
 
     onLeave = () => {}
 

@@ -10,12 +10,14 @@ const Game = ({ sessionId, onSessionEnd }) => {
 
     useEffect(() => {
         setWebsocketRoom(new WebsocketRoom(sessionId))
+    }, [])
 
-        // PHASER config for phone in horizontal mode
+    const startGame = (gameData) => {
         const config = {
             height: 1080,
             width: 1920,
             type: Phaser.AUTO,
+            pixelArt: true,
             parent: "phaser-game",
             physics: {
                 default: "arcade",
@@ -28,23 +30,13 @@ const Game = ({ sessionId, onSessionEnd }) => {
                 autoCenter: Phaser.Scale.CENTER_BOTH,
             },
             scene: [GameScene, UIScene],
-            data: { websocketRoom },
         }
-
         const game = new Phaser.Game(config)
-        eventEmitter.on('sceneCreated', () => {
-            eventEmitter.emit('emitGameObject',game)
-            console.log("emitted event")
+        game.registry.set("websocketRoom", websocketRoom)
+        eventEmitter.on("sceneCreated", () => {
+            eventEmitter.emit("setGameData", gameData)
         })
-
-
-        eventEmitter.on('UIsceneCreated', () => {
-            eventEmitter.emit('emitGameObjectS',game)
-            console.log("emitted event")
-        })
-
-
-    }, [])
+    }
 
     useEffect(() => {
         if (!websocketRoom) return
@@ -55,11 +47,14 @@ const Game = ({ sessionId, onSessionEnd }) => {
                     websocketRoom.sendEvent("playerReady")
                     break
                 case "startGame":
-                    console.log("recieved map object", data)
+                    startGame(data)
                     break
                 case "endSession":
                     console.log("end session")
                     onSessionEnd()
+                    break
+                case "updatePlayerPosition":
+                    eventEmitter.emit("moveOpponent", data)
                     break
             }
         }
