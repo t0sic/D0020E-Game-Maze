@@ -29,16 +29,19 @@ class GameScene extends Phaser.Scene {
         const wallLayer = map.createLayer("Walls", tileset)
 
         wallLayer.setCollisionByProperty({ Collision: true })
-        console.log("Number of tiles with collision property:", wallLayer.getTilesWithin(0, 0, wallLayer.width, wallLayer.height, { Collision: true }).length);
+        console.log(
+            "Number of tiles with collision property:",
+            wallLayer.getTilesWithin(0, 0, wallLayer.width, wallLayer.height, {
+                Collision: true,
+            }).length
+        )
         const debugGraphics = this.add.graphics().setAlpha(0.7)
         wallLayer.renderDebug(debugGraphics, {
             tileColor: null,
             collidingTileColor: new Phaser.Display.Color(255, 0, 0, 255),
             faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-
-            
         })
-        this.add.existing(debugGraphics);
+        this.add.existing(debugGraphics)
     }
 }
 
