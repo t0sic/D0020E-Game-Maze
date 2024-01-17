@@ -17,7 +17,7 @@ class GameScene extends Phaser.Scene {
 
     preload = () => {
         this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap1.json")
+        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap3.json")
         console.log("GameScene preload")
     }
 
