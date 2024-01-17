@@ -18,10 +18,12 @@ class GameScene extends Phaser.Scene {
     preload = () => {
         this.load.image("tiles", "/assets/dungeon_tiles.png")
         this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap3.json")
-        console.log("GameScene preload")
     }
 
     create = () => {
+        this.createTilemap()
+    }
+    createTilemap = () => {
         console.log("GameScene create")
         const map = this.make.tilemap({ key: "dungeon_tiles" })
         const tileset = map.addTilesetImage("dungeon_tiles", "tiles")
