@@ -1,7 +1,5 @@
 import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
-import Key from "./Key.js"
-import Spell from "./Spell.js"
 import Phaser from "phaser"
 
 class GameScene extends Phaser.Scene {
@@ -10,14 +8,14 @@ class GameScene extends Phaser.Scene {
     }
 
     preload = () => {
-        this.load.image("bluespell", "/assets/10.png")
-        this.load.image("redspell", "/assets/11.png")
+        this.load.spritesheet("player", "/assets/spritesheet1.png", {
+            frameWidth: 16,
+            frameHeight: 16,
+        })
 
-        this.load.image("key", "/assets/02.png")
-        this.load.image("player", "/assets/test.png")
         this.load.image("background", "/assets/background.png")
         this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap5.json")
+        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap4.json")
     }
 
     init = () => {
@@ -54,39 +52,15 @@ class GameScene extends Phaser.Scene {
         this.add.existing(debugGraphics)
     }
 
-    removeKeyfrommap = () => {
-        this.physics.add.collider(
-            this.player,
-            this.key,
-            this.handleKeyCollision,
-            null,
-            this
-        )
-    }
-
-    handleKeyCollision = (player, key) => {
-        console.log(
-            "Player has collided with a key tile at position:",
-            key.x,
-            key.y
-        )
-        key.destroy()
-    }
-
     create = () => {
         this.add.image(0, 0, "background").setOrigin(0, 0)
-
         this.createTilemap()
         this.player = new Player(this, 100, 100)
         this.opponent = new Player(this, 0, 0)
 
-        this.key = new Key(this, 350, 130)
-
         this.addCollisions()
 
         this.addCamera()
-
-        this.removeKeyfrommap()
 
         this.scene.launch("UIScene")
         this.scene
@@ -168,9 +142,26 @@ class GameScene extends Phaser.Scene {
             const dir = vector.normalize()
             this.player.setVelocityX(dir.x * this.player.maxSpeed)
             this.player.setVelocityY(dir.y * this.player.maxSpeed)
+
+            const angle = Phaser.Math.RadToDeg(vector.angle())
+            const frameIndex = this.calculateFrameIndex(angle)
+
+            this.player.setFrame(frameIndex)
         } else {
             this.player.setVelocityX(0)
             this.player.setVelocityY(0)
+        }
+    }
+
+    calculateFrameIndex = (angle) => {
+        if (angle >= -45 && angle < 45) {
+            return 8 //right
+        } else if (angle >= 45 && angle < 135) {
+            return 0 //down
+        } else if (angle >= 135 && angle < 225) {
+            return 4 //up
+        } else {
+            return 12 //left
         }
     }
 }
