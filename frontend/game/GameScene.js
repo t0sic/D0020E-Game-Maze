@@ -10,10 +10,12 @@ class GameScene extends Phaser.Scene {
     }
 
     preload = () => {
-        this.load.image("bluespell", "/assets/10.png")
-        this.load.image("redspell", "/assets/11.png")
+        this.load.image("air", "/assets/air.png")
+        this.load.image("water", "/assets/water.png")
+        this.load.image("earth", "/assets/earth.png")
+        this.load.image("fire", "/assets/fire.png")
 
-        this.load.image("key", "/assets/02.png")
+        this.load.image("key", "/assets/key.png")
         this.load.image("player", "/assets/test.png")
         this.load.image("background", "/assets/background.png")
         this.load.image("tiles", "/assets/dungeon_tiles.png")
@@ -23,6 +25,7 @@ class GameScene extends Phaser.Scene {
     init = () => {
         this.websocketRoom = this.registry.get("websocketRoom")
         this.socketId = this.websocketRoom.namespace.id
+        this.spells = []
     }
 
     createTilemap = () => {
@@ -54,7 +57,49 @@ class GameScene extends Phaser.Scene {
         this.add.existing(debugGraphics)
     }
 
-    removeKeyfrommap = () => {
+    createSpell = (x, y, type) => {
+        const spell = new Spell(this, x, y, type)
+        this.spells.push(spell)
+        this.physics.add.collider(
+            this.player,
+            spell,
+            this.handleSpellCollision,
+            null,
+            this
+        )
+    }
+
+    handleSpellCollision = (player, spell) => {
+        console.log("Player has collided with a spell", spell.type)
+
+        this.spells = this.spells.filter((s) => s !== spell)
+        this.player.spells.push(spell.type)
+
+        spell.destroy()
+        this.emitRemoveSpell(spell)
+    }
+
+    emitRemoveSpell = (spell) => {
+        this.websocketRoom.sendEvent("spellPickup", {
+            x: spell.x,
+            y: spell.y,
+            type: spell.type,
+        })
+    }
+
+    destroySpell = (spell) => {
+        this.spells = this.spells.filter((s) => {
+            if (s.x === spell.x && s.y === spell.y) {
+                s.destroy()
+                return false
+            }
+            return true
+        })
+    }
+
+    createKey = (x, y) => {
+        this.key = new Key(this, x, y)
+
         this.physics.add.collider(
             this.player,
             this.key,
@@ -64,29 +109,26 @@ class GameScene extends Phaser.Scene {
         )
     }
 
+    destroyKey = () => this.key.destroy()
+
+    emitRemoveKey = () => {
+        this.websocketRoom.sendEvent("keyPickup")
+    }
+
     handleKeyCollision = (player, key) => {
-        console.log(
-            "Player has collided with a key tile at position:",
-            key.x,
-            key.y
-        )
-        key.destroy()
+        this.player.hasKey = true
+        this.emitRemoveKey()
+        this.destroyKey()
     }
 
     create = () => {
-        this.add.image(0, 0, "background").setOrigin(0, 0)
-
         this.createTilemap()
         this.player = new Player(this, 100, 100)
         this.opponent = new Player(this, 0, 0)
 
-        this.key = new Key(this, 350, 130)
-
         this.addCollisions()
 
         this.addCamera()
-
-        this.removeKeyfrommap()
 
         this.scene.launch("UIScene")
         this.scene
@@ -95,6 +137,8 @@ class GameScene extends Phaser.Scene {
 
         eventEmitter.on("setGameData", this.setGameData)
         eventEmitter.on("moveOpponent", this.moveOpponent)
+        eventEmitter.on("keyPickup", this.destroyKey)
+        eventEmitter.on("spellPickup", this.destroySpell)
 
         eventEmitter.emit("sceneCreated")
     }
@@ -115,8 +159,8 @@ class GameScene extends Phaser.Scene {
     setGameData = (gameData) => {
         this.gameData = gameData
 
-        const { players } = this.gameData
-        const ids = Object.keys(this.gameData.players)
+        const { players, map, spells } = this.gameData
+        const ids = Object.keys(players)
 
         this.opponentId = ids[0] === this.socketId ? ids[1] : ids[0]
 
@@ -128,6 +172,12 @@ class GameScene extends Phaser.Scene {
             players[this.opponentId].x,
             players[this.opponentId].y
         )
+
+        spells.forEach((spell) =>
+            this.createSpell(spell.x, spell.y, spell.type)
+        )
+
+        this.createKey(map.key.x, map.key.y)
     }
 
     moveOpponent = (coords) => {

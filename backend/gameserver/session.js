@@ -29,7 +29,26 @@ export default class Session {
             case "playerReady":
                 this.onPlayerReady(socket)
                 break
+            case "keyPickup":
+                this.keyPickup(socket)
+                break
+            case "spellPickup":
+                this.spellPickup(socket, data)
+                break
         }
+    }
+
+    spellPickup = (socket, spell) => {
+        this.game.spells = this.game.spells.filter(
+            (s) => s.x !== spell.x && s.y !== spell.y
+        )
+        this.game.players[socket.id].spells.push(spell.type)
+        socket.broadcast.emit("spellPickup", spell)
+    }
+
+    keyPickup = (socket) => {
+        this.game.players[socket.id].hasKey = true
+        socket.broadcast.emit("keyPickup")
     }
 
     onDisconnect = (socket) => {
@@ -44,6 +63,8 @@ export default class Session {
     }
 
     updatePlayerPosition = (socket, data) => {
+        this.game.players[socket.id].x = data.x
+        this.game.players[socket.id].y = data.y
         socket.broadcast.emit("updatePlayerPosition", data)
     }
 

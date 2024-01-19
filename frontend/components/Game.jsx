@@ -56,6 +56,12 @@ const Game = ({ sessionId, onSessionEnd }) => {
                 case "updatePlayerPosition":
                     eventEmitter.emit("moveOpponent", data)
                     break
+                case "keyPickup":
+                    eventEmitter.emit("keyPickup", data)
+                    break
+                case "spellPickup":
+                    eventEmitter.emit("spellPickup", data)
+                    break
             }
         }
     }, [websocketRoom])

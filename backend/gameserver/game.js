@@ -1,16 +1,43 @@
+import Player from "./player.js"
+
 export default class Game {
     constructor(playerIds) {
-        console.log(playerIds)
+        const spellTypes = ["fire", "water", "earth", "air"]
+        const maps = [
+            {
+                asset: "Tilemap1",
+                spells: [
+                    { x: 100, y: 150 },
+                    { x: 200, y: 200 },
+                ],
+                spawnpoints: [
+                    { x: 100, y: 100 },
+                    { x: 700, y: 100 },
+                ],
+                key: { x: 50, y: 100 },
+            },
+        ]
 
-        const randomDecimal = Math.random()
-        const randomNumber = Math.floor(randomDecimal * 4) + 1
-        this.map = randomNumber
-        this.key = 1 // ska sättas till random koordinater av möjliga spawnpoints
+        this.map = maps.random()
+        this.spells = [...this.map.spells].map((spell) => ({
+            ...spell,
+            type: spellTypes.random(),
+        }))
+
         this.players = {
-            [playerIds[0]]: { x: 600, y: 100 },
-            [playerIds[1]]: { x: 400, y: 100 },
+            [playerIds[0]]: new Player(
+                this.map.spawnpoints[0].x,
+                this.map.spawnpoints[0].y
+            ),
+            [playerIds[1]]: new Player(
+                this.map.spawnpoints[1].x,
+                this.map.spawnpoints[1].y
+            ),
         }
         this.time = new Date()
-        this.spells = ["placeholder"] // listan ska fyllas med alla platser där spells har spawnat.
+
+        setInterval(() => {
+            console.log("Game state", this)
+        }, 10000)
     }
 }
