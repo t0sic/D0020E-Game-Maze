@@ -16,8 +16,8 @@ class GameScene extends Phaser.Scene {
     }
 
     preload = () => {
-        this.load.image("bluespell", "/assets/01.png")
-        this.load.image("redspell", "/assets/01.png")
+        this.load.image("bluespell", "/assets/10.png")
+        this.load.image("redspell", "/assets/11.png")
 
         this.load.image("key", "/assets/02.png")
         this.load.image("player", "/assets/test.png")
@@ -84,9 +84,6 @@ class GameScene extends Phaser.Scene {
         this.createTilemap()
         this.player = new Player(this, 100, 100)
         this.key = new Key(this, 408, 575)
-
-        this.spell = new Spell(this, 200, 200, "bluespell")
-        this.spell = new Spell(this, 300, 300, "redspell")
 
         this.physics.add.collider(
             this.player,
