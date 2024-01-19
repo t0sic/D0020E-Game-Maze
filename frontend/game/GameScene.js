@@ -16,11 +16,14 @@ class GameScene extends Phaser.Scene {
     }
 
     preload = () => {
+        this.load.image("bluespell", "/assets/01.png")
+        this.load.image("redspell", "/assets/01.png")
+
         this.load.image("key", "/assets/02.png")
         this.load.image("player", "/assets/test.png")
         this.load.image("background", "/assets/background.png")
         this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap4.json")
+        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap5.json")
     }
 
     init = () => {
@@ -77,9 +80,14 @@ class GameScene extends Phaser.Scene {
 
     create = () => {
         this.add.image(0, 0, "background").setOrigin(0, 0)
+
         this.createTilemap()
         this.player = new Player(this, 100, 100)
         this.key = new Key(this, 408, 575)
+
+        this.spell = new Spell(this, 200, 200, "bluespell")
+        this.spell = new Spell(this, 300, 300, "redspell")
+
         this.physics.add.collider(
             this.player,
             this.doorLayer,
