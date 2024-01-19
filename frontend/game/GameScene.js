@@ -1,5 +1,7 @@
 import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
+import Key from "./Key.js"
+import Spell from "./Spell.js"
 import Phaser from "phaser"
 
 class GameScene extends Phaser.Scene {
@@ -8,10 +10,14 @@ class GameScene extends Phaser.Scene {
     }
 
     preload = () => {
+        this.load.image("bluespell", "/assets/10.png")
+        this.load.image("redspell", "/assets/11.png")
+
+        this.load.image("key", "/assets/02.png")
         this.load.image("player", "/assets/test.png")
         this.load.image("background", "/assets/background.png")
         this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap4.json")
+        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap5.json")
     }
 
     init = () => {
@@ -48,10 +54,31 @@ class GameScene extends Phaser.Scene {
         this.add.existing(debugGraphics)
     }
 
+    removeKeyfrommap = () => {
+        this.physics.add.collider(
+            this.player,
+            this.key,
+            this.handleKeyCollision,
+            null,
+            this
+        )
+    }
+
+    handleKeyCollision = (player, key) => {
+        console.log(
+            "Player has collided with a key tile at position:",
+            key.x,
+            key.y
+        )
+        key.destroy()
+    }
+
     create = () => {
         this.add.image(0, 0, "background").setOrigin(0, 0)
+
         this.createTilemap()
         this.player = new Player(this, 100, 100)
+<<<<<<< HEAD
         this.opponent = new Player(this, 0, 0)
 
         this.addCollisions()
@@ -70,6 +97,10 @@ class GameScene extends Phaser.Scene {
     }
 
     addCollisions = () => {
+=======
+        this.key = new Key(this, 408, 575)
+
+>>>>>>> feature/objects
         this.physics.add.collider(
             this.player,
             this.doorLayer,
@@ -82,6 +113,7 @@ class GameScene extends Phaser.Scene {
 
     update = () => {}
 
+<<<<<<< HEAD
     setGameData = (gameData) => {
         this.gameData = gameData
 
@@ -109,6 +141,14 @@ class GameScene extends Phaser.Scene {
             x: this.player.x,
             y: this.player.y,
         })
+=======
+        this.removeKeyfrommap()
+
+        this.scene.launch("UIScene")
+        this.scene
+            .get("UIScene")
+            .events.on("joystickMove", this.updatePlayerPosition)
+>>>>>>> feature/objects
     }
 
     update = () => {}
