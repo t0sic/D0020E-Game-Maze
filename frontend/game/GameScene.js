@@ -78,12 +78,15 @@ class GameScene extends Phaser.Scene {
 
         this.createTilemap()
         this.player = new Player(this, 100, 100)
-<<<<<<< HEAD
         this.opponent = new Player(this, 0, 0)
+
+        this.key = new Key(this, 350, 130)
 
         this.addCollisions()
 
         this.addCamera()
+
+        this.removeKeyfrommap()
 
         this.scene.launch("UIScene")
         this.scene
@@ -97,10 +100,6 @@ class GameScene extends Phaser.Scene {
     }
 
     addCollisions = () => {
-=======
-        this.key = new Key(this, 408, 575)
-
->>>>>>> feature/objects
         this.physics.add.collider(
             this.player,
             this.doorLayer,
@@ -113,7 +112,6 @@ class GameScene extends Phaser.Scene {
 
     update = () => {}
 
-<<<<<<< HEAD
     setGameData = (gameData) => {
         this.gameData = gameData
 
@@ -141,14 +139,6 @@ class GameScene extends Phaser.Scene {
             x: this.player.x,
             y: this.player.y,
         })
-=======
-        this.removeKeyfrommap()
-
-        this.scene.launch("UIScene")
-        this.scene
-            .get("UIScene")
-            .events.on("joystickMove", this.updatePlayerPosition)
->>>>>>> feature/objects
     }
 
     update = () => {}
