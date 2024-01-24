@@ -3,6 +3,7 @@ import Player from "./Player.js"
 import Key from "./Key.js"
 import Spell from "./Spell.js"
 import Phaser from "phaser"
+import Projectile from "./Projectile.js"
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -14,6 +15,10 @@ class GameScene extends Phaser.Scene {
         this.load.image("water", "/assets/water.png")
         this.load.image("earth", "/assets/earth.png")
         this.load.image("fire", "/assets/fire.png")
+        this.load.spritesheet("flame", "/assets/flame_horizontal.png", {
+            frameWidth: 12,
+            frameHeight: 12,
+        })
 
         this.load.image("key", "/assets/key.png")
         this.load.image("player", "/assets/test.png")
@@ -25,7 +30,7 @@ class GameScene extends Phaser.Scene {
     init = () => {
         this.websocketRoom = this.registry.get("websocketRoom")
         this.socketId = this.websocketRoom.namespace.id
-        this.spells = []
+        this.projectiles = this.add.group()
     }
 
     createTilemap = () => {
@@ -128,15 +133,61 @@ class GameScene extends Phaser.Scene {
         this.destroyKey()
     }
 
+    spawnProjectile = (player) => {
+        const projectile = new Projectile(this, player.x, player.y, this.dir)
+        this.projectiles.add(projectile)
+
+        projectile.setVelocityX(this.dir.x * projectile.maxSpeed)
+        projectile.setVelocityY(this.dir.y * projectile.maxSpeed)
+
+        projectile.setRotation(this.playerAngle)
+        projectile.anims.play("flameAnimation", true)
+
+        this.physics.add.collider(projectile, this.wallLayer, () => {
+            projectile.destroy()
+        })
+
+        this.physics.add.collider(projectile, this.opponent, () => {
+            projectile.destroy()
+            console.log("Projectile hit opponent")
+        })
+    }
+
+    handleSpacebarPress = () => {
+        this.spawnProjectile(this.player)
+    }
+
+    setRotation(angle) {
+        if (this.flameSprite) {
+            this.flameSprite.rotation = angle
+        }
+    }
+
+    createAnimations = () => {
+        this.anims.create({
+            key: "flameAnimation",
+            frames: this.anims.generateFrameNumbers("flame", {
+                start: 0,
+                end: 3,
+            }),
+            frameRate: 10,
+            repeat: -1,
+        })
+    }
+
     create = () => {
         this.createTilemap()
-        this.player = new Player(this, 100, 100)
+        this.player = new Player(this, 150, 150)
         this.opponent = new Player(this, 0, 0)
+        this.opponent.setPushable(false)
+        this.player.setPushable(false)
+        this.spells = []
 
         this.addCollisions()
 
         this.addCamera()
 
+        this.createAnimations()
         this.scene.launch("UIScene")
         this.scene
             .get("UIScene")
@@ -149,6 +200,8 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("onSpellButtonClicked", this.castSpell)
 
         eventEmitter.emit("sceneCreated")
+
+        this.input.keyboard.on("keydown-SPACE", this.handleSpacebarPress)
     }
 
     castSpell = (type) => {
@@ -229,9 +282,11 @@ class GameScene extends Phaser.Scene {
                 joystick.forceY
             )
             this.sendPlayerPosition()
-            const dir = vector.normalize()
-            this.player.setVelocityX(dir.x * this.player.maxSpeed)
-            this.player.setVelocityY(dir.y * this.player.maxSpeed)
+            this.dir = vector.normalize()
+            this.playerAngle = Math.atan2(this.dir.y, this.dir.x)
+
+            this.player.setVelocityX(this.dir.x * this.player.maxSpeed)
+            this.player.setVelocityY(this.dir.y * this.player.maxSpeed)
         } else {
             this.player.setVelocityX(0)
             this.player.setVelocityY(0)
