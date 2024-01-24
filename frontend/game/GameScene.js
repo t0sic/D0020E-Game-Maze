@@ -71,9 +71,9 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("moveOpponent", this.moveOpponent)
 
         eventEmitter.emit("sceneCreated")
-        this.createAnimations()
+        this.createPlayerAnimations()
     }
-    createAnimations = () => {
+    createPlayerAnimations = () => {
         this.anims.create({
             key: "down_animation",
             frames: this.anims.generateFrameNumbers("player", {
