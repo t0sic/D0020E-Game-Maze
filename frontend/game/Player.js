@@ -4,7 +4,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, spawnX, spawnY) {
         super(scene, spawnX, spawnY, "player")
 
-        this.maxSpeed = 200
+        this.maxSpeed = 100
         this.hasKey = false
         this.spells = []
 

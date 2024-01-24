@@ -1,9 +1,9 @@
 import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
-import Key from "./Key.js"
-import Spell from "./Spell.js"
 import Phaser from "phaser"
 import Projectile from "./Projectile.js"
+import Spell from "./Spell.js"
+import Key from "./Key.js"
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -21,10 +21,14 @@ class GameScene extends Phaser.Scene {
         })
 
         this.load.image("key", "/assets/key.png")
-        this.load.image("player", "/assets/test.png")
+        this.load.spritesheet("player", "/assets/spritesheet1.png", {
+            frameWidth: 16,
+            frameHeight: 16,
+        })
+
         this.load.image("background", "/assets/background.png")
         this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap5.json")
+        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap4.json")
     }
 
     init = () => {
@@ -182,6 +186,7 @@ class GameScene extends Phaser.Scene {
         this.opponent.setPushable(false)
         this.player.setPushable(false)
         this.spells = []
+        this.createPlayerAnimations()
 
         this.addCollisions()
 
@@ -208,6 +213,47 @@ class GameScene extends Phaser.Scene {
         this.player.spells = this.player.spells.filter(
             (spell) => spell !== type
         )
+    }
+    createPlayerAnimations = () => {
+        this.anims.create({
+            key: "down_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 0,
+                end: 3,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+
+        this.anims.create({
+            key: "left_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 4,
+                end: 7,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+
+        this.anims.create({
+            key: "right_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 8,
+                end: 11,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+
+        this.anims.create({
+            key: "up_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 12,
+                end: 15,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
     }
 
     addCollisions = () => {
@@ -272,7 +318,6 @@ class GameScene extends Phaser.Scene {
             tile.x,
             tile.y
         )
-        // Additional logic for door collision can be added here
     }
 
     updatePlayerPosition = (joystick) => {
@@ -287,9 +332,40 @@ class GameScene extends Phaser.Scene {
 
             this.player.setVelocityX(this.dir.x * this.player.maxSpeed)
             this.player.setVelocityY(this.dir.y * this.player.maxSpeed)
+
+            const angle = Phaser.Math.RadToDeg(vector.angle())
+            const frameIndex = this.calculateFrameIndex(angle)
+
+            if (this.player.currentFrameIndex !== frameIndex) {
+                this.player.currentFrameIndex = frameIndex
+
+                const animations = {
+                    0: "down",
+                    4: "left",
+                    8: "right",
+                    12: "up",
+                }
+
+                const animationKey = animations[frameIndex]
+                this.player.play(`${animationKey}_animation`, true)
+            }
         } else {
             this.player.setVelocityX(0)
             this.player.setVelocityY(0)
+
+            this.player.anims.stop()
+        }
+    }
+
+    calculateFrameIndex = (angle) => {
+        if (angle >= -45 && angle < 45) {
+            return 8 //right
+        } else if (angle >= 45 && angle < 135) {
+            return 0 //down
+        } else if (angle >= 135 && angle < 225) {
+            return 4 //up
+        } else {
+            return 12 //left
         }
     }
 }
