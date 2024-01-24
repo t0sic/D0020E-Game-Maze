@@ -50,20 +50,6 @@ class GameScene extends Phaser.Scene {
 
         this.wallLayer = wallLayer
         this.doorLayer = doorLayer
-
-        console.log(
-            "Number of tiles with collision property:",
-            wallLayer.getTilesWithin(0, 0, wallLayer.width, wallLayer.height, {
-                Collision: true,
-            }).length
-        )
-        const debugGraphics = this.add.graphics().setAlpha(0.7)
-        wallLayer.renderDebug(debugGraphics, {
-            tileColor: null,
-            collidingTileColor: new Phaser.Display.Color(255, 0, 0, 255),
-            faceColor: new Phaser.Display.Color(40, 39, 37, 255),
-        })
-        this.add.existing(debugGraphics)
     }
 
     createSpell = (x, y, type) => {
@@ -186,9 +172,8 @@ class GameScene extends Phaser.Scene {
         this.opponent.setPushable(false)
         this.player.setPushable(false)
         this.spells = []
-        this.createPlayerAnimations()
-
         this.addCollisions()
+        this.player.createAnimations()
 
         this.addCamera()
 
@@ -202,58 +187,17 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("moveOpponent", this.moveOpponent)
         eventEmitter.on("keyPickup", this.destroyKey)
         eventEmitter.on("spellPickup", this.destroySpell)
-        eventEmitter.on("onSpellButtonClicked", this.castSpell)
+        eventEmitter.on("onSpellButtonClicked", this.onSpellButtonClicked)
+        eventEmitter.on("castSpell", this.opponent.castSpell)
 
         eventEmitter.emit("sceneCreated")
 
         this.input.keyboard.on("keydown-SPACE", this.handleSpacebarPress)
     }
 
-    castSpell = (type) => {
-        this.player.spells = this.player.spells.filter(
-            (spell) => spell !== type
-        )
-    }
-    createPlayerAnimations = () => {
-        this.anims.create({
-            key: "down_animation",
-            frames: this.anims.generateFrameNumbers("player", {
-                start: 0,
-                end: 3,
-            }),
-            frameRate: 8,
-            repeat: -1,
-        })
-
-        this.anims.create({
-            key: "left_animation",
-            frames: this.anims.generateFrameNumbers("player", {
-                start: 4,
-                end: 7,
-            }),
-            frameRate: 8,
-            repeat: -1,
-        })
-
-        this.anims.create({
-            key: "right_animation",
-            frames: this.anims.generateFrameNumbers("player", {
-                start: 8,
-                end: 11,
-            }),
-            frameRate: 8,
-            repeat: -1,
-        })
-
-        this.anims.create({
-            key: "up_animation",
-            frames: this.anims.generateFrameNumbers("player", {
-                start: 12,
-                end: 15,
-            }),
-            frameRate: 8,
-            repeat: -1,
-        })
+    onSpellButtonClicked = (spellType) => {
+        this.websocketRoom.sendEvent("spellCast", spellType)
+        this.player.castSpell(spellType)
     }
 
     addCollisions = () => {

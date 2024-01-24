@@ -1,9 +1,10 @@
 import Phaser from "phaser"
+import Projectile from "./Projectile.js"
 
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, spawnX, spawnY) {
         super(scene, spawnX, spawnY, "player")
-
+        this.websocketRoom = this.scene.registry.get("websocketRoom")
         this.maxSpeed = 100
         this.hasKey = false
         this.spells = []
@@ -52,6 +53,42 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }),
             frameRate: 8,
             repeat: -1,
+        })
+    }
+
+    castSpell = (type) => {
+        console.log("in castSpell")
+        this.spells = this.spells.filter((spell) => spell !== type)
+        console.log(this)
+        this.spawnProjectile(this)
+    }
+
+    spawnProjectile = (player) => {
+        const projectile = new Projectile(
+            this.scene,
+            player.x,
+            player.y,
+            this.scene.dir
+        )
+        this.scene.projectiles.add(projectile)
+
+        projectile.setVelocityX(this.scene.dir.x * projectile.maxSpeed)
+        projectile.setVelocityY(this.scene.dir.y * projectile.maxSpeed)
+
+        projectile.setRotation(this.playerAngle)
+        projectile.anims.play("flameAnimation", true)
+
+        this.scene.physics.add.collider(
+            projectile,
+            this.scene.wallLayer,
+            () => {
+                projectile.destroy()
+            }
+        )
+
+        this.scene.physics.add.collider(projectile, this.scene.opponent, () => {
+            projectile.destroy()
+            console.log("Projectile hit opponent")
         })
     }
 }

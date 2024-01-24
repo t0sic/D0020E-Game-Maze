@@ -62,6 +62,10 @@ const Game = ({ sessionId, onSessionEnd }) => {
                 case "spellPickup":
                     eventEmitter.emit("spellPickup", data)
                     break
+                case "castSpell":
+                    eventEmitter.emit("castSpell", data)
+                    console.log("recieved cast spell", data)
+                    break
             }
         }
     }, [websocketRoom])
