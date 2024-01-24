@@ -71,6 +71,48 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("moveOpponent", this.moveOpponent)
 
         eventEmitter.emit("sceneCreated")
+        this.createAnimations()
+    }
+    createAnimations = () => {
+        this.anims.create({
+            key: "down_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 0,
+                end: 3,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+
+        this.anims.create({
+            key: "left_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 4,
+                end: 7,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+
+        this.anims.create({
+            key: "right_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 8,
+                end: 11,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+
+        this.anims.create({
+            key: "up_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 12,
+                end: 15,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
     }
 
     addCollisions = () => {
@@ -129,7 +171,6 @@ class GameScene extends Phaser.Scene {
             tile.x,
             tile.y
         )
-        // Additional logic for door collision can be added here
     }
 
     updatePlayerPosition = (joystick) => {
@@ -146,10 +187,24 @@ class GameScene extends Phaser.Scene {
             const angle = Phaser.Math.RadToDeg(vector.angle())
             const frameIndex = this.calculateFrameIndex(angle)
 
-            this.player.setFrame(frameIndex)
+            if (this.player.currentFrameIndex !== frameIndex) {
+                this.player.currentFrameIndex = frameIndex
+
+                const animations = {
+                    0: "down",
+                    4: "left",
+                    8: "right",
+                    12: "up",
+                }
+
+                const animationKey = animations[frameIndex]
+                this.player.play(`${animationKey}_animation`, true)
+            }
         } else {
             this.player.setVelocityX(0)
             this.player.setVelocityY(0)
+
+            this.player.anims.stop()
         }
     }
 
