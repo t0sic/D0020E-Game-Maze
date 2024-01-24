@@ -7,10 +7,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxSpeed = 100
         this.hasKey = false
         this.spells = []
+        this.isHaste = false
+        this.hasteDuration = 5000
         this.createAnimations
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
+        this.cursors = scene.input.keyboard.createCursorKeys()
     }
 
     createAnimations = () => {
@@ -53,6 +56,32 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             frameRate: 8,
             repeat: -1,
         })
+    }
+    update = (delta) => {
+        if (this.cursors.right.isDown && !this.isHaste) {
+            this.applyHateEffect()
+        }
+        if (this.isHaste) {
+            this.hasteDuration -= delta
+            if (this.hasteDuration <= 0) {
+                this.removeHasteEffects()
+            }
+        }
+    }
+
+    applyHateEffect = () => {
+        this.isHaste = true
+        this.maxSpeed *= 2
+        console.log("Player speed has been multiplied")
+        setTimeout(() => {
+            this.removeHasteEffects()
+        }, this.hasteDuration)
+    }
+
+    removeHasteEffects = () => {
+        this.maxSpeed /= 2
+        this.isHaste = false
+        this.hasteDuration = 5000
     }
 }
 

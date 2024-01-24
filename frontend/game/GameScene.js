@@ -4,7 +4,7 @@ import Phaser from "phaser"
 import Projectile from "./Projectile.js"
 import Spell from "./Spell.js"
 import Key from "./Key.js"
-
+//fsldkflksdmfksmdlfmdskmfslkmdflksdmf
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" })
@@ -187,6 +187,7 @@ class GameScene extends Phaser.Scene {
         this.player.setPushable(false)
         this.spells = []
         this.createPlayerAnimations()
+        this.input.keyboard.on("keydown-F", this.handleHasteKeyPress)
 
         this.addCollisions()
 
@@ -207,6 +208,11 @@ class GameScene extends Phaser.Scene {
         eventEmitter.emit("sceneCreated")
 
         this.input.keyboard.on("keydown-SPACE", this.handleSpacebarPress)
+    }
+    handleHasteKeyPress = () => {
+        if (this.player && typeof this.player.applyHateEffect === "function") {
+            this.player.applyHateEffect()
+        }
     }
 
     castSpell = (type) => {
