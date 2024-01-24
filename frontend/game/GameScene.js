@@ -60,7 +60,7 @@ class GameScene extends Phaser.Scene {
     createSpell = (x, y, type) => {
         const spell = new Spell(this, x, y, type)
         this.spells.push(spell)
-        this.physics.add.collider(
+        this.physics.add.overlap(
             this.player,
             spell,
             this.handleSpellCollision,
@@ -70,10 +70,14 @@ class GameScene extends Phaser.Scene {
     }
 
     handleSpellCollision = (player, spell) => {
-        console.log("Player has collided with a spell", spell.type)
+        console.log("Player has collided with a spell", spell.spellType)
+
+        if (this.player.spells.includes(spell.spellType)) return
 
         this.spells = this.spells.filter((s) => s !== spell)
-        this.player.spells.push(spell.type)
+        this.player.spells.push(spell.spellType)
+
+        eventEmitter.emit("onSpellData", this.player.spells)
 
         spell.destroy()
         this.emitRemoveSpell(spell)
@@ -83,7 +87,7 @@ class GameScene extends Phaser.Scene {
         this.websocketRoom.sendEvent("spellPickup", {
             x: spell.x,
             y: spell.y,
-            type: spell.type,
+            spellType: spell.spellType,
         })
     }
 
@@ -100,7 +104,7 @@ class GameScene extends Phaser.Scene {
     createKey = (x, y) => {
         this.key = new Key(this, x, y)
 
-        this.physics.add.collider(
+        this.physics.add.overlap(
             this.player,
             this.key,
             this.handleKeyCollision,
@@ -117,6 +121,9 @@ class GameScene extends Phaser.Scene {
 
     handleKeyCollision = (player, key) => {
         this.player.hasKey = true
+
+        eventEmitter.emit("onKeyData", this.player.hasKey)
+
         this.emitRemoveKey()
         this.destroyKey()
     }
@@ -139,8 +146,15 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("moveOpponent", this.moveOpponent)
         eventEmitter.on("keyPickup", this.destroyKey)
         eventEmitter.on("spellPickup", this.destroySpell)
+        eventEmitter.on("onSpellButtonClicked", this.castSpell)
 
         eventEmitter.emit("sceneCreated")
+    }
+
+    castSpell = (type) => {
+        this.player.spells = this.player.spells.filter(
+            (spell) => spell !== type
+        )
     }
 
     addCollisions = () => {
@@ -174,7 +188,7 @@ class GameScene extends Phaser.Scene {
         )
 
         spells.forEach((spell) =>
-            this.createSpell(spell.x, spell.y, spell.type)
+            this.createSpell(spell.x, spell.y, spell.spellType)
         )
 
         this.createKey(map.key.x, map.key.y)

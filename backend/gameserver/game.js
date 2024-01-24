@@ -21,7 +21,7 @@ export default class Game {
         this.map = maps.random()
         this.spells = [...this.map.spells].map((spell) => ({
             ...spell,
-            type: spellTypes.random(),
+            spellType: spellTypes.random(),
         }))
 
         this.players = {

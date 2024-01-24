@@ -42,7 +42,8 @@ export default class Session {
         this.game.spells = this.game.spells.filter(
             (s) => s.x !== spell.x && s.y !== spell.y
         )
-        this.game.players[socket.id].spells.push(spell.type)
+
+        this.game.players[socket.id].spells.push(spell.spellType)
         socket.broadcast.emit("spellPickup", spell)
     }
 
