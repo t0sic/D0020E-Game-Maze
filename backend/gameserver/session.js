@@ -35,7 +35,16 @@ export default class Session {
             case "spellPickup":
                 this.spellPickup(socket, data)
                 break
+            case "castSpell":
+                console.log(data)
+                this.castSpell(socket, data)
+                break
         }
+    }
+
+    castSpell = (socket, projectile) => {
+        // sends event to other front end client to spawn spell casted by other client
+        socket.broadcast.emit("castSpell", projectile)
     }
 
     spellPickup = (socket, spell) => {

@@ -4,6 +4,7 @@ import eventEmitter from "../eventEmitter.js"
 import GameScene from "../game/GameScene.js"
 import UIScene from "../game/UIScene.js"
 import Phaser from "phaser"
+import EndScene from "../game/EndScene.js"
 
 const Game = ({ sessionId, onSessionEnd }) => {
     const [websocketRoom, setWebsocketRoom] = useState()
@@ -29,12 +30,16 @@ const Game = ({ sessionId, onSessionEnd }) => {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH,
             },
-            scene: [GameScene, UIScene],
+            scene: [GameScene, UIScene,EndScene],
         }
         const game = new Phaser.Game(config)
         game.registry.set("websocketRoom", websocketRoom)
         eventEmitter.on("sceneCreated", () => {
             eventEmitter.emit("setGameData", gameData)
+        })
+        eventEmitter.on("endGame", () => {
+            onSessionEnd()
+            console.log("end gamejsjxsjxjsjxsjx")
         })
     }
 
@@ -61,6 +66,10 @@ const Game = ({ sessionId, onSessionEnd }) => {
                     break
                 case "spellPickup":
                     eventEmitter.emit("spellPickup", data)
+                    break
+                case "castSpell":
+                    eventEmitter.emit("castSpell", data)
+                    console.log("recieved cast spell", data)
                     break
             }
         }

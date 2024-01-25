@@ -1,9 +1,11 @@
 import Phaser from "phaser"
+import Projectile from "./Projectile.js"
+import eventEmitter from "../eventEmitter.js"
 
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, spawnX, spawnY) {
         super(scene, spawnX, spawnY, "player")
-
+        this.websocketRoom = this.scene.registry.get("websocketRoom")
         this.maxSpeed = 100
         this.hasKey = false
         this.spells = []
@@ -18,7 +20,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
-        this.cursors = scene.input.keyboard.createCursorKeys()
+        this.createAnimations()
+        this.setPushable(false)
     }
 
     createAnimations = () => {
@@ -62,7 +65,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             repeat: -1,
         })
     }
-    update = (delta) => {}
 
     applyHasteEffect = () => {
         if (!this.isHasted) {
@@ -124,6 +126,128 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxSpeed = 100
         this.isSlowed = false
         console.log("Stun effect removed!")
+    }
+
+    onSpellButtonClicked = (spellType) => {
+        this.websocketRoom.sendEvent("castSpell", {
+            spellType,
+            direction: this.dir,
+        })
+        this.castSpell({ spellType, direction: this.dir })
+    }
+
+    castSpell = (projectile) => {
+        this.spells = this.spells.filter(
+            (spell) => spell !== projectile.spellType
+        )
+        this.spawnProjectile(projectile.direction)
+    }
+
+    handleSpellCollision = (player, spell) => {
+        if (this.spells.includes(spell.spellType)) return
+
+        this.scene.spells = this.scene.spells.filter((s) => s !== spell)
+        this.spells.push(spell.spellType)
+
+        eventEmitter.emit("onSpellData", this.spells)
+
+        spell.destroy()
+        this.emitRemoveSpell(spell)
+    }
+
+    emitRemoveSpell = (spell) => {
+        this.websocketRoom.sendEvent("spellPickup", {
+            x: spell.x,
+            y: spell.y,
+            spellType: spell.spellType,
+        })
+    }
+
+    spawnProjectile = (direction) => {
+        const projectile = new Projectile(this.scene, this.x, this.y, direction)
+        this.scene.projectiles.add(projectile)
+
+        projectile.setVelocityX(direction.x * projectile.maxSpeed)
+        projectile.setVelocityY(direction.y * projectile.maxSpeed)
+
+        projectile.setRotation(this.playerAngle)
+        projectile.anims.play("flameAnimation", true)
+
+        this.scene.physics.add.collider(
+            projectile,
+            this.scene.wallLayer,
+            () => {
+                projectile.destroy()
+            }
+        )
+
+        const vemVareSomCasta = this.scene.opponent === this
+
+        this.scene.physics.add.collider(
+            projectile,
+            vemVareSomCasta ? this.scene.player : this.scene.opponent,
+            () => {
+                projectile.destroy()
+                console.log("Projectile hit opponent")
+            }
+        )
+    }
+
+    sendPlayerPosition = () => {
+        this.websocketRoom.sendEvent("updatePlayerPosition", {
+            x: this.x,
+            y: this.y,
+        })
+    }
+
+    calculateFrameIndex = (vector) => {
+        if (Math.abs(vector.x) > Math.abs(vector.y)) {
+            if (vector.x > 0) {
+                return 8
+            }
+            return 4
+        }
+        if (vector.y > 0) {
+            return 0
+        }
+        return 12
+    }
+
+    updatePosition = (joystick) => {
+        if (joystick.forceX || joystick.forceY) {
+            const vector = new Phaser.Math.Vector2(
+                joystick.forceX,
+                joystick.forceY
+            )
+            this.sendPlayerPosition()
+            this.dir = vector.normalize()
+            this.playerAngle = Math.atan2(this.dir.y, this.dir.x)
+            this.isConfused ? (this.dir = this.dir.negate()) : this.dir
+
+            this.setVelocityX(this.dir.x * this.maxSpeed)
+            this.setVelocityY(this.dir.y * this.maxSpeed)
+
+            const frameIndex = this.calculateFrameIndex(this.dir)
+
+            if (this.currentFrameIndex !== frameIndex) {
+                this.currentFrameIndex = frameIndex
+
+                const animations = {
+                    0: "down",
+                    4: "left",
+                    8: "right",
+                    12: "up",
+                }
+
+                const animationKey = animations[frameIndex]
+                this.play(`${animationKey}_animation`, true)
+            }
+        } else {
+            this.setVelocityX(0)
+            this.setVelocityY(0)
+
+            this.anims.stop()
+        }
     }
 }
 
