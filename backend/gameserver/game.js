@@ -12,7 +12,7 @@ export default class Game {
                 ],
                 spawnpoints: [
                     { x: 100, y: 100 },
-                    { x: 700, y: 100 },
+                    { x: 200, y: 100 },
                 ],
                 key: { x: 50, y: 100 },
             },

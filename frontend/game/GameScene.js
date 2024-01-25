@@ -123,26 +123,6 @@ class GameScene extends Phaser.Scene {
         this.destroyKey()
     }
 
-    spawnProjectile = (player) => {
-        const projectile = new Projectile(this, player.x, player.y, this.dir)
-        this.projectiles.add(projectile)
-
-        projectile.setVelocityX(this.dir.x * projectile.maxSpeed)
-        projectile.setVelocityY(this.dir.y * projectile.maxSpeed)
-
-        projectile.setRotation(this.playerAngle)
-        projectile.anims.play("flameAnimation", true)
-
-        this.physics.add.collider(projectile, this.wallLayer, () => {
-            projectile.destroy()
-        })
-
-        this.physics.add.collider(projectile, this.opponent, () => {
-            projectile.destroy()
-            console.log("Projectile hit opponent")
-        })
-    }
-
     handleSpacebarPress = () => {
         this.spawnProjectile(this.player)
     }
@@ -196,8 +176,11 @@ class GameScene extends Phaser.Scene {
     }
 
     onSpellButtonClicked = (spellType) => {
-        this.websocketRoom.sendEvent("spellCast", spellType)
-        this.player.castSpell(spellType)
+        this.websocketRoom.sendEvent("castSpell", {
+            spellType,
+            direction: this.dir,
+        })
+        this.player.castSpell({ spellType, direction: this.dir })
     }
 
     addCollisions = () => {

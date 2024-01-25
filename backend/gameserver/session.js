@@ -42,9 +42,9 @@ export default class Session {
         }
     }
 
-    castSpell = (socket, spellType) => {
+    castSpell = (socket, projectile) => {
         // sends event to other front end client to spawn spell casted by other client
-        socket.broadcast.emit("castSpell", spellType)
+        socket.broadcast.emit("castSpell", projectile)
     }
 
     spellPickup = (socket, spell) => {

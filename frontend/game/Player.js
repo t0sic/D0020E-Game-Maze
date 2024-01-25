@@ -56,24 +56,21 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
     }
 
-    castSpell = (type) => {
+    castSpell = (projectile) => {
         console.log("in castSpell")
-        this.spells = this.spells.filter((spell) => spell !== type)
+        this.spells = this.spells.filter(
+            (spell) => spell !== projectile.spellType
+        )
         console.log(this)
-        this.spawnProjectile(this)
+        this.spawnProjectile(projectile.direction)
     }
 
-    spawnProjectile = (player) => {
-        const projectile = new Projectile(
-            this.scene,
-            player.x,
-            player.y,
-            this.scene.dir
-        )
+    spawnProjectile = (direction) => {
+        const projectile = new Projectile(this.scene, this.x, this.y, direction)
         this.scene.projectiles.add(projectile)
 
-        projectile.setVelocityX(this.scene.dir.x * projectile.maxSpeed)
-        projectile.setVelocityY(this.scene.dir.y * projectile.maxSpeed)
+        projectile.setVelocityX(direction.x * projectile.maxSpeed)
+        projectile.setVelocityY(direction.y * projectile.maxSpeed)
 
         projectile.setRotation(this.playerAngle)
         projectile.anims.play("flameAnimation", true)
@@ -86,10 +83,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
         )
 
-        this.scene.physics.add.collider(projectile, this.scene.opponent, () => {
-            projectile.destroy()
-            console.log("Projectile hit opponent")
-        })
+        const vemVareSomCasta = this.scene.opponent === this
+
+        this.scene.physics.add.collider(
+            projectile,
+            vemVareSomCasta ? this.scene.player : this.scene.opponent,
+            () => {
+                projectile.destroy()
+                console.log("Projectile hit opponent")
+            }
+        )
     }
 }
 
