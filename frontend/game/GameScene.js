@@ -1,8 +1,7 @@
 import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
-import Phaser from "phaser"
-import Projectile from "./Projectile.js"
 import Spell from "./Spell.js"
+import Phaser from "phaser"
 import Key from "./Key.js"
 
 class GameScene extends Phaser.Scene {
@@ -37,6 +36,37 @@ class GameScene extends Phaser.Scene {
         this.projectiles = this.add.group()
     }
 
+    create = () => {
+        this.createTilemap()
+        this.player = new Player(this, 150, 150)
+        this.player.setPushable(false)
+
+        this.opponent = new Player(this, 0, 0)
+        this.opponent.setPushable(false)
+
+        this.addCollisions()
+        this.createProjectileAnimations()
+
+        this.addCamera()
+
+        this.scene.launch("UIScene")
+        this.scene
+            .get("UIScene")
+            .events.on("joystickMove", this.player.updatePosition)
+
+        eventEmitter.on("setGameData", this.setGameData)
+        eventEmitter.on("moveOpponent", this.moveOpponent)
+        eventEmitter.on("keyPickup", this.destroyKey)
+        eventEmitter.on("spellPickup", this.destroySpell)
+        eventEmitter.on(
+            "onSpellButtonClicked",
+            this.player.onSpellButtonClicked
+        )
+        eventEmitter.on("castSpell", this.opponent.castSpell)
+
+        eventEmitter.emit("sceneCreated")
+    }
+
     createTilemap = () => {
         console.log("GameScene create")
         const map = this.make.tilemap({ key: "dungeon_tiles" })
@@ -58,32 +88,10 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(
             this.player,
             spell,
-            this.handleSpellCollision,
+            this.player.handleSpellCollision,
             null,
             this
         )
-    }
-
-    handleSpellCollision = (player, spell) => {
-        console.log("Player has collided with a spell", spell.spellType)
-
-        if (this.player.spells.includes(spell.spellType)) return
-
-        this.spells = this.spells.filter((s) => s !== spell)
-        this.player.spells.push(spell.spellType)
-
-        eventEmitter.emit("onSpellData", this.player.spells)
-
-        spell.destroy()
-        this.emitRemoveSpell(spell)
-    }
-
-    emitRemoveSpell = (spell) => {
-        this.websocketRoom.sendEvent("spellPickup", {
-            x: spell.x,
-            y: spell.y,
-            spellType: spell.spellType,
-        })
     }
 
     destroySpell = (spell) => {
@@ -123,17 +131,13 @@ class GameScene extends Phaser.Scene {
         this.destroyKey()
     }
 
-    handleSpacebarPress = () => {
-        this.spawnProjectile(this.player)
-    }
-
     setRotation(angle) {
         if (this.flameSprite) {
             this.flameSprite.rotation = angle
         }
     }
 
-    createAnimations = () => {
+    createProjectileAnimations = () => {
         this.anims.create({
             key: "flameAnimation",
             frames: this.anims.generateFrameNumbers("flame", {
@@ -143,44 +147,6 @@ class GameScene extends Phaser.Scene {
             frameRate: 10,
             repeat: -1,
         })
-    }
-
-    create = () => {
-        this.createTilemap()
-        this.player = new Player(this, 150, 150)
-        this.opponent = new Player(this, 0, 0)
-        this.opponent.setPushable(false)
-        this.player.setPushable(false)
-        this.spells = []
-        this.addCollisions()
-        this.player.createAnimations()
-
-        this.addCamera()
-
-        this.createAnimations()
-        this.scene.launch("UIScene")
-        this.scene
-            .get("UIScene")
-            .events.on("joystickMove", this.updatePlayerPosition)
-
-        eventEmitter.on("setGameData", this.setGameData)
-        eventEmitter.on("moveOpponent", this.moveOpponent)
-        eventEmitter.on("keyPickup", this.destroyKey)
-        eventEmitter.on("spellPickup", this.destroySpell)
-        eventEmitter.on("onSpellButtonClicked", this.onSpellButtonClicked)
-        eventEmitter.on("castSpell", this.opponent.castSpell)
-
-        eventEmitter.emit("sceneCreated")
-
-        this.input.keyboard.on("keydown-SPACE", this.handleSpacebarPress)
-    }
-
-    onSpellButtonClicked = (spellType) => {
-        this.websocketRoom.sendEvent("castSpell", {
-            spellType,
-            direction: this.dir,
-        })
-        this.player.castSpell({ spellType, direction: this.dir })
     }
 
     addCollisions = () => {
@@ -224,15 +190,6 @@ class GameScene extends Phaser.Scene {
         this.opponent.setPosition(coords.x, coords.y)
     }
 
-    sendPlayerPosition = () => {
-        this.websocketRoom.sendEvent("updatePlayerPosition", {
-            x: this.player.x,
-            y: this.player.y,
-        })
-    }
-
-    update = () => {}
-
     addCamera = () => {
         const camera = this.cameras.main
         camera.startFollow(this.player)
@@ -245,55 +202,6 @@ class GameScene extends Phaser.Scene {
             tile.x,
             tile.y
         )
-    }
-
-    updatePlayerPosition = (joystick) => {
-        if (joystick.forceX || joystick.forceY) {
-            const vector = new Phaser.Math.Vector2(
-                joystick.forceX,
-                joystick.forceY
-            )
-            this.sendPlayerPosition()
-            this.dir = vector.normalize()
-            this.playerAngle = Math.atan2(this.dir.y, this.dir.x)
-
-            this.player.setVelocityX(this.dir.x * this.player.maxSpeed)
-            this.player.setVelocityY(this.dir.y * this.player.maxSpeed)
-
-            const angle = Phaser.Math.RadToDeg(vector.angle())
-            const frameIndex = this.calculateFrameIndex(angle)
-
-            if (this.player.currentFrameIndex !== frameIndex) {
-                this.player.currentFrameIndex = frameIndex
-
-                const animations = {
-                    0: "down",
-                    4: "left",
-                    8: "right",
-                    12: "up",
-                }
-
-                const animationKey = animations[frameIndex]
-                this.player.play(`${animationKey}_animation`, true)
-            }
-        } else {
-            this.player.setVelocityX(0)
-            this.player.setVelocityY(0)
-
-            this.player.anims.stop()
-        }
-    }
-
-    calculateFrameIndex = (angle) => {
-        if (angle >= -45 && angle < 45) {
-            return 8 //right
-        } else if (angle >= 45 && angle < 135) {
-            return 0 //down
-        } else if (angle >= 135 && angle < 225) {
-            return 4 //up
-        } else {
-            return 12 //left
-        }
     }
 }
 
