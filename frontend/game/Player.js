@@ -13,6 +13,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
+        this.setPushable(false)
     }
 
     createAnimations = () => {

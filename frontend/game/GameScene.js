@@ -1,9 +1,9 @@
 import eventEmitter from "../eventEmitter.js"
+import EndScene from "./EndScene.js"
 import Player from "./Player.js"
 import Spell from "./Spell.js"
 import Phaser from "phaser"
 import Key from "./Key.js"
-import EndScene from "./EndScene.js"
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -42,10 +42,7 @@ class GameScene extends Phaser.Scene {
     create = () => {
         this.createTilemap()
         this.player = new Player(this, 150, 150)
-        this.player.setPushable(false)
-
         this.opponent = new Player(this, 0, 0)
-        this.opponent.setPushable(false)
 
         this.spells = []
 
