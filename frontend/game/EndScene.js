@@ -6,7 +6,11 @@ export default class EndScene extends Phaser.Scene {
         super("EndScene")
     }
 
-    create(data) {
+    preload = () => {
+        this.load.image("background3", "/assets/background3.png")
+    }
+
+    create = (data) => {
         const { win } = data
 
         this.scale.resize(1920, 1080)

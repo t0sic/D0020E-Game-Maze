@@ -1,9 +1,8 @@
 import eventEmitter from "../eventEmitter.js"
-import EndScene from "./EndScene.js"
 import Player from "./Player.js"
-import Spell from "./Spell.js"
 import Phaser from "phaser"
 import Key from "./Key.js"
+import Map from "./Map.js"
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -26,27 +25,24 @@ class GameScene extends Phaser.Scene {
             frameHeight: 16,
         })
 
-        this.load.image("background", "/assets/background.png")
         this.load.image("tiles", "/assets/dungeon_tiles.png")
         this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap4.json")
-
-        this.load.image("background3", "/assets/background3.png")
     }
 
     init = () => {
         this.websocketRoom = this.registry.get("websocketRoom")
         this.socketId = this.websocketRoom.namespace.id
         this.projectiles = this.add.group()
+        this.spells = []
     }
 
     create = () => {
-        this.createTilemap()
+        this.map = new Map(this)
+
         this.player = new Player(this, 150, 150)
         this.opponent = new Player(this, 0, 0)
 
-        this.spells = []
-
-        this.addCollisions()
+        this.map.addCollisions()
         this.createProjectileAnimations()
 
         this.addCamera()
@@ -58,8 +54,8 @@ class GameScene extends Phaser.Scene {
 
         eventEmitter.on("setGameData", this.setGameData)
         eventEmitter.on("moveOpponent", this.moveOpponent)
-        eventEmitter.on("keyPickup", this.destroyKey)
-        eventEmitter.on("spellPickup", this.destroySpell)
+        eventEmitter.on("keyPickup", this.map.destroyKey)
+        eventEmitter.on("spellPickup", this.map.destroySpell)
         eventEmitter.on(
             "onSpellButtonClicked",
             this.player.onSpellButtonClicked
@@ -67,76 +63,6 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("castSpell", this.opponent.castSpell)
 
         eventEmitter.emit("sceneCreated")
-    }
-
-    createTilemap = () => {
-        console.log("GameScene create")
-        const map = this.make.tilemap({ key: "dungeon_tiles" })
-        const tileset = map.addTilesetImage("dungeon_tiles", "tiles")
-        const groundLayer = map.createLayer("Ground", tileset)
-        const wallLayer = map.createLayer("Walls", tileset)
-        const doorLayer = map.createLayer("Door", tileset)
-
-        wallLayer.setCollisionByProperty({ Collision: true })
-        doorLayer.setCollisionByProperty({ Collision: true })
-
-        this.wallLayer = wallLayer
-        this.doorLayer = doorLayer
-    }
-
-    createSpell = (x, y, type) => {
-        const spell = new Spell(this, x, y, type)
-        this.spells.push(spell)
-        this.physics.add.overlap(
-            this.player,
-            spell,
-            this.player.handleSpellCollision,
-            null,
-            this
-        )
-    }
-
-    destroySpell = (spell) => {
-        this.spells = this.spells.filter((s) => {
-            if (s.x === spell.x && s.y === spell.y) {
-                s.destroy()
-                return false
-            }
-            return true
-        })
-    }
-
-    createKey = (x, y) => {
-        this.key = new Key(this, x, y)
-
-        this.physics.add.overlap(
-            this.player,
-            this.key,
-            this.handleKeyCollision,
-            null,
-            this
-        )
-    }
-
-    destroyKey = () => this.key.destroy()
-
-    emitRemoveKey = () => {
-        this.websocketRoom.sendEvent("keyPickup")
-    }
-
-    handleKeyCollision = (player, key) => {
-        this.player.hasKey = true
-
-        eventEmitter.emit("onKeyData", this.player.hasKey)
-
-        this.emitRemoveKey()
-        this.destroyKey()
-    }
-
-    setRotation(angle) {
-        if (this.flameSprite) {
-            this.flameSprite.rotation = angle
-        }
     }
 
     createProjectileAnimations = () => {
@@ -150,19 +76,6 @@ class GameScene extends Phaser.Scene {
             repeat: -1,
         })
     }
-
-    addCollisions = () => {
-        this.physics.add.collider(
-            this.player,
-            this.doorLayer,
-            this.handleDoorCollision,
-            null,
-            this
-        )
-        this.physics.add.collider(this.player, this.wallLayer)
-    }
-
-    update = () => {}
 
     setGameData = (gameData) => {
         this.gameData = gameData
@@ -181,11 +94,9 @@ class GameScene extends Phaser.Scene {
             players[this.opponentId].y
         )
 
-        spells.forEach((spell) =>
-            this.createSpell(spell.x, spell.y, spell.spellType)
-        )
+        spells.forEach(this.map.createSpell)
 
-        this.createKey(map.key.x, map.key.y)
+        this.map.createKey(map.key.x, map.key.y)
     }
 
     moveOpponent = (coords) => {
@@ -199,13 +110,7 @@ class GameScene extends Phaser.Scene {
     }
 
     handleDoorCollision = (player, tile) => {
-        console.log(
-            "Player has collided with a door tile at position:",
-            tile.x,
-            tile.y
-        )
         if ((this.player.hasKey = true)) {
-            console.log("Player has key")
             this.scene.remove("UIScene")
             this.scene.start("EndScene", { win: true })
         }

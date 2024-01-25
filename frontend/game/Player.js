@@ -74,8 +74,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     handleSpellCollision = (player, spell) => {
-        console.log("Player has collided with a spell", spell.spellType)
-
         if (this.spells.includes(spell.spellType)) return
 
         this.scene.spells = this.scene.spells.filter((s) => s !== spell)
@@ -132,16 +130,17 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
     }
 
-    calculateFrameIndex = (angle) => {
-        if (angle >= -45 && angle < 45) {
-            return 8 //right
-        } else if (angle >= 45 && angle < 135) {
-            return 0 //down
-        } else if (angle >= 135 && angle < 225) {
-            return 4 //up
-        } else {
-            return 12 //left
+    calculateFrameIndex = (vector) => {
+        if (Math.abs(vector.x) > Math.abs(vector.y)) {
+            if (vector.x > 0) {
+                return 8
+            }
+            return 4
         }
+        if (vector.y > 0) {
+            return 0
+        }
+        return 12
     }
 
     updatePosition = (joystick) => {
@@ -157,8 +156,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(this.dir.x * this.maxSpeed)
             this.setVelocityY(this.dir.y * this.maxSpeed)
 
-            const angle = Phaser.Math.RadToDeg(vector.angle())
-            const frameIndex = this.calculateFrameIndex(angle)
+            const frameIndex = this.calculateFrameIndex(this.dir)
 
             if (this.currentFrameIndex !== frameIndex) {
                 this.currentFrameIndex = frameIndex
