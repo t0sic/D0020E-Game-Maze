@@ -110,7 +110,7 @@ class GameScene extends Phaser.Scene {
     }
 
     handleDoorCollision = (player, tile) => {
-        if ((this.player.hasKey = true)) {
+        if (this.player.hasKey) {
             this.scene.remove("UIScene")
             this.scene.start("EndScene", { win: true })
         }
