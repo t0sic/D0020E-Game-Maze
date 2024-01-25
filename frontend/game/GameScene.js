@@ -44,6 +44,8 @@ class GameScene extends Phaser.Scene {
         this.opponent = new Player(this, 0, 0)
         this.opponent.setPushable(false)
 
+        this.spells = []
+
         this.addCollisions()
         this.createProjectileAnimations()
 
