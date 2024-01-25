@@ -36,10 +36,19 @@ export default class Session {
                 this.spellPickup(socket, data)
                 break
             case "castSpell":
-                console.log(data)
                 this.castSpell(socket, data)
                 break
+            case "playerWon":
+                this.playerWon(socket)
+                break
         }
+    }
+
+    playerWon = (socket) => {
+        socket.broadcast.emit("playerWon")
+        // setTimeout(() => {
+        //     this.gameserver.endSession(this)
+        // }, 10000)
     }
 
     castSpell = (socket, projectile) => {

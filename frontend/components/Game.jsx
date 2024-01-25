@@ -6,10 +6,11 @@ import UIScene from "../game/UIScene.js"
 import Phaser from "phaser"
 import EndScene from "../game/EndScene.js"
 
-const Game = ({ sessionId, onSessionEnd }) => {
+const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
     const [websocketRoom, setWebsocketRoom] = useState()
 
     useEffect(() => {
+        console.log("creating websocket room")
         setWebsocketRoom(new WebsocketRoom(sessionId))
     }, [])
 
@@ -30,7 +31,7 @@ const Game = ({ sessionId, onSessionEnd }) => {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH,
             },
-            scene: [GameScene, UIScene,EndScene],
+            scene: [GameScene, UIScene, EndScene],
         }
         const game = new Phaser.Game(config)
         game.registry.set("websocketRoom", websocketRoom)
@@ -38,8 +39,7 @@ const Game = ({ sessionId, onSessionEnd }) => {
             eventEmitter.emit("setGameData", gameData)
         })
         eventEmitter.on("endGame", () => {
-            onSessionEnd()
-            console.log("end gamejsjxsjxjsjxsjx")
+            onGameEnd()
         })
     }
 
@@ -70,6 +70,9 @@ const Game = ({ sessionId, onSessionEnd }) => {
                 case "castSpell":
                     eventEmitter.emit("castSpell", data)
                     console.log("recieved cast spell", data)
+                    break
+                case "playerWon":
+                    eventEmitter.emit("playerWon", false)
                     break
             }
         }

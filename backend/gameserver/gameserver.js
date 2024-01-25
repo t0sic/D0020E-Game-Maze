@@ -11,7 +11,7 @@ export default class Gameserver {
         this.websocketRoom = new WebsocketRoom(
             "gameserver",
             this.eventHandler,
-            this.webserver.io,
+            this.webserver.io
         )
 
         console.log("Gameserver started")
@@ -51,7 +51,7 @@ export default class Gameserver {
             "Gameserver Player leaving queue: ",
             socket.id,
             "Queue size:",
-            this.queue.length,
+            this.queue.length
         )
     }
 
@@ -61,7 +61,7 @@ export default class Gameserver {
             "Gameserver Player joining queue",
             socket.id,
             "Queue size:",
-            this.queue.length,
+            this.queue.length
         )
         if (this.queue.length >= 2) this.createSession()
     }
@@ -70,7 +70,7 @@ export default class Gameserver {
         console.log("Gameserver Removing session, id:", session.id)
 
         this.sessions = this.sessions.filter(
-            (_session) => session.id !== _session.id,
+            (_session) => session.id !== _session.id
         )
 
         console.log(this.sessions)

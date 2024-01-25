@@ -49,6 +49,10 @@ const App = () => {
         setPath("Home")
     }
 
+    const handleGameEnd = () => {
+        setPath("Home")
+    }
+
     const handleSessionEnd = () => {
         setQueueState("ended")
         setPath("Queue")
@@ -59,7 +63,11 @@ const App = () => {
             {path === "Queue" ? (
                 <Queue queueState={queueState} onLeave={handleLeave} />
             ) : path === "Game" ? (
-                <Game sessionId={sessionId} onSessionEnd={handleSessionEnd} />
+                <Game
+                    sessionId={sessionId}
+                    onGameEnd={handleGameEnd}
+                    onSessionEnd={handleSessionEnd}
+                />
             ) : (
                 <Layout setPath={setPath} path={path} onPlay={handlePlay} />
             )}
