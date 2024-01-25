@@ -7,9 +7,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxSpeed = 100
         this.hasKey = false
         this.spells = []
-        this.isHaste = false
+        this.isHasted = false
         this.hasteDuration = 5000
-        this.createAnimations
+        this.isConfused = false
+        this.confusionDuration = 5000
+        this.isSlowed = false
+        this.slowDuration = 5000
+        this.isStunned = false
+        this.stunDuration = 5000
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
@@ -57,31 +62,68 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             repeat: -1,
         })
     }
-    update = (delta) => {
-        if (this.cursors.right.isDown && !this.isHaste) {
-            this.applyHateEffect()
-        }
-        if (this.isHaste) {
-            this.hasteDuration -= delta
-            if (this.hasteDuration <= 0) {
-                this.removeHasteEffects()
-            }
-        }
-    }
+    update = (delta) => {}
 
-    applyHateEffect = () => {
-        this.isHaste = true
-        this.maxSpeed *= 2
-        console.log("Player speed has been multiplied")
-        setTimeout(() => {
-            this.removeHasteEffects()
-        }, this.hasteDuration)
+    applyHasteEffect = () => {
+        if (!this.isHasted) {
+            this.isHasted = true
+            this.maxSpeed *= 2
+            console.log("Player speed has been multiplied")
+            setTimeout(() => {
+                this.removeHasteEffects()
+            }, this.hasteDuration)
+        }
     }
 
     removeHasteEffects = () => {
-        this.maxSpeed /= 2
-        this.isHaste = false
-        this.hasteDuration = 5000
+        this.maxSpeed = 100
+        this.isHasted = false
+        console.log("Speed effect removed!")
+    }
+
+    applyConfusionEffect = () => {
+        this.isConfused = true
+        console.log("Player controls are confused!")
+
+        setTimeout(() => {
+            this.removeConfusionEffect()
+        }, this.confusionDuration)
+    }
+    removeConfusionEffect = () => {
+        this.isConfused = false
+        console.log("Confusion effect removed!")
+    }
+    applySlowEffect = () => {
+        if (!this.isSlowed) {
+            this.isSlowed = true
+            this.maxSpeed = 50
+            console.log("Player is slowed!")
+
+            setTimeout(() => {
+                this.removeSlowEffect()
+            }, this.slowDuration)
+        }
+    }
+    removeSlowEffect = () => {
+        this.maxSpeed = 100
+        this.isSlowed = false
+        console.log("Slow effect removed!")
+    }
+    applyStunEffect = () => {
+        if (!this.isStunned) {
+            this.isSlowed = true
+            this.maxSpeed = 0
+            console.log("Player is immovable!")
+
+            setTimeout(() => {
+                this.removeStunEffect()
+            }, this.stunDuration)
+        }
+    }
+    removeStunEffect = () => {
+        this.maxSpeed = 100
+        this.isSlowed = false
+        console.log("Stun effect removed!")
     }
 }
 

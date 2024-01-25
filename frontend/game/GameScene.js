@@ -187,7 +187,10 @@ class GameScene extends Phaser.Scene {
         this.player.setPushable(false)
         this.spells = []
         this.createPlayerAnimations()
-        this.input.keyboard.on("keydown-F", this.handleHasteKeyPress)
+        this.input.keyboard.on("keydown-F", this.player.applyHasteEffect)
+        this.input.keyboard.on("keydown-T", this.player.applyConfusionEffect)
+        this.input.keyboard.on("keydown-S", this.player.applySlowEffect)
+        this.input.keyboard.on("keydown-P", this.player.applyStunEffect)
 
         this.addCollisions()
 
@@ -208,11 +211,6 @@ class GameScene extends Phaser.Scene {
         eventEmitter.emit("sceneCreated")
 
         this.input.keyboard.on("keydown-SPACE", this.handleSpacebarPress)
-    }
-    handleHasteKeyPress = () => {
-        if (this.player && typeof this.player.applyHateEffect === "function") {
-            this.player.applyHateEffect()
-        }
     }
 
     castSpell = (type) => {
@@ -334,6 +332,7 @@ class GameScene extends Phaser.Scene {
             )
             this.sendPlayerPosition()
             this.dir = vector.normalize()
+            this.player.isConfused ? (this.dir = this.dir.negate()) : this.dir // If the player is confused, inverts the direction vector
             this.playerAngle = Math.atan2(this.dir.y, this.dir.x)
 
             this.player.setVelocityX(this.dir.x * this.player.maxSpeed)
