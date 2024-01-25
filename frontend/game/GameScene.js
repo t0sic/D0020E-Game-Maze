@@ -3,6 +3,7 @@ import Player from "./Player.js"
 import Spell from "./Spell.js"
 import Phaser from "phaser"
 import Key from "./Key.js"
+import EndScene from "./EndScene.js"
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -28,6 +29,8 @@ class GameScene extends Phaser.Scene {
         this.load.image("background", "/assets/background.png")
         this.load.image("tiles", "/assets/dungeon_tiles.png")
         this.load.tilemapTiledJSON("dungeon_tiles", "/assets/Tilemap4.json")
+
+        this.load.image("background3", "/assets/background3.png")
     }
 
     init = () => {
@@ -204,6 +207,11 @@ class GameScene extends Phaser.Scene {
             tile.x,
             tile.y
         )
+        if ((this.player.hasKey = true)) {
+            console.log("Player has key")
+            this.scene.remove("UIScene")
+            this.scene.start("EndScene", { win: true })
+        }
     }
 }
 
