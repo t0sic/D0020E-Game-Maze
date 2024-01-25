@@ -12,7 +12,7 @@ class GameScene extends Phaser.Scene {
     preload = () => {
         this.load.image("air", "/assets/air.png")
         this.load.image("water", "/assets/water.png")
-        this.load.image("earth", "/assets/earth.png")
+        this.load.image("haste", "/assets/haste.png")
         this.load.image("fire", "/assets/fire.png")
         this.load.spritesheet("flame", "/assets/flame_horizontal.png", {
             frameWidth: 12,

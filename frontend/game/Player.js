@@ -129,11 +129,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     onSpellButtonClicked = (spellType) => {
-        this.websocketRoom.sendEvent("castSpell", {
-            spellType,
-            direction: this.dir,
-        })
-        this.castSpell({ spellType, direction: this.dir })
+        if (spellType === "haste") {
+            this.applyHasteEffect()
+        } else {
+            this.castSpell({ spellType, direction: this.dir })
+            this.websocketRoom.sendEvent("castSpell", {
+                spellType,
+                direction: this.dir,
+            })
+        }
     }
 
     castSpell = (projectile) => {

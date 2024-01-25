@@ -2,7 +2,7 @@ import Player from "./player.js"
 
 export default class Game {
     constructor(playerIds) {
-        const spellTypes = ["fire", "water", "earth", "air"]
+        const spellTypes = ["fire", "water", "haste", "air"]
         const maps = [
             {
                 asset: "Tilemap1",

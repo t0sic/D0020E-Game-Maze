@@ -6,7 +6,7 @@ class UIScene extends Phaser.Scene {
     constructor() {
         super({ key: "UIScene", active: true })
 
-        this.spellTypes = ["earth", "fire", "water", "air"]
+        this.spellTypes = ["haste", "fire", "water", "air"]
 
         eventEmitter.on("emitGameObject", (data) => {
             const game = data
