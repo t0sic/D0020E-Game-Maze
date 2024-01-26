@@ -7,23 +7,12 @@ class UIScene extends Phaser.Scene {
         super({ key: "UIScene", active: true })
 
         this.spellTypes = ["earth", "fire", "water", "air"]
-
-        eventEmitter.on("emitGameObject", (data) => {
-            const game = data
-            console.log("recieved " + game)
-        })
-        eventEmitter.emit("sceneCreated")
-    }
-
-    updateFPS = () => {
-        this.fpsText.setText("FPS: " + Math.floor(this.game.loop.actualFps))
     }
 
     create = () => {
         this.createKeyIndicator()
         this.createSpellButtons()
         this.createJoyStick()
-        this.createFPSCounter()
 
         eventEmitter.on("onSpellData", this.updateSpellButtons)
         eventEmitter.on("onKeyData", this.updateKeyIndicator)
@@ -80,15 +69,6 @@ class UIScene extends Phaser.Scene {
                 this[spell + "Button"].setAlpha(0.5)
             }
         })
-    }
-
-    createFPSCounter = () => {
-        this.fpsText = this.add.text(16, 16, "FPS: 0", {
-            font: "40px Arial",
-            fill: "#ffffff",
-        })
-
-        setInterval(this.updateFPS, 500)
     }
 
     createJoyStick = () => {

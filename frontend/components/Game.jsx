@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react"
 import WebsocketRoom from "../websocketRoom.js"
 import eventEmitter from "../eventEmitter.js"
 import GameScene from "../game/GameScene.js"
+import EndScene from "../game/EndScene.js"
 import UIScene from "../game/UIScene.js"
 import Phaser from "phaser"
-import EndScene from "../game/EndScene.js"
 
 const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
     const [websocketRoom, setWebsocketRoom] = useState()
@@ -34,6 +34,7 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
             scene: [GameScene, UIScene, EndScene],
         }
         const game = new Phaser.Game(config)
+        eventEmitter.events = {}
         game.registry.set("websocketRoom", websocketRoom)
         eventEmitter.on("sceneCreated", () => {
             eventEmitter.emit("setGameData", gameData)
