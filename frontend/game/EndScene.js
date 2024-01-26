@@ -12,9 +12,6 @@ export default class EndScene extends Phaser.Scene {
 
     create = (data) => {
         const { win } = data
-        if (!win) {
-            print()
-        }
 
         this.scale.resize(1920, 1080)
 
