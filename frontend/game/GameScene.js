@@ -1,7 +1,6 @@
 import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
 import Phaser from "phaser"
-import Key from "./Key.js"
 import Map from "./Map.js"
 
 class GameScene extends Phaser.Scene {
@@ -65,6 +64,7 @@ class GameScene extends Phaser.Scene {
             this.player.onSpellButtonClicked
         )
         eventEmitter.on("castSpell", this.opponent.castSpell)
+        eventEmitter.on("playerWon", this.onPlayerWon)
 
         eventEmitter.emit("sceneCreated")
     }
@@ -115,9 +115,14 @@ class GameScene extends Phaser.Scene {
 
     handleDoorCollision = (player, tile) => {
         if (this.player.hasKey) {
-            this.scene.remove("UIScene")
-            this.scene.start("EndScene", { win: true })
+            this.websocketRoom.sendEvent("playerWon")
+            this.onPlayerWon(true)
         }
+    }
+
+    onPlayerWon = (isWinner) => {
+        this.scene.remove("UIScene")
+        this.scene.start("EndScene", { win: isWinner })
     }
 }
 
