@@ -140,7 +140,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.spells = this.spells.filter(
             (spell) => spell !== projectile.spellType
         )
-        this.spawnProjectile(projectile.direction)
+        this.spawnProjectile(projectile)
     }
 
     handleSpellCollision = (player, spell) => {
@@ -163,7 +163,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
     }
 
-    spawnProjectile = (direction) => {
+    spawnProjectile = (spell) => {
+        const direction = spell.direction
         const projectile = new Projectile(this.scene, this.x, this.y, direction)
         this.scene.projectiles.add(projectile)
 
@@ -181,16 +182,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
         )
 
-        const vemVareSomCasta = this.scene.opponent === this
+        const vemVareSomCasta =
+            this.scene.opponent === this
+                ? this.scene.player
+                : this.scene.opponent
 
-        this.scene.physics.add.collider(
-            projectile,
-            vemVareSomCasta ? this.scene.player : this.scene.opponent,
-            () => {
-                projectile.destroy()
-                console.log("Projectile hit opponent")
+        this.scene.physics.add.collider(projectile, vemVareSomCasta, () => {
+            switch (spell.spellType) {
+                case "fire":
+                    vemVareSomCasta.applyStunEffect()
+                    break
             }
-        )
+            projectile.destroy()
+            console.log("Projectile hit opponent")
+        })
     }
 
     sendPlayerPosition = () => {
