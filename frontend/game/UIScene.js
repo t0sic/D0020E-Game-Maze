@@ -6,7 +6,7 @@ class UIScene extends Phaser.Scene {
     constructor() {
         super({ key: "UIScene", active: true })
 
-        this.spellTypes = ["earth", "fire", "water", "air"]
+        this.spellTypes = ["haste", "stun", "slow", "confuse"]
     }
 
     create = () => {

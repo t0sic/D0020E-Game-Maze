@@ -136,11 +136,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.castSpell({ spellType, direction: this.dir })
     }
 
-    castSpell = (projectile) => {
+    castSpell = (spell) => {
         this.spells = this.spells.filter(
-            (spell) => spell !== projectile.spellType
+            (spellType) => spellType !== spell.spellType
         )
-        this.spawnProjectile(projectile.direction)
+        if (spell.spellType === "haste") {
+            this.applyHasteEffect()
+        } else {
+            this.spawnProjectile(spell)
+        }
     }
 
     handleSpellCollision = (player, spell) => {
@@ -163,15 +167,21 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
     }
 
-    spawnProjectile = (direction) => {
-        const projectile = new Projectile(this.scene, this.x, this.y, direction)
+    spawnProjectile = (spell) => {
+        const { direction } = spell
+        const projectile = new Projectile(
+            this.scene,
+            this.x,
+            this.y,
+            spell.spellType
+        )
         this.scene.projectiles.add(projectile)
 
         projectile.setVelocityX(direction.x * projectile.maxSpeed)
         projectile.setVelocityY(direction.y * projectile.maxSpeed)
 
-        projectile.setRotation(this.playerAngle)
-        projectile.anims.play("flameAnimation", true)
+        projectile.setRotation(this.playerAngle) /
+            projectile.anims.play("flameAnimation", true)
 
         this.scene.physics.add.collider(
             projectile,
@@ -186,11 +196,23 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.physics.add.collider(
             projectile,
             vemVareSomCasta ? this.scene.player : this.scene.opponent,
-            () => {
-                projectile.destroy()
-                console.log("Projectile hit opponent")
-            }
+            this.handleProjectileCollision
         )
+    }
+
+    handleProjectileCollision = (projectile, player) => {
+        projectile.destroy()
+        switch (projectile.spellType) {
+            case "stun":
+                player.applyStunEffect()
+                break
+            case "slow":
+                player.applySlowEffect()
+                break
+            case "confuse":
+                player.applyConfusionEffect()
+                break
+        }
     }
 
     sendPlayerPosition = () => {

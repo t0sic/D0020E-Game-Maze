@@ -9,11 +9,11 @@ class GameScene extends Phaser.Scene {
     }
 
     preload = () => {
-        this.load.image("air", "/assets/air.png")
-        this.load.image("water", "/assets/water.png")
-        this.load.image("earth", "/assets/earth.png")
-        this.load.image("fire", "/assets/fire.png")
-        this.load.spritesheet("flame", "/assets/flame_horizontal.png", {
+        this.load.image("confuse", "/assets/confuse.png")
+        this.load.image("slow", "/assets/slow.png")
+        this.load.image("haste", "/assets/haste.png")
+        this.load.image("stun", "/assets/stun.png")
+        this.load.spritesheet("flame", "/assets/Flame_full_sheet.png", {
             frameWidth: 12,
             frameHeight: 12,
         })
@@ -48,8 +48,8 @@ class GameScene extends Phaser.Scene {
         this.anims.create({
             key: "flameAnimation",
             frames: this.anims.generateFrameNumbers("flame", {
-                start: 0,
-                end: 3,
+                start: 17,
+                end: 20,
             }),
             frameRate: 10,
             repeat: -1,
