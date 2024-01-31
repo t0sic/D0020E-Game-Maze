@@ -19,13 +19,13 @@ class GameScene extends Phaser.Scene {
         })
 
         this.load.image("key", "/assets/key.png")
-        this.load.spritesheet("player", "/assets/spritesheet1.png", {
+        this.load.spritesheet("player", "/assets/player.png", {
             frameWidth: 16,
             frameHeight: 16,
         })
 
         this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("dungeon_tiles", "/assets/sprint3.json")
+        this.load.tilemapTiledJSON("Tilemap1", "/assets/sprint3.json")
     }
 
     init = () => {
@@ -37,35 +37,10 @@ class GameScene extends Phaser.Scene {
 
     create = () => {
         this.map = new Map(this)
-
-        this.player = new Player(this, 150, 150)
-        this.opponent = new Player(this, 0, 0)
-
-        this.map.addCollisions()
         this.createProjectileAnimations()
-        this.input.keyboard.on("keydown-F", this.player.applyHasteEffect)
-        this.input.keyboard.on("keydown-T", this.player.applyConfusionEffect)
-        this.input.keyboard.on("keydown-S", this.player.applySlowEffect)
-        this.input.keyboard.on("keydown-P", this.player.applyStunEffect)
-
-        this.addCamera()
-
         this.scene.launch("UIScene")
-        this.scene
-            .get("UIScene")
-            .events.on("joystickMove", this.player.updatePosition)
 
         eventEmitter.on("setGameData", this.setGameData)
-        eventEmitter.on("moveOpponent", this.moveOpponent)
-        eventEmitter.on("keyPickup", this.map.destroyKey)
-        eventEmitter.on("spellPickup", this.map.destroySpell)
-        eventEmitter.on(
-            "onSpellButtonClicked",
-            this.player.onSpellButtonClicked,
-        )
-        eventEmitter.on("castSpell", this.opponent.castSpell)
-        eventEmitter.on("playerWon", this.onPlayerWon)
-
         eventEmitter.emit("sceneCreated")
     }
 
@@ -89,14 +64,36 @@ class GameScene extends Phaser.Scene {
 
         this.opponentId = ids[0] === this.socketId ? ids[1] : ids[0]
 
-        this.player.setPosition(
+        this.map.createMap()
+
+        this.player = new Player(
+            this,
             players[this.socketId].x,
-            players[this.socketId].y,
+            players[this.socketId].y
         )
-        this.opponent.setPosition(
+        this.opponent = new Player(
+            this,
             players[this.opponentId].x,
-            players[this.opponentId].y,
+            players[this.opponentId].y
         )
+
+        this.map.addCollisions()
+
+        eventEmitter.on("moveOpponent", this.moveOpponent)
+        eventEmitter.on("keyPickup", this.map.destroyKey)
+        eventEmitter.on("spellPickup", this.map.destroySpell)
+        eventEmitter.on(
+            "onSpellButtonClicked",
+            this.player.onSpellButtonClicked
+        )
+        eventEmitter.on("castSpell", this.opponent.castSpell)
+        eventEmitter.on("playerWon", this.onPlayerWon)
+
+        this.scene
+            .get("UIScene")
+            .events.on("joystickMove", this.player.updatePosition)
+
+        this.addCamera()
 
         spells.forEach(this.map.createSpell)
 

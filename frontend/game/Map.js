@@ -5,11 +5,12 @@ import Key from "./Key.js"
 export default class Map {
     constructor(scene) {
         this.scene = scene
-        this.createMap()
     }
 
     createMap = () => {
-        const map = this.scene.make.tilemap({ key: "dungeon_tiles" })
+        const mapAsset = this.scene.gameData.map.asset
+
+        const map = this.scene.make.tilemap({ key: mapAsset })
         const tileset = map.addTilesetImage("dungeon_tiles", "tiles")
         const groundLayer = map.createLayer("Ground", tileset)
         const wallLayer = map.createLayer("Walls", tileset)
