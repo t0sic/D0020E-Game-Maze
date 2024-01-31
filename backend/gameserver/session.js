@@ -11,6 +11,7 @@ export default class Session {
         this.id = id
         this.users = []
         this.game
+        this.time = new Date().getTime()
     }
 
     eventHandler = (socket, event, data) => {
@@ -41,7 +42,14 @@ export default class Session {
             case "playerWon":
                 this.playerWon(socket)
                 break
+            case "spectate":
+                this.spectate(socket)
+                break
         }
+    }
+
+    spectate = (socket) => {
+        socket.emit("data", this.game)
     }
 
     playerWon = (socket) => {
@@ -73,6 +81,10 @@ export default class Session {
     onDisconnect = (socket) => {
         console.log("Session Disconnect", socket.id)
 
+        const isPlayer = this.users.some((user) => user.id === socket.id)
+
+        if (!isPlayer) return console.log("Spectator left")
+
         this.users.forEach((user) => {
             if (user.id !== socket.id)
                 this.websocketRoom.sendEvent("endSession")
@@ -84,7 +96,10 @@ export default class Session {
     updatePlayerPosition = (socket, data) => {
         this.game.players[socket.id].x = data.x
         this.game.players[socket.id].y = data.y
-        socket.broadcast.emit("updatePlayerPosition", data)
+        socket.broadcast.emit("updatePlayerPosition", {
+            coords: data,
+            id: socket.id,
+        })
     }
 
     onLeave = () => {}

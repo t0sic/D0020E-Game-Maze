@@ -19,6 +19,9 @@ const Home = ({ setPath, onPlay }) => {
                 >
                     Leaderboard
                 </button>
+                <button className="button" onClick={() => setPath("Spectate")}>
+                    Spectate
+                </button>
             </div>
         </div>
     )

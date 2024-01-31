@@ -34,5 +34,14 @@ export default class Webserver {
         this.app.get("/", (req, res) => {
             res.sendFile("index.html", options)
         })
+
+        this.app.get("/api/sessions", (req, res) => {
+            const sessions = [...this.gameserver.sessions].map((session) => ({
+                id: session.id,
+                time: session.time,
+            }))
+
+            res.send(sessions)
+        })
     }
 }

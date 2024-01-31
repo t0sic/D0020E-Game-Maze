@@ -60,7 +60,7 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
                     onSessionEnd()
                     break
                 case "updatePlayerPosition":
-                    eventEmitter.emit("moveOpponent", data)
+                    eventEmitter.emit("moveOpponent", data.coords)
                     break
                 case "keyPickup":
                     eventEmitter.emit("keyPickup", data)

@@ -34,10 +34,5 @@ export default class Game {
                 this.map.spawnpoints[1].y
             ),
         }
-        this.time = new Date()
-
-        setInterval(() => {
-            console.log("Game state", this)
-        }, 10000)
     }
 }

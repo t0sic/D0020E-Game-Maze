@@ -2,6 +2,7 @@ import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
 import Phaser from "phaser"
 import Map from "./Map.js"
+import { preload } from "./shared.js"
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -9,23 +10,7 @@ class GameScene extends Phaser.Scene {
     }
 
     preload = () => {
-        this.load.image("air", "/assets/air.png")
-        this.load.image("water", "/assets/water.png")
-        this.load.image("earth", "/assets/earth.png")
-        this.load.image("fire", "/assets/fire.png")
-        this.load.spritesheet("flame", "/assets/flame_horizontal.png", {
-            frameWidth: 12,
-            frameHeight: 12,
-        })
-
-        this.load.image("key", "/assets/key.png")
-        this.load.spritesheet("player", "/assets/player.png", {
-            frameWidth: 16,
-            frameHeight: 16,
-        })
-
-        this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("Tilemap1", "/assets/sprint3.json")
+        preload(this)
     }
 
     init = () => {
@@ -64,7 +49,7 @@ class GameScene extends Phaser.Scene {
 
         this.opponentId = ids[0] === this.socketId ? ids[1] : ids[0]
 
-        this.map.createMap()
+        this.map.createMap(map.asset)
 
         this.player = new Player(
             this,
@@ -77,7 +62,7 @@ class GameScene extends Phaser.Scene {
             players[this.opponentId].y
         )
 
-        this.map.addCollisions()
+        this.map.addCollisions([this.player])
 
         eventEmitter.on("moveOpponent", this.moveOpponent)
         eventEmitter.on("keyPickup", this.map.destroyKey)
@@ -95,9 +80,9 @@ class GameScene extends Phaser.Scene {
 
         this.addCamera()
 
-        spells.forEach(this.map.createSpell)
+        spells.forEach((spell) => this.map.createSpell(spell, [this.player]))
 
-        this.map.createKey(map.key.x, map.key.y)
+        this.map.createKey(map.key.x, map.key.y, [this.player])
     }
 
     moveOpponent = (coords) => {
