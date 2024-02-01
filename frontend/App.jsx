@@ -75,7 +75,10 @@ const App = () => {
                     onSessionEnd={handleSessionEnd}
                 />
             ) : path === "SpectateGame" ? (
-                <SpectateGame sessionId={sessionId} />
+                <SpectateGame
+                    sessionId={sessionId}
+                    onSessionEnd={handleSessionEnd}
+                />
             ) : (
                 <Layout
                     setPath={setPath}

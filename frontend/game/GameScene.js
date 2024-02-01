@@ -64,7 +64,7 @@ class GameScene extends Phaser.Scene {
 
         this.map.addCollisions([this.player])
 
-        eventEmitter.on("moveOpponent", this.moveOpponent)
+        eventEmitter.on("moveOpponent", this.opponent.updatePlayerPosition)
         eventEmitter.on("keyPickup", this.map.destroyKey)
         eventEmitter.on("spellPickup", this.map.destroySpell)
         eventEmitter.on(
@@ -76,42 +76,13 @@ class GameScene extends Phaser.Scene {
 
         this.scene
             .get("UIScene")
-            .events.on("joystickMove", this.player.updatePosition)
+            .events.on("joystickMove", this.player.joystickMove)
 
         this.addCamera()
 
         spells.forEach((spell) => this.map.createSpell(spell, [this.player]))
 
         this.map.createKey(map.key.x, map.key.y, [this.player])
-    }
-
-    moveOpponent = (coords) => {
-        const dx = coords.x - this.opponent.x
-        const dy = coords.y - this.opponent.y
-        const resultantVector = new Phaser.Math.Vector2(dx, dy)
-
-        const frameIndex = this.opponent.calculateFrameIndex(resultantVector)
-
-        if (this.activeFrameIndex !== frameIndex) {
-            this.activeFrameIndex = frameIndex
-
-            const animations = {
-                0: "down",
-                4: "left",
-                8: "right",
-                12: "up",
-            }
-
-            const animationKey = animations[frameIndex]
-            this.opponent.play(`${animationKey}_animation`, true)
-        }
-
-        this.opponent.setPosition(coords.x, coords.y)
-        setTimeout(() => {
-            if (coords.x === this.opponent.x && coords.y === this.opponent.y) {
-                this.opponent.anims.stop()
-            }
-        }, 100)
     }
 
     addCamera = () => {

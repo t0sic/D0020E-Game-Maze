@@ -49,6 +49,7 @@ export default class Session {
     }
 
     spectate = (socket) => {
+        console.log("Spectator joined")
         socket.emit("data", this.game)
     }
 
@@ -70,12 +71,13 @@ export default class Session {
         )
 
         this.game.players[socket.id].spells.push(spell.spellType)
-        socket.broadcast.emit("spellPickup", spell)
+        socket.broadcast.emit("spellPickup", { spell, id: socket.id })
     }
 
     keyPickup = (socket) => {
         this.game.players[socket.id].hasKey = true
-        socket.broadcast.emit("keyPickup")
+        this.game.map.key = null
+        socket.broadcast.emit("keyPickup", socket.id)
     }
 
     onDisconnect = (socket) => {

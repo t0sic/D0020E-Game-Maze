@@ -166,3 +166,37 @@
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
 }
+
+.game-controlls-slider {
+    margin: 0 15px;
+    -webkit-appearance: none;
+    appearance: none;
+    width: calc(100% - 30px);
+    border-radius: 10px;
+    height: 25px;
+    background: #000017;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
+}
+
+.game-controlls-slider:hover {
+    opacity: 1;
+}
+
+.game-controlls-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #7153bf;
+    cursor: pointer;
+}
+
+.game-controlls-slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #7153bf;
+    cursor: pointer;
+}

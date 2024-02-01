@@ -66,7 +66,7 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
                     eventEmitter.emit("keyPickup", data)
                     break
                 case "spellPickup":
-                    eventEmitter.emit("spellPickup", data)
+                    eventEmitter.emit("spellPickup", data.spell)
                     break
                 case "castSpell":
                     eventEmitter.emit("castSpell", data)

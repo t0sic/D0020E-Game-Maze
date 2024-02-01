@@ -26,7 +26,33 @@ export default class SpectateScene extends Phaser.Scene {
     }
 
     updatePlayerPosition = (coords, playerId) => {
-        this.players[playerId].setPosition(coords.x, coords.y)
+        const player = this.players[playerId]
+        const dx = coords.x - player.x
+        const dy = coords.y - player.y
+        const resultantVector = new Phaser.Math.Vector2(dx, dy)
+
+        const frameIndex = player.calculateFrameIndex(resultantVector)
+
+        if (player.activeFrameIndex !== frameIndex) {
+            player.activeFrameIndex = frameIndex
+
+            const animations = {
+                0: "down",
+                4: "left",
+                8: "right",
+                12: "up",
+            }
+
+            const animationKey = animations[frameIndex]
+            player.play(`${animationKey}_animation`, true)
+        }
+
+        player.setPosition(coords.x, coords.y)
+        setTimeout(() => {
+            if (coords.x === player.x && coords.y === player.y) {
+                player.anims.stop()
+            }
+        }, 100)
     }
 
     addCamera = (player) => {
@@ -36,13 +62,18 @@ export default class SpectateScene extends Phaser.Scene {
 
         if (player) {
             camera.startFollow(this.players[player])
-            camera.setZoom(2)
+            camera.setZoom(this.zoom || 2)
         } else {
             console.log(mapWidth, mapHeight)
             camera.stopFollow()
             camera.centerOn(mapWidth / 2, mapHeight / 2)
-            camera.setZoom(1)
+            camera.setZoom(this.zoom || 1)
         }
+    }
+
+    zoomCamera = (zoom) => {
+        this.zoom = zoom
+        this.cameras.main.setZoom(zoom)
     }
 
     setGameData = (gameData) => {
@@ -58,12 +89,16 @@ export default class SpectateScene extends Phaser.Scene {
         }
 
         spells.forEach((spell) => this.map.createSpell(spell, []))
-        this.map.createKey(map.key.x, map.key.y, [])
+
+        if (map.key) {
+            this.map.createKey(map.key.x, map.key.y, [])
+        }
 
         eventEmitter.on("updatePlayerPosition", this.updatePlayerPosition)
         eventEmitter.on("keyPickup", this.map.destroyKey)
         eventEmitter.on("spellPickup", this.map.destroySpell)
         eventEmitter.on("cameraFocusPlayer", this.addCamera)
+        eventEmitter.on("cameraZoom", this.zoomCamera)
 
         this.addCamera()
     }

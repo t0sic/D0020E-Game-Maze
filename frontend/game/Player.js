@@ -213,7 +213,40 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         return 12
     }
 
-    updatePosition = (joystick) => {
+    playAnimation = (vector) => {
+        const frameIndex = this.calculateFrameIndex(vector)
+
+        if (this.activeFrameIndex !== frameIndex) {
+            this.activeFrameIndex = frameIndex
+
+            const animations = {
+                0: "down",
+                4: "left",
+                8: "right",
+                12: "up",
+            }
+
+            const animationKey = animations[frameIndex]
+            this.play(`${animationKey}_animation`, true)
+        }
+    }
+
+    updatePlayerPosition = (coords) => {
+        const dx = coords.x - this.x
+        const dy = coords.y - this.y
+        const resultantVector = new Phaser.Math.Vector2(dx, dy)
+
+        this.playAnimation(resultantVector)
+
+        this.setPosition(coords.x, coords.y)
+        setTimeout(() => {
+            if (coords.x === this.x && coords.y === this.y) {
+                this.anims.stop()
+            }
+        }, 100)
+    }
+
+    joystickMove = (joystick) => {
         if (joystick.forceX || joystick.forceY) {
             const vector = new Phaser.Math.Vector2(
                 joystick.forceX,
@@ -227,21 +260,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(this.dir.x * this.maxSpeed)
             this.setVelocityY(this.dir.y * this.maxSpeed)
 
-            const frameIndex = this.calculateFrameIndex(this.dir)
-
-            if (this.currentFrameIndex !== frameIndex) {
-                this.currentFrameIndex = frameIndex
-
-                const animations = {
-                    0: "down",
-                    4: "left",
-                    8: "right",
-                    12: "up",
-                }
-
-                const animationKey = animations[frameIndex]
-                this.play(`${animationKey}_animation`, true)
-            }
+            this.playAnimation(this.dir)
         } else {
             this.setVelocityX(0)
             this.setVelocityY(0)
