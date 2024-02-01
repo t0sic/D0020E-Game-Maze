@@ -1,8 +1,8 @@
 import Phaser from "phaser"
 
 class Projectile extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, spawnX, spawnY, spellType) {
-        super(scene, spawnX, spawnY, "flame")
+    constructor(scene, spawnX, spawnY, spellType, texture) {
+        super(scene, spawnX, spawnY, texture)
         this.spellType = spellType
         this.maxSpeed = 100
 

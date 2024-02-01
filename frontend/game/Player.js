@@ -168,20 +168,47 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     spawnProjectile = (spell) => {
-        const { direction } = spell
+        const { direction, spellType } = spell
+
+        console.log("projectile", spell)
+
+        let texture
+        switch (spellType) {
+            case "slow":
+                texture = "slow_projectile"
+                break
+            case "stun":
+                texture = "stun_projectile"
+                break
+            case "confuse":
+                texture = "confuse_projectile"
+                break
+        }
         const projectile = new Projectile(
             this.scene,
             this.x,
             this.y,
-            spell.spellType
+            spell.spellType,
+            texture
         )
         this.scene.projectiles.add(projectile)
 
         projectile.setVelocityX(direction.x * projectile.maxSpeed)
         projectile.setVelocityY(direction.y * projectile.maxSpeed)
 
-        projectile.setRotation(this.playerAngle) /
-            projectile.anims.play("flameAnimation", true)
+        projectile.setRotation(Math.atan2(direction.y, direction.x))
+
+        switch (spellType) {
+            case "stun":
+                projectile.anims.play("stunAnimation", true)
+                break
+            case "slow":
+                projectile.anims.play("slowAnimation", true)
+                break
+            case "confuse":
+                projectile.anims.play("confuseAnimation", true)
+                break
+        }
 
         this.scene.physics.add.collider(
             projectile,
@@ -263,7 +290,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setPosition(coords.x, coords.y)
         setTimeout(() => {
             if (coords.x === this.x && coords.y === this.y) {
-                this.anims.stop()
+                this.activeFrameIndex = undefined
+                this.anims.restart()
+                this.anims.pause()
             }
         }, 100)
     }
@@ -276,7 +305,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             )
             this.sendPlayerPosition()
             this.dir = vector.normalize()
-            this.playerAngle = Math.atan2(this.dir.y, this.dir.x)
             this.isConfused ? (this.dir = this.dir.negate()) : this.dir
 
             this.setVelocityX(this.dir.x * this.maxSpeed)
@@ -287,7 +315,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(0)
             this.setVelocityY(0)
 
-            this.anims.stop()
+            this.anims.restart()
         }
     }
 }

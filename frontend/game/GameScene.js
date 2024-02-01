@@ -31,8 +31,26 @@ class GameScene extends Phaser.Scene {
 
     createProjectileAnimations = () => {
         this.anims.create({
-            key: "flameAnimation",
-            frames: this.anims.generateFrameNumbers("flame", {
+            key: "stunAnimation",
+            frames: this.anims.generateFrameNumbers("stun_projectile", {
+                start: 0,
+                end: 3,
+            }),
+            frameRate: 10,
+            repeat: -1,
+        })
+        this.anims.create({
+            key: "slowAnimation",
+            frames: this.anims.generateFrameNumbers("slow_projectile", {
+                start: 0,
+                end: 8,
+            }),
+            frameRate: 10,
+            repeat: -1,
+        })
+        this.anims.create({
+            key: "confuseAnimation",
+            frames: this.anims.generateFrameNumbers("confuse_projectile", {
                 start: 17,
                 end: 20,
             }),
