@@ -16,6 +16,9 @@ export default class Map {
         const wallLayer = map.createLayer("Walls", tileset)
         const doorLayer = map.createLayer("Door", tileset)
 
+        const decor = map.addTilesetImage("decorative", "decor")
+        const decorLayer = map.createLayer("Decorative", decor)
+
         wallLayer.setCollisionByProperty({ Collision: true })
         doorLayer.setCollisionByProperty({ Collision: true })
 
@@ -31,7 +34,7 @@ export default class Map {
             spell,
             this.scene.player.handleSpellCollision,
             null,
-            this
+            this,
         )
     }
 
@@ -52,7 +55,7 @@ export default class Map {
             this.scene.key,
             this.handleKeyCollision,
             null,
-            this
+            this,
         )
     }
 
@@ -77,7 +80,7 @@ export default class Map {
             this.scene.doorLayer,
             this.scene.handleDoorCollision,
             null,
-            this
+            this,
         )
         this.scene.physics.add.collider(this.scene.player, this.scene.wallLayer)
     }

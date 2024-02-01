@@ -25,7 +25,9 @@ class GameScene extends Phaser.Scene {
         })
 
         this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("Tilemap1", "/assets/sprint3.json")
+        this.load.image("decor", "/assets/decorative.png")
+
+        this.load.tilemapTiledJSON("Tilemap1", "/assets/sprint1map_1.json")
     }
 
     init = () => {
@@ -69,12 +71,12 @@ class GameScene extends Phaser.Scene {
         this.player = new Player(
             this,
             players[this.socketId].x,
-            players[this.socketId].y
+            players[this.socketId].y,
         )
         this.opponent = new Player(
             this,
             players[this.opponentId].x,
-            players[this.opponentId].y
+            players[this.opponentId].y,
         )
 
         this.map.addCollisions()
@@ -84,7 +86,7 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("spellPickup", this.map.destroySpell)
         eventEmitter.on(
             "onSpellButtonClicked",
-            this.player.onSpellButtonClicked
+            this.player.onSpellButtonClicked,
         )
         eventEmitter.on("castSpell", this.opponent.castSpell)
         eventEmitter.on("playerWon", this.onPlayerWon)
