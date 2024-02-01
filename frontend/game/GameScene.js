@@ -2,6 +2,7 @@ import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
 import Phaser from "phaser"
 import Map from "./Map.js"
+import { preload } from "./shared.js"
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -9,23 +10,7 @@ class GameScene extends Phaser.Scene {
     }
 
     preload = () => {
-        this.load.image("confuse", "/assets/confuse.png")
-        this.load.image("slow", "/assets/slow.png")
-        this.load.image("haste", "/assets/haste.png")
-        this.load.image("stun", "/assets/stun.png")
-        this.load.spritesheet("flame", "/assets/Flame_full_sheet.png", {
-            frameWidth: 12,
-            frameHeight: 12,
-        })
-
-        this.load.image("key", "/assets/key.png")
-        this.load.spritesheet("player", "/assets/player.png", {
-            frameWidth: 16,
-            frameHeight: 16,
-        })
-
-        this.load.image("tiles", "/assets/dungeon_tiles.png")
-        this.load.tilemapTiledJSON("Tilemap1", "/assets/sprint3.json")
+        preload(this)
     }
 
     init = () => {
@@ -64,7 +49,7 @@ class GameScene extends Phaser.Scene {
 
         this.opponentId = ids[0] === this.socketId ? ids[1] : ids[0]
 
-        this.map.createMap()
+        this.map.createMap(map.asset)
 
         this.player = new Player(
             this,
@@ -77,9 +62,9 @@ class GameScene extends Phaser.Scene {
             players[this.opponentId].y
         )
 
-        this.map.addCollisions()
+        this.map.addCollisions([this.player])
 
-        eventEmitter.on("moveOpponent", this.moveOpponent)
+        eventEmitter.on("moveOpponent", this.opponent.updatePlayerPosition)
         eventEmitter.on("keyPickup", this.map.destroyKey)
         eventEmitter.on("spellPickup", this.map.destroySpell)
         eventEmitter.on(
@@ -91,42 +76,13 @@ class GameScene extends Phaser.Scene {
 
         this.scene
             .get("UIScene")
-            .events.on("joystickMove", this.player.updatePosition)
+            .events.on("joystickMove", this.player.joystickMove)
 
         this.addCamera()
 
-        spells.forEach(this.map.createSpell)
+        spells.forEach((spell) => this.map.createSpell(spell, [this.player]))
 
-        this.map.createKey(map.key.x, map.key.y)
-    }
-
-    moveOpponent = (coords) => {
-        const dx = coords.x - this.opponent.x
-        const dy = coords.y - this.opponent.y
-        const resultantVector = new Phaser.Math.Vector2(dx, dy)
-
-        const frameIndex = this.opponent.calculateFrameIndex(resultantVector)
-
-        if (this.activeFrameIndex !== frameIndex) {
-            this.activeFrameIndex = frameIndex
-
-            const animations = {
-                0: "down",
-                4: "left",
-                8: "right",
-                12: "up",
-            }
-
-            const animationKey = animations[frameIndex]
-            this.opponent.play(`${animationKey}_animation`, true)
-        }
-
-        this.opponent.setPosition(coords.x, coords.y)
-        setTimeout(() => {
-            if (coords.x === this.opponent.x && coords.y === this.opponent.y) {
-                this.opponent.anims.stop()
-            }
-        }, 100)
+        this.map.createKey(map.key.x, map.key.y, [this.player])
     }
 
     addCamera = () => {

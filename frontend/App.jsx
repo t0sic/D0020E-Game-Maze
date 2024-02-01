@@ -1,3 +1,4 @@
+import SpectateGame from "./components/SpectateGame.jsx"
 import React, { useState, useEffect } from "react"
 import Layout from "./components/Layout.jsx"
 import WebsocketRoom from "./websocketRoom.js"
@@ -58,6 +59,11 @@ const App = () => {
         setPath("Queue")
     }
 
+    const handleSetSessionId = (id) => {
+        setSessionId(id)
+        setPath("SpectateGame")
+    }
+
     return (
         <>
             {path === "Queue" ? (
@@ -68,8 +74,18 @@ const App = () => {
                     onGameEnd={handleGameEnd}
                     onSessionEnd={handleSessionEnd}
                 />
+            ) : path === "SpectateGame" ? (
+                <SpectateGame
+                    sessionId={sessionId}
+                    onSessionEnd={handleSessionEnd}
+                />
             ) : (
-                <Layout setPath={setPath} path={path} onPlay={handlePlay} />
+                <Layout
+                    setPath={setPath}
+                    path={path}
+                    onPlay={handlePlay}
+                    handleSetSessionId={handleSetSessionId}
+                />
             )}
         </>
     )

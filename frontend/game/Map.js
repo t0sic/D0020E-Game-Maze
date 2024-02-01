@@ -7,32 +7,40 @@ export default class Map {
         this.scene = scene
     }
 
-    createMap = () => {
-        const mapAsset = this.scene.gameData.map.asset
-
+    createMap = (mapAsset) => {
         const map = this.scene.make.tilemap({ key: mapAsset })
         const tileset = map.addTilesetImage("dungeon_tiles", "tiles")
         const groundLayer = map.createLayer("Ground", tileset)
         const wallLayer = map.createLayer("Walls", tileset)
         const doorLayer = map.createLayer("Door", tileset)
 
+        const decor = map.addTilesetImage("decorative", "decor")
+        const decorLayer = map.createLayer("Decorative", decor)
+
         wallLayer.setCollisionByProperty({ Collision: true })
         doorLayer.setCollisionByProperty({ Collision: true })
 
+        console.log(map)
+
+        this.width = map.widthInPixels
+        this.height = map.heightInPixels
         this.scene.wallLayer = wallLayer
         this.scene.doorLayer = doorLayer
     }
 
-    createSpell = ({ x, y, spellType }) => {
+    createSpell = ({ x, y, spellType }, players) => {
         const spell = new Spell(this.scene, x, y, spellType)
         this.scene.spells.push(spell)
-        this.scene.physics.add.overlap(
-            this.scene.player,
-            spell,
-            this.scene.player.handleSpellCollision,
-            null,
-            this
-        )
+
+        players.forEach((player) => {
+            this.scene.physics.add.overlap(
+                player,
+                spell,
+                player.handleSpellCollision,
+                null,
+                this
+            )
+        })
     }
 
     destroySpell = (spell) => {
@@ -45,21 +53,23 @@ export default class Map {
         })
     }
 
-    createKey = (x, y) => {
+    createKey = (x, y, players) => {
         this.scene.key = new Key(this.scene, x, y)
-        this.scene.physics.add.overlap(
-            this.scene.player,
-            this.scene.key,
-            this.handleKeyCollision,
-            null,
-            this
-        )
+        players.forEach((player) => {
+            this.scene.physics.add.overlap(
+                player,
+                this.scene.key,
+                this.handleKeyCollision,
+                null,
+                this
+            )
+        })
     }
 
     handleKeyCollision = (player, key) => {
-        this.scene.player.hasKey = true
+        player.hasKey = true
 
-        eventEmitter.emit("onKeyData", this.scene.player.hasKey)
+        eventEmitter.emit("onKeyData", true)
 
         this.emitRemoveKey()
         this.destroyKey()
@@ -71,14 +81,16 @@ export default class Map {
         this.scene.websocketRoom.sendEvent("keyPickup")
     }
 
-    addCollisions = () => {
-        this.scene.physics.add.collider(
-            this.scene.player,
-            this.scene.doorLayer,
-            this.scene.handleDoorCollision,
-            null,
-            this
-        )
-        this.scene.physics.add.collider(this.scene.player, this.scene.wallLayer)
+    addCollisions = (players) => {
+        players.forEach((player) => {
+            this.scene.physics.add.collider(
+                player,
+                this.scene.doorLayer,
+                this.scene.handleDoorCollision,
+                null,
+                this
+            )
+            this.scene.physics.add.collider(player, this.scene.wallLayer)
+        })
     }
 }
