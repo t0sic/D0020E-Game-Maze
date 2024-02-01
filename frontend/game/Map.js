@@ -14,6 +14,9 @@ export default class Map {
         const wallLayer = map.createLayer("Walls", tileset)
         const doorLayer = map.createLayer("Door", tileset)
 
+        const decor = map.addTilesetImage("decorative", "decor")
+        const decorLayer = map.createLayer("Decorative", decor)
+
         wallLayer.setCollisionByProperty({ Collision: true })
         doorLayer.setCollisionByProperty({ Collision: true })
 

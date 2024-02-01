@@ -15,5 +15,7 @@ export const preload = (scene) => {
     })
 
     scene.load.image("tiles", "/assets/dungeon_tiles.png")
-    scene.load.tilemapTiledJSON("Tilemap1", "/assets/sprint3.json")
+    scene.load.image("decor", "/assets/decorative.png")
+
+    scene.load.tilemapTiledJSON("Tilemap1", "/assets/sprint1map_1.json")
 }
