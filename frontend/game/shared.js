@@ -8,8 +8,8 @@ export const preload = (scene) => {
         frameHeight: 16,
     })
     scene.load.spritesheet("stun_projectile", "/assets/stun_projectile.png", {
-        frameWidth: 38,
-        frameHeight: 38,
+        frameWidth: 16,
+        frameHeight: 16,
     })
     scene.load.spritesheet(
         "confuse_projectile",
