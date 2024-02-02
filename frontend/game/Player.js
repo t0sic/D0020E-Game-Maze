@@ -10,6 +10,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         const { player, spells } = config
 
         this.websocketRoom = this.scene.registry.get("websocketRoom")
+        this.opponent
         this.maxSpeed = player["speed"]
         this.hasKey = false
         this.spells = []
@@ -186,18 +187,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         console.log("projectile", spell)
 
-        let texture
-        switch (spellType) {
-            case "slow":
-                texture = "slow_projectile"
-                break
-            case "stun":
-                texture = "stun_projectile"
-                break
-            case "confuse":
-                texture = "confuse_projectile"
-                break
-        }
+        let texture = spellType + "_projectile"
         const projectile = new Projectile(
             this.scene,
             this.x,
@@ -210,19 +200,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         projectile.setVelocityX(direction.x * projectile.maxSpeed)
         projectile.setVelocityY(direction.y * projectile.maxSpeed)
 
-        projectile.setRotation(Math.atan2(direction.y, direction.x))
+        const angle = Math.atan2(direction.y, direction.x)
 
-        switch (spellType) {
-            case "stun":
-                projectile.anims.play("stunAnimation", true)
-                break
-            case "slow":
-                projectile.anims.play("slowAnimation", true)
-                break
-            case "confuse":
-                projectile.anims.play("confuseAnimation", true)
-                break
-        }
+        projectile.setRotation(angle)
+
+        projectile.anims.play(spellType + "Animation", true)
 
         this.scene.physics.add.collider(
             projectile,
@@ -232,11 +214,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
         )
 
-        const vemVareSomCasta = this.scene.opponent === this
+        const vemVareSomCasta = this.opponent === this
 
         this.scene.physics.add.collider(
             projectile,
-            vemVareSomCasta ? this.scene.player : this.scene.opponent,
+            vemVareSomCasta ? this.scene.player : this.opponent,
             this.handleProjectileCollision
         )
     }

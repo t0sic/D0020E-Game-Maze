@@ -58,6 +58,19 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
         }
     }
 
+    const handleSpellCast = (data) => {
+        eventEmitter.emit("castSpell", data)
+
+        let currentGameData = { ...gameDataRef.current }
+
+        if (currentGameData && currentGameData.players[data.id]) {
+            currentGameData.players[data.id].spells = currentGameData.players[
+                data.id
+            ].spells.filter((spell) => spell !== data.spellType)
+            setGameData(currentGameData)
+        }
+    }
+
     const handleKeyPickup = (id) => {
         eventEmitter.emit("keyPickup", id)
         let currentGameData = { ...gameDataRef.current }
@@ -92,6 +105,9 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                     break
                 case "spellPickup":
                     handleSpellPickup(data.spell, data.id)
+                    break
+                case "castSpell":
+                    handleSpellCast(data)
                     break
                 case "endSession":
                     onSessionEnd()
@@ -175,12 +191,12 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/pickups/fire.png)",
+                                                                "url(/assets/pickups/haste.png)",
                                                             opacity:
                                                                 gameData.players[
                                                                     player
                                                                 ].spells.includes(
-                                                                    "fire"
+                                                                    "haste"
                                                                 )
                                                                     ? 1
                                                                     : 0.5,
@@ -190,12 +206,12 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/pickups/earth.png)",
+                                                                "url(/assets/pickups/stun.png)",
                                                             opacity:
                                                                 gameData.players[
                                                                     player
                                                                 ].spells.includes(
-                                                                    "earth"
+                                                                    "stun"
                                                                 )
                                                                     ? 1
                                                                     : 0.5,
@@ -205,12 +221,12 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/pickups/air.png)",
+                                                                "url(/assets/pickups/slow.png)",
                                                             opacity:
                                                                 gameData.players[
                                                                     player
                                                                 ].spells.includes(
-                                                                    "air"
+                                                                    "slow"
                                                                 )
                                                                     ? 1
                                                                     : 0.5,
@@ -220,12 +236,12 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/pickups/water.png)",
+                                                                "url(/assets/pickups/confuse.png)",
                                                             opacity:
                                                                 gameData.players[
                                                                     player
                                                                 ].spells.includes(
-                                                                    "water"
+                                                                    "confuse"
                                                                 )
                                                                     ? 1
                                                                     : 0.5,

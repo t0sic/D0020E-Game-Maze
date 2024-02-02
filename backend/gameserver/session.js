@@ -56,19 +56,25 @@ export default class Session {
     playerWon = (socket) => {
         socket.broadcast.emit("playerWon")
         this.gameserver.endSession(this)
-        // setTimeout(() => {
-        // }, 10000)
     }
 
     castSpell = (socket, projectile) => {
-        // sends event to other front end client to spawn spell casted by other client
-        socket.broadcast.emit("castSpell", projectile)
+        socket.broadcast.emit("castSpell", { ...projectile, id: socket.id })
     }
 
     spellPickup = (socket, spell) => {
-        this.game.spells = this.game.spells.filter(
-            (s) => s.x !== spell.x && s.y !== spell.y
-        )
+        this.game.spells = this.game.spells.filter((s) => {
+            if (
+                s.x === spell.x &&
+                s.y === spell.y &&
+                s.spellType === spell.spellType
+            ) {
+                return false
+            }
+            return true
+        })
+
+        console.log("after", this.game.spells)
 
         this.game.players[socket.id].spells.push(spell.spellType)
         socket.broadcast.emit("spellPickup", { spell, id: socket.id })

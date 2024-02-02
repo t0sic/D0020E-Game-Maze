@@ -1,5 +1,35 @@
 import config from "../../config.json"
 
+export const createProjectileAnimations = (scene) => {
+    scene.anims.create({
+        key: "stunAnimation",
+        frames: scene.anims.generateFrameNumbers("stun_projectile", {
+            start: 0,
+            end: 3,
+        }),
+        frameRate: 10,
+        repeat: -1,
+    })
+    scene.anims.create({
+        key: "slowAnimation",
+        frames: scene.anims.generateFrameNumbers("slow_projectile", {
+            start: 0,
+            end: 8,
+        }),
+        frameRate: 10,
+        repeat: -1,
+    })
+    scene.anims.create({
+        key: "confuseAnimation",
+        frames: scene.anims.generateFrameNumbers("confuse_projectile", {
+            start: 17,
+            end: 20,
+        }),
+        frameRate: 10,
+        repeat: -1,
+    })
+}
+
 export const preload = (scene) => {
     console.log("config", config)
 

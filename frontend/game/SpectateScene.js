@@ -1,5 +1,5 @@
+import { preload, createProjectileAnimations } from "./shared.js"
 import eventEmitter from "../eventEmitter.js"
-import { preload } from "./shared.js"
 import Player from "./Player.js"
 import Phaser from "phaser"
 import Map from "./Map.js"
@@ -12,6 +12,7 @@ export default class SpectateScene extends Phaser.Scene {
     init = () => {
         this.spells = []
         this.players = []
+        this.projectiles = this.add.group()
     }
 
     preload = () => {
@@ -21,38 +22,14 @@ export default class SpectateScene extends Phaser.Scene {
     create = () => {
         this.map = new Map(this)
 
+        createProjectileAnimations(this)
+
         eventEmitter.on("setGameData", this.setGameData)
         eventEmitter.emit("sceneCreated")
     }
 
-    updatePlayerPosition = (coords, playerId) => {
-        const player = this.players[playerId]
-        const dx = coords.x - player.x
-        const dy = coords.y - player.y
-        const resultantVector = new Phaser.Math.Vector2(dx, dy)
-
-        const frameIndex = player.calculateFrameIndex(resultantVector)
-
-        if (player.activeFrameIndex !== frameIndex) {
-            player.activeFrameIndex = frameIndex
-
-            const animations = {
-                0: "down",
-                4: "left",
-                8: "right",
-                12: "up",
-            }
-
-            const animationKey = animations[frameIndex]
-            player.play(`${animationKey}_animation`, true)
-        }
-
-        player.setPosition(coords.x, coords.y)
-        setTimeout(() => {
-            if (coords.x === player.x && coords.y === player.y) {
-                player.anims.stop()
-            }
-        }, 100)
+    onPlayerMove = (coords, playerId) => {
+        this.players[playerId].updatePlayerPosition(coords)
     }
 
     addCamera = (player) => {
@@ -76,6 +53,10 @@ export default class SpectateScene extends Phaser.Scene {
         this.cameras.main.setZoom(zoom)
     }
 
+    onCastSpell = (spell) => {
+        this.players[spell.id].castSpell(spell)
+    }
+
     setGameData = (gameData) => {
         const { map, players, spells } = gameData
 
@@ -88,13 +69,17 @@ export default class SpectateScene extends Phaser.Scene {
             [ids[1]]: new Player(this, players[ids[1]].x, players[ids[1]].y),
         }
 
+        this.players[ids[0]].opponent = this.players[ids[1]]
+        this.players[ids[1]].opponent = this.players[ids[0]]
+
         spells.forEach((spell) => this.map.createSpell(spell, []))
 
         if (map.key) {
             this.map.createKey(map.key.x, map.key.y, [])
         }
 
-        eventEmitter.on("updatePlayerPosition", this.updatePlayerPosition)
+        eventEmitter.on("updatePlayerPosition", this.onPlayerMove)
+        eventEmitter.on("castSpell", this.onCastSpell)
         eventEmitter.on("keyPickup", this.map.destroyKey)
         eventEmitter.on("spellPickup", this.map.destroySpell)
         eventEmitter.on("cameraFocusPlayer", this.addCamera)

@@ -1,8 +1,8 @@
+import { preload, createProjectileAnimations } from "./shared.js"
 import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
 import Phaser from "phaser"
 import Map from "./Map.js"
-import { preload } from "./shared.js"
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -22,41 +22,12 @@ class GameScene extends Phaser.Scene {
 
     create = () => {
         this.map = new Map(this)
-        this.createProjectileAnimations()
+
+        createProjectileAnimations(this)
         this.scene.launch("UIScene")
 
         eventEmitter.on("setGameData", this.setGameData)
         eventEmitter.emit("sceneCreated")
-    }
-
-    createProjectileAnimations = () => {
-        this.anims.create({
-            key: "stunAnimation",
-            frames: this.anims.generateFrameNumbers("stun_projectile", {
-                start: 0,
-                end: 3,
-            }),
-            frameRate: 10,
-            repeat: -1,
-        })
-        this.anims.create({
-            key: "slowAnimation",
-            frames: this.anims.generateFrameNumbers("slow_projectile", {
-                start: 0,
-                end: 8,
-            }),
-            frameRate: 10,
-            repeat: -1,
-        })
-        this.anims.create({
-            key: "confuseAnimation",
-            frames: this.anims.generateFrameNumbers("confuse_projectile", {
-                start: 17,
-                end: 20,
-            }),
-            frameRate: 10,
-            repeat: -1,
-        })
     }
 
     setGameData = (gameData) => {
@@ -79,6 +50,9 @@ class GameScene extends Phaser.Scene {
             players[this.opponentId].x,
             players[this.opponentId].y
         )
+
+        this.opponent.opponent = this.player
+        this.player.opponent = this.opponent
 
         this.map.addCollisions([this.player])
 

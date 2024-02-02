@@ -72,8 +72,6 @@ export default class Gameserver {
         this.sessions = this.sessions.filter(
             (_session) => session.id !== _session.id
         )
-
-        console.log(this.sessions)
     }
 
     createSession = () => {
