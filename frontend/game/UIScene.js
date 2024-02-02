@@ -1,12 +1,13 @@
 import eventEmitter from "../eventEmitter.js"
 import Phaser from "phaser"
 import VirtualJoystick from "phaser3-rex-plugins/plugins/virtualjoystick.js"
+import config from "../../config.json"
 
 class UIScene extends Phaser.Scene {
     constructor() {
         super({ key: "UIScene", active: true })
 
-        this.spellTypes = ["haste", "stun", "slow", "confuse"]
+        this.spellTypes = Object.keys(config.spells)
     }
 
     create = () => {
@@ -38,13 +39,17 @@ class UIScene extends Phaser.Scene {
     }
 
     createSpellButtons = () => {
+        const { spells } = config
+
         this.spellTypes.forEach((type, i) => {
             const offsetX = 1920 - 50 * 2 - 30
             const offsetY = 1080 - 50 * 2 - 30 * (i + 1) - 100 * i
 
+            console.log(spells[type]["button_asset"])
+
             this[type + "Button"] = this.add.container(offsetX, offsetY)
             const circle = this.add.circle(0, 0, 50, 0x000f12)
-            const image = this.add.image(0, 0, type)
+            const image = this.add.image(0, 0, type + "_button")
             image.setScale(4)
 
             this[type + "Button"].add([circle, image])

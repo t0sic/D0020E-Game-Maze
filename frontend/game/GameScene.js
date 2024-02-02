@@ -67,7 +67,7 @@ class GameScene extends Phaser.Scene {
 
         this.opponentId = ids[0] === this.socketId ? ids[1] : ids[0]
 
-        this.map.createMap(map.asset)
+        this.map.createMap(map.name)
 
         this.player = new Player(
             this,

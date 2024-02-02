@@ -55,8 +55,8 @@ export default class Session {
 
     playerWon = (socket) => {
         socket.broadcast.emit("playerWon")
+        this.gameserver.endSession(this)
         // setTimeout(() => {
-        //     this.gameserver.endSession(this)
         // }, 10000)
     }
 

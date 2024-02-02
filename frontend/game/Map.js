@@ -20,8 +20,6 @@ export default class Map {
         wallLayer.setCollisionByProperty({ Collision: true })
         doorLayer.setCollisionByProperty({ Collision: true })
 
-        console.log(map)
-
         this.width = map.widthInPixels
         this.height = map.heightInPixels
         this.scene.wallLayer = wallLayer
@@ -29,7 +27,13 @@ export default class Map {
     }
 
     createSpell = ({ x, y, spellType }, players) => {
-        const spell = new Spell(this.scene, x, y, spellType)
+        const spell = new Spell(
+            this.scene,
+            x,
+            y,
+            spellType,
+            spellType + "_vile"
+        )
         this.scene.spells.push(spell)
 
         players.forEach((player) => {

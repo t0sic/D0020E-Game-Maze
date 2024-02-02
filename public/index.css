@@ -39,7 +39,7 @@ body {
 .logo {
     width: 75px;
     height: 75px;
-    background-image: url(assets/logo.png);
+    background-image: url(assets/ui/logo.png);
     background-size: cover;
     cursor: pointer;
 }
@@ -52,7 +52,7 @@ body {
 }
 
 .content {
-    background-image: url(assets/background2.png);
+    background-image: url(assets/ui/background2.png);
     height: 100%;
     background-size: contain;
     background-repeat: no-repeat;
@@ -62,6 +62,6 @@ body {
 
 @media screen and (min-width: 1000px) {
     .content {
-        background-image: url(assets/background.png);
+        background-image: url(assets/ui/background.png);
     }
 }

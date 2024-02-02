@@ -1,34 +1,10 @@
 import Player from "./player.js"
+import config from "../../config.json" assert { type: "json" }
 
 export default class Game {
     constructor(playerIds) {
-        const spellTypes = ["stun", "slow", "haste", "confuse"] //Röd = stun, grön= haste, blå=slow ljusblå=confuse
-        const maps = [
-            {
-                asset: "Tilemap1",
-                spells: [
-                    { x: 100, y: 150 },
-                    { x: 101, y: 150 },
-                    { x: 102, y: 150 },
-                    { x: 103, y: 150 },
-                    { x: 104, y: 150 },
-                    { x: 105, y: 150 },
-                    { x: 105, y: 150 },
-                    { x: 105, y: 150 },
-                    { x: 105, y: 150 },
-                    { x: 105, y: 150 },
-                    { x: 105, y: 150 },
-                    { x: 105, y: 150 },
-                    { x: 105, y: 150 },
-                    { x: 206, y: 200 },
-                ],
-                spawnpoints: [
-                    { x: 100, y: 100 },
-                    { x: 200, y: 100 },
-                ],
-                key: { x: 50, y: 100 },
-            },
-        ]
+        const { maps, spells } = config
+        const spellTypes = Object.keys(spells)
 
         this.map = maps.random()
         this.spells = [...this.map.spells].map((spell) => ({

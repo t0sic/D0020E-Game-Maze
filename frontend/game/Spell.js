@@ -1,8 +1,8 @@
 import Phaser from "phaser"
 
 class Spell extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, spawnX, spawnY, type) {
-        super(scene, spawnX, spawnY, type)
+    constructor(scene, spawnX, spawnY, type, texture) {
+        super(scene, spawnX, spawnY, texture)
 
         this.spellType = type
 

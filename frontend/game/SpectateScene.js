@@ -79,7 +79,7 @@ export default class SpectateScene extends Phaser.Scene {
     setGameData = (gameData) => {
         const { map, players, spells } = gameData
 
-        this.map.createMap(map.asset)
+        this.map.createMap(map.name)
 
         const ids = Object.keys(players)
 

@@ -1,3 +1,69 @@
 {
-    "test": 123
+    "key": {
+        "asset": "/assets/pickups/key.png"
+    },
+    "spells": {
+        "haste": {
+            "button_asset": "/assets/pickups/haste.png",
+            "vile_asset": "/assets/pickups/haste.png",
+            "speed": 200,
+            "duration": 10000
+        },
+        "stun": {
+            "button_asset": "/assets/pickups/stun.png",
+            "vile_asset": "/assets/pickups/stun.png",
+            "duration": 5000,
+            "projectile_speed": 200,
+            "projectile_asset": "/assets/projectiles/stun_projectile.png"
+        },
+        "confuse": {
+            "button_asset": "/assets/pickups/confuse.png",
+            "vile_asset": "/assets/pickups/confuse.png",
+            "duration": 5000,
+            "projectile_speed": 200,
+            "projectile_asset": "/assets/projectiles/confuse_projectile.png"
+        },
+        "slow": {
+            "button_asset": "/assets/pickups/slow.png",
+            "vile_asset": "/assets/pickups/slow.png",
+            "duration": 5000,
+            "speed": 50,
+            "projectile_speed": 200,
+            "projectile_asset": "/assets/projectiles/slow_projectile.png"
+        }
+    },
+    "player": {
+        "speed": 100,
+        "asset": "/assets/player/player.png"
+    },
+    "tiles": {
+        "asset": "/assets/tiles/dungeon_tiles.png",
+        "decor_asset": "/assets/tiles/decorative.png"
+    },
+    "maps": [
+        {
+            "name": "Tilemap1",
+            "asset": "/assets/maps/sprint1map_1.json",
+            "spells": [
+                { "x": 110, "y": 150 },
+                { "x": 121, "y": 150 },
+                { "x": 132, "y": 150 },
+                { "x": 133, "y": 150 },
+                { "x": 144, "y": 150 },
+                { "x": 155, "y": 150 },
+                { "x": 165, "y": 150 },
+                { "x": 175, "y": 150 },
+                { "x": 185, "y": 150 },
+                { "x": 195, "y": 150 },
+                { "x": 205, "y": 150 },
+                { "x": 215, "y": 150 },
+                { "x": 225, "y": 150 }
+            ],
+            "spawnpoints": [
+                { "x": 100, "y": 100 },
+                { "x": 200, "y": 100 }
+            ],
+            "key": { "x": 50, "y": 100 }
+        }
+    ]
 }

@@ -1,22 +1,26 @@
 import Phaser from "phaser"
 import Projectile from "./Projectile.js"
 import eventEmitter from "../eventEmitter.js"
+import config from "../../config.json"
 
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, spawnX, spawnY) {
         super(scene, spawnX, spawnY, "player")
+
+        const { player, spells } = config
+
         this.websocketRoom = this.scene.registry.get("websocketRoom")
-        this.maxSpeed = 100
+        this.maxSpeed = player["speed"]
         this.hasKey = false
         this.spells = []
         this.isHasted = false
-        this.hasteDuration = 5000
+        this.hasteDuration = spells["haste"]["duration"]
         this.isConfused = false
-        this.confusionDuration = 5000
+        this.confusionDuration = spells["confuse"]["duration"]
         this.isSlowed = false
-        this.slowDuration = 5000
+        this.slowDuration = spells["slow"]["duration"]
         this.isStunned = false
-        this.stunDuration = 5000
+        this.stunDuration = spells["stun"]["duration"]
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
@@ -67,9 +71,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     applyHasteEffect = () => {
+        const { spells } = config
+
         if (!this.isHasted) {
             this.isHasted = true
-            this.maxSpeed *= 2
+            this.maxSpeed = spells["haste"]["speed"]
             console.log("Player speed has been multiplied")
             setTimeout(() => {
                 this.removeHasteEffects()
@@ -78,7 +84,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     removeHasteEffects = () => {
-        this.maxSpeed = 100
+        const { player } = config
+
+        this.maxSpeed = player["speed"]
         this.isHasted = false
         console.log("Speed effect removed!")
     }
@@ -91,14 +99,18 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.removeConfusionEffect()
         }, this.confusionDuration)
     }
+
     removeConfusionEffect = () => {
         this.isConfused = false
         console.log("Confusion effect removed!")
     }
+
     applySlowEffect = () => {
+        const { spells } = config
+
         if (!this.isSlowed) {
             this.isSlowed = true
-            this.maxSpeed = 50
+            this.maxSpeed = spells["slow"]["speed"]
             console.log("Player is slowed!")
 
             setTimeout(() => {
@@ -106,11 +118,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }, this.slowDuration)
         }
     }
+
     removeSlowEffect = () => {
         this.maxSpeed = 100
         this.isSlowed = false
         console.log("Slow effect removed!")
     }
+
     applyStunEffect = () => {
         if (!this.isStunned) {
             this.isSlowed = true
@@ -310,7 +324,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(this.dir.x * this.maxSpeed)
             this.setVelocityY(this.dir.y * this.maxSpeed)
 
-            this.playAnimation(this.dir)
+            if (!this.isStunned) this.playAnimation(this.dir)
         } else {
             this.setVelocityX(0)
             this.setVelocityY(0)

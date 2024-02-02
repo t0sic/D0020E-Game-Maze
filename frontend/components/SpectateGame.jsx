@@ -161,7 +161,7 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                 className="game-player-image"
                                                 style={{
                                                     backgroundImage:
-                                                        "url(/assets/player" +
+                                                        "url(/assets/ui/player" +
                                                         (i + 1) +
                                                         ".webp)",
                                                 }}
@@ -175,7 +175,7 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/fire.png)",
+                                                                "url(/assets/pickups/fire.png)",
                                                             opacity:
                                                                 gameData.players[
                                                                     player
@@ -190,7 +190,7 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/earth.png)",
+                                                                "url(/assets/pickups/earth.png)",
                                                             opacity:
                                                                 gameData.players[
                                                                     player
@@ -205,7 +205,7 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/air.png)",
+                                                                "url(/assets/pickups/air.png)",
                                                             opacity:
                                                                 gameData.players[
                                                                     player
@@ -220,7 +220,7 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/water.png)",
+                                                                "url(/assets/pickups/water.png)",
                                                             opacity:
                                                                 gameData.players[
                                                                     player
@@ -235,7 +235,7 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                         className="game-player-pickup"
                                                         style={{
                                                             backgroundImage:
-                                                                "url(/assets/key.png)",
+                                                                "url(/assets/pickups/key.png)",
                                                             opacity: gameData
                                                                 .players[player]
                                                                 .hasKey
