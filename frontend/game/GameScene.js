@@ -1,4 +1,8 @@
-import { preload, createProjectileAnimations } from "./shared.js"
+import {
+    preload,
+    createProjectileAnimations,
+    createKeyAnimations,
+} from "./shared.js"
 import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
 import Phaser from "phaser"
@@ -24,6 +28,7 @@ class GameScene extends Phaser.Scene {
         this.map = new Map(this)
 
         createProjectileAnimations(this)
+        createKeyAnimations(this)
         this.scene.launch("UIScene")
 
         eventEmitter.on("setGameData", this.setGameData)

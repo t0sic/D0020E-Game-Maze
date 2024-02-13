@@ -59,6 +59,8 @@ export default class Map {
 
     createKey = (x, y, players) => {
         this.scene.key = new Key(this.scene, x, y)
+        this.scene.key.anims.play("keyAnimation")
+
         players.forEach((player) => {
             this.scene.physics.add.overlap(
                 player,

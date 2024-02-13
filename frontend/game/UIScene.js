@@ -23,7 +23,7 @@ class UIScene extends Phaser.Scene {
         this.keyIndcator = this.add.container(1920 - 50 * 2 - 30, 50 * 2 - 30)
         const circle = this.add.circle(0, 0, 50, 0x000f12)
         const image = this.add.image(0, 0, "key")
-        image.setScale(4)
+        image.setScale(2)
 
         this.keyIndcator.add([circle, image])
 
@@ -48,11 +48,10 @@ class UIScene extends Phaser.Scene {
             console.log(spells[type]["button_asset"])
 
             this[type + "Button"] = this.add.container(offsetX, offsetY)
-            const circle = this.add.circle(0, 0, 50, 0x000f12)
             const image = this.add.image(0, 0, type + "_button")
-            image.setScale(4)
+            image.setScale(8)
 
-            this[type + "Button"].add([circle, image])
+            this[type + "Button"].add([image])
             // Add hit area to container
             this[type + "Button"].setSize(100, 100)
             this[type + "Button"].setInteractive()

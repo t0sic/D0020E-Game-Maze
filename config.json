@@ -1,31 +1,34 @@
 {
+
     "key": {
-        "asset": "/assets/pickups/key.png"
+        "asset": "/assets/pickups/key3.png"
     },
     "spells": {
         "haste": {
-            "button_asset": "/assets/pickups/haste.png",
+            "button_asset": "/assets/ui/haste.png",
             "vile_asset": "/assets/pickups/haste.png",
             "speed": 200,
             "duration": 10000
         },
         "stun": {
-            "button_asset": "/assets/pickups/stun.png",
+            "button_asset": "/assets/ui/stun.png",
             "vile_asset": "/assets/pickups/stun.png",
+            "collision_asset": "/assets/projectiles/stun_collision.png",
             "duration": 5000,
             "projectile_speed": 200,
             "projectile_asset": "/assets/projectiles/stun_projectile.png"
         },
         "confuse": {
-            "button_asset": "/assets/pickups/confuse.png",
+            "button_asset": "/assets/ui/confuse.png",
             "vile_asset": "/assets/pickups/confuse.png",
             "duration": 5000,
             "projectile_speed": 200,
             "projectile_asset": "/assets/projectiles/confuse_projectile.png"
         },
         "slow": {
-            "button_asset": "/assets/pickups/slow.png",
+            "button_asset": "/assets/ui/slow.png",
             "vile_asset": "/assets/pickups/slow.png",
+            "collision_asset": "/assets/projectiles/slow_collision.png",
             "duration": 5000,
             "speed": 50,
             "projectile_speed": 200,

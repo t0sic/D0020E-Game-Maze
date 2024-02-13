@@ -28,6 +28,46 @@ export const createProjectileAnimations = (scene) => {
         frameRate: 10,
         repeat: -1,
     })
+    scene.anims.create({
+        key: "confuse_collision",
+        frames: scene.anims.generateFrameNumbers("confuse_projectile", {
+            start: 40,
+            end: 47,
+        }),
+        frameRate: 10,
+        repeat: 0,
+    })
+
+    scene.anims.create({
+        key: "stun_collision",
+        frames: scene.anims.generateFrameNumbers("stun_collision", {
+            start: 0,
+            end: 5,
+        }),
+        frameRate: 10,
+        repeat: 0,
+    })
+
+    scene.anims.create({
+        key: "slow_collision",
+        frames: scene.anims.generateFrameNumbers("slow_collision", {
+            start: 0,
+            end: 5,
+        }),
+        frameRate: 10,
+        repeat: 0,
+    })
+}
+export const createKeyAnimations = (scene) => {
+    scene.anims.create({
+        key: "keyAnimation",
+        frames: scene.anims.generateFrameNumbers("key", {
+            start: 0,
+            end: 4,
+        }),
+        frameRate: 10,
+        repeat: -1,
+    })
 }
 
 export const preload = (scene) => {
@@ -61,9 +101,20 @@ export const preload = (scene) => {
         frameWidth: 12,
         frameHeight: 12,
     })
+    scene.load.spritesheet("stun_collision", stun["collision_asset"], {
+        frameWidth: 16,
+        frameHeight: 16,
+    })
+    scene.load.spritesheet("slow_collision", slow["collision_asset"], {
+        frameWidth: 15,
+        frameHeight: 8,
+    })
 
     // Key
-    scene.load.image("key", key["asset"])
+    scene.load.spritesheet("key", key["asset"], {
+        frameWidth: 14,
+        frameHeight: 27,
+    })
 
     // Player
     scene.load.spritesheet("player", player["asset"], {

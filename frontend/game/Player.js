@@ -210,7 +210,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             projectile,
             this.scene.wallLayer,
             () => {
-                projectile.destroy()
+                this.createProjectileCollision(projectile)
             }
         )
 
@@ -223,8 +223,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         )
     }
 
+    createProjectileCollision = (projectile) => {
+        projectile.body.enable = false
+        projectile.anims.play(projectile.spellType + "_collision", true)
+        projectile.on("animationcomplete", () => {
+            projectile.destroy()
+        })
+    }
     handleProjectileCollision = (projectile, player) => {
-        projectile.destroy()
+        this.createProjectileCollision(projectile)
         switch (projectile.spellType) {
             case "stun":
                 player.applyStunEffect()
