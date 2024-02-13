@@ -118,8 +118,8 @@ export const preload = (scene) => {
 
     // Player
     scene.load.spritesheet("player", player["asset"], {
-        frameWidth: 16,
-        frameHeight: 16,
+        frameWidth: 32,
+        frameHeight: 32,
     })
 
     // Tiles

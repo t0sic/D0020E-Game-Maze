@@ -56,6 +56,8 @@ class GameScene extends Phaser.Scene {
             players[this.opponentId].y
         )
 
+        this.opponent.playIdleAnimation(new Phaser.Math.Vector2(1, 0))
+
         this.opponent.opponent = this.player
         this.player.opponent = this.opponent
 

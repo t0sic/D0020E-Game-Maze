@@ -12,6 +12,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.websocketRoom = this.scene.registry.get("websocketRoom")
         this.opponent
         this.maxSpeed = player["speed"]
+        this.isAttacking = false
         this.hasKey = false
         this.spells = []
         this.isHasted = false
@@ -31,10 +32,82 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     createAnimations = () => {
         this.anims.create({
+            key: "attackhorizontal_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 88,
+                end: 93,
+            }),
+            frameRate: 8,
+            repeat: 0,
+        })
+        this.anims.create({
+            key: "attackup_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 96,
+                end: 101,
+            }),
+            frameRate: 8,
+            repeat: 0,
+        })
+        this.anims.create({
+            key: "attackdown_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 104,
+                end: 109,
+            }),
+            frameRate: 8,
+            repeat: 0,
+        })
+        this.anims.create({
+            key: "idleup_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 112,
+                end: 115,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+        this.anims.create({
+            key: "idledown_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 120,
+                end: 123,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+        this.anims.create({
+            key: "idlehorizontal_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 64,
+                end: 67,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+        this.anims.create({
             key: "down_animation",
             frames: this.anims.generateFrameNumbers("player", {
-                start: 0,
-                end: 3,
+                start: 48,
+                end: 51,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+        this.anims.create({
+            key: "downright_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 56,
+                end: 59,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+        this.anims.create({
+            key: "downleft_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 40,
+                end: 43,
             }),
             frameRate: 8,
             repeat: -1,
@@ -43,8 +116,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.anims.create({
             key: "left_animation",
             frames: this.anims.generateFrameNumbers("player", {
-                start: 4,
-                end: 7,
+                start: 32,
+                end: 39,
             }),
             frameRate: 8,
             repeat: -1,
@@ -53,8 +126,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.anims.create({
             key: "right_animation",
             frames: this.anims.generateFrameNumbers("player", {
-                start: 8,
-                end: 11,
+                start: 0,
+                end: 7,
             }),
             frameRate: 8,
             repeat: -1,
@@ -63,8 +136,26 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.anims.create({
             key: "up_animation",
             frames: this.anims.generateFrameNumbers("player", {
-                start: 12,
-                end: 15,
+                start: 16,
+                end: 19,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+        this.anims.create({
+            key: "upright_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 8,
+                end: 11,
+            }),
+            frameRate: 8,
+            repeat: -1,
+        })
+        this.anims.create({
+            key: "upleft_animation",
+            frames: this.anims.generateFrameNumbers("player", {
+                start: 24,
+                end: 27,
             }),
             frameRate: 8,
             repeat: -1,
@@ -182,10 +273,33 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
     }
 
+    playAttackAnimation = (direction) => {
+        this.isAttacking = true
+        const frameIndex = this.calculateFrameIndex(direction)
+
+        if (frameIndex === 4) {
+            this.anims.play("attackhorizontal_animation", true)
+            this.setFlipX(true)
+        } else if (frameIndex === 0) {
+            this.anims.play("attackhorizontal_animation", true)
+            this.setFlipX(false)
+        } else if ([1, 2, 3].includes(frameIndex)) {
+            this.anims.play("attackdown_animation", true)
+        } else if ([5, 6, 7].includes(frameIndex)) {
+            this.anims.play("attackup_animation", true)
+        }
+
+        this.on("animationcomplete", () => {
+            this.isAttacking = false
+            this.setFlipX(false)
+            this.playIdleAnimation(new Phaser.Math.Vector2(1, 0))
+        })
+    }
+
     spawnProjectile = (spell) => {
         const { direction, spellType } = spell
 
-        console.log("projectile", spell)
+        this.playAttackAnimation(direction)
 
         let texture = spellType + "_projectile"
         const projectile = new Projectile(
@@ -253,34 +367,52 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     calculateFrameIndex = (vector) => {
-        if (Math.abs(vector.x) > Math.abs(vector.y)) {
-            if (vector.x > 0) {
-                return 8
-            }
-            return 4
+        const angle = Math.atan2(vector.y, vector.x)
+
+        // Convert radians to degrees
+        const degree = angle * (180 / Math.PI)
+
+        // Normalize degree to be between 0 and 360
+        const normalizedDegree = (degree + 360) % 360
+
+        if (normalizedDegree >= 22.5 && normalizedDegree < 67.5) {
+            return 1 // Up-Right
+        } else if (normalizedDegree >= 67.5 && normalizedDegree < 112.5) {
+            return 2 // Up
+        } else if (normalizedDegree >= 112.5 && normalizedDegree < 157.5) {
+            return 3 // Up-Left
+        } else if (normalizedDegree >= 157.5 && normalizedDegree < 202.5) {
+            return 4 // Left
+        } else if (normalizedDegree >= 202.5 && normalizedDegree < 247.5) {
+            return 5 // Down-Left
+        } else if (normalizedDegree >= 247.5 && normalizedDegree < 292.5) {
+            return 6 // Down
+        } else if (normalizedDegree >= 292.5 && normalizedDegree < 337.5) {
+            return 7 // Down-Right
+        } else {
+            return 0 // Right
         }
-        if (vector.y > 0) {
-            return 0
-        }
-        return 12
     }
 
     playAnimation = (vector) => {
+        if (this.isAttacking) return
+
+        this.setFlipX(false)
         const frameIndex = this.calculateFrameIndex(vector)
 
-        if (this.activeFrameIndex !== frameIndex) {
-            this.activeFrameIndex = frameIndex
-
-            const animations = {
-                0: "down",
-                4: "left",
-                8: "right",
-                12: "up",
-            }
-
-            const animationKey = animations[frameIndex]
-            this.play(`${animationKey}_animation`, true)
+        const animations = {
+            0: "right",
+            1: "downright",
+            2: "down",
+            3: "downleft",
+            4: "left",
+            5: "upleft",
+            6: "up",
+            7: "upright",
         }
+
+        const animationKey = animations[frameIndex]
+        this.play(`${animationKey}_animation`, true)
     }
 
     updatePlayerPosition = (coords) => {
@@ -293,11 +425,29 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setPosition(coords.x, coords.y)
         setTimeout(() => {
             if (coords.x === this.x && coords.y === this.y) {
-                this.activeFrameIndex = undefined
-                this.anims.restart()
-                this.anims.pause()
+                this.playIdleAnimation(resultantVector)
             }
         }, 100)
+    }
+
+    playIdleAnimation = (vector) => {
+        if (this.isAttacking) return
+
+        const frameIndex = this.calculateFrameIndex(vector)
+
+        this.setFlipX(false)
+
+        if (frameIndex === 4) {
+            this.anims.play("idlehorizontal_animation", true)
+            this.setFlipX(true)
+        } else if (frameIndex === 0) {
+            this.anims.play("idlehorizontal_animation", true)
+            this.setFlipX(false)
+        } else if ([1, 2, 3].includes(frameIndex)) {
+            this.anims.play("idledown_animation", true)
+        } else if ([5, 6, 7].includes(frameIndex)) {
+            this.anims.play("idleup_animation", true)
+        }
     }
 
     joystickMove = (joystick) => {
@@ -318,7 +468,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(0)
             this.setVelocityY(0)
 
-            this.anims.restart()
+            this.playIdleAnimation(this.dir || new Phaser.Math.Vector2(1, 0))
         }
     }
 }
