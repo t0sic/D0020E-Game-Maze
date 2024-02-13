@@ -1,5 +1,5 @@
 {
-    "watch": ["backend"],
+    "watch": ["backend", "config.json"],
     "ext": "js,json",
     "ignore": ["game", "public"],
     "quiet": true

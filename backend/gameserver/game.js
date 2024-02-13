@@ -7,19 +7,23 @@ export default class Game {
         const spellTypes = Object.keys(spells)
 
         this.map = maps.random()
+
+        const spawnpoints = this.map.spawnpoints.random()
+
+        this.map.key = spawnpoints.key
+
         this.spells = [...this.map.spells].map((spell) => ({
             ...spell,
             spellType: spellTypes.random(),
         }))
-
         this.players = {
             [playerIds[0]]: new Player(
-                this.map.spawnpoints[0].x,
-                this.map.spawnpoints[0].y
+                spawnpoints.players[0].x,
+                spawnpoints.players[0].y,
             ),
             [playerIds[1]]: new Player(
-                this.map.spawnpoints[1].x,
-                this.map.spawnpoints[1].y
+                spawnpoints.players[1].x,
+                spawnpoints.players[1].y,
             ),
         }
     }
