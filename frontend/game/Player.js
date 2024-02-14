@@ -416,13 +416,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     updatePlayerPosition = (coords) => {
+        const { rules } = config
+
         const dx = coords.x - this.x
         const dy = coords.y - this.y
         const resultantVector = new Phaser.Math.Vector2(dx, dy)
 
         this.playAnimation(resultantVector)
 
-        if (this.hasKey) {
+        if (this.hasKey && rules["track_opponent"]) {
             eventEmitter.emit("onIndicatorData", this.opponent, this)
         }
 
@@ -455,6 +457,22 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     joystickMove = (joystick) => {
+        const { rules } = config
+
+        let coords
+
+        if (!this.opponent.hasKey && !this.hasKey && rules["track_key"]) {
+            coords = this.scene.key
+        } else if (this.hasKey && rules["track_exit"]) {
+            coords = this.scene.map.getDoorCoords()
+        } else if (this.opponent.hasKey && rules["track_opponent"]) {
+            coords = this.opponent
+        }
+
+        if (coords) {
+            eventEmitter.emit("onIndicatorData", this, coords)
+        }
+
         if (joystick.forceX || joystick.forceY) {
             const vector = new Phaser.Math.Vector2(
                 joystick.forceX,
@@ -466,20 +484,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.setVelocityX(this.dir.x * this.maxSpeed)
             this.setVelocityY(this.dir.y * this.maxSpeed)
-
-            let coords
-
-            if (!this.opponent.hasKey && !this.hasKey) {
-                coords = this.scene.key
-            } else if (this.hasKey) {
-                coords = this.scene.map.getDoorCoords()
-            } else if (this.opponent.hasKey) {
-                coords = this.opponent
-            }
-
-            if (coords) {
-                eventEmitter.emit("onIndicatorData", this, coords)
-            }
 
             if (!this.isStunned) this.playAnimation(this.dir)
         } else {

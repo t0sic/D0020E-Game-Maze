@@ -86,6 +86,7 @@ class GameScene extends Phaser.Scene {
 
     onKeyPickup = () => {
         this.opponent.hasKey = true
+        eventEmitter.emit("onObjectiveData", "opponent")
         this.map.destroyKey()
     }
 

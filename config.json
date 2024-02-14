@@ -6,6 +6,11 @@
         "arrow_asset": "/assets/ui/arrow.png",
         "exit_asset": "/assets/ui/exit.png"
     },
+    "rules": {
+        "track_key": true,
+        "track_exit": true,
+        "track_opponent": true
+    },
     "spells": {
         "haste": {
             "button_asset": "/assets/ui/haste.png",

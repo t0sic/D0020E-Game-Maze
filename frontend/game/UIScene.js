@@ -8,6 +8,8 @@ class UIScene extends Phaser.Scene {
         super({ key: "UIScene", active: true })
 
         this.spellTypes = Object.keys(config.spells)
+        this.objective = "key"
+        this.hasKey = false
     }
 
     create = () => {
@@ -17,7 +19,12 @@ class UIScene extends Phaser.Scene {
 
         eventEmitter.on("onSpellData", this.updateSpellButtons)
         eventEmitter.on("onIndicatorData", this.setIndicatorDirection)
-        eventEmitter.on("onKeyData", this.updateKeyIndicator)
+        eventEmitter.on("onObjectiveData", this.updateObjective)
+        eventEmitter.on("onKeyData", this.updateKeyData)
+    }
+
+    updateKeyData = (hasKey) => {
+        this.hasKey = hasKey
     }
 
     setIndicatorDirection = (playerCoords, targetCoords) => {
@@ -27,6 +34,7 @@ class UIScene extends Phaser.Scene {
             targetCoords.x,
             targetCoords.y
         )
+
         this.keyIndcator.getAt(2).setRotation(angle + Math.PI / 2)
     }
 
@@ -34,27 +42,53 @@ class UIScene extends Phaser.Scene {
         this.keyIndcator = this.add.container(1920 - 50 * 2 - 30, 50 * 2)
         const circle = this.add.circle(0, 0, 50, 0x000f12)
         const key = this.add.image(0, 0, "key")
+        key.setAlpha(0.5)
         key.setScale(2)
 
         const exit = this.add.image(0, 0, "exit")
+        exit.setAlpha(0)
         exit.setScale(0.3)
 
         const arrow = this.add.image(0, 0, "arrow")
         arrow.setScale(0.4)
         arrow.setOrigin(0.5, 1)
 
-        this.keyIndcator.add([circle, key, arrow, exit])
+        const opponent = this.add.image(0, 0, "player")
+        opponent.setScale(2)
+        opponent.setAlpha(0)
 
-        this.updateKeyIndicator(false)
+        this.keyIndcator.add([circle, key, arrow, exit, opponent])
     }
 
-    updateKeyIndicator = (hasKey) => {
-        if (hasKey) {
-            this.keyIndcator.getAt(3).setAlpha(1)
-            this.keyIndcator.getAt(1).setAlpha(0)
-        } else {
-            this.keyIndcator.getAt(1).setAlpha(1)
-            this.keyIndcator.getAt(3).setAlpha(0)
+    updateObjective = (objective) => {
+        const { rules } = config
+
+        this.objective = objective
+
+        const arrow = this.keyIndcator.getAt(2)
+        const key = this.keyIndcator.getAt(1)
+        const exit = this.keyIndcator.getAt(3)
+        const opponent = this.keyIndcator.getAt(4)
+
+        switch (objective) {
+            case "key":
+                key.setAlpha(this.hasKey ? 1 : 0.5)
+                exit.setAlpha(0)
+                opponent.setAlpha(0)
+                arrow.setAlpha(rules["track_key"] ? 1 : 0)
+                break
+            case "opponent":
+                key.setAlpha(0)
+                exit.setAlpha(0)
+                opponent.setAlpha(1)
+                arrow.setAlpha(rules["track_opponent"] ? 1 : 0)
+                break
+            case "exit":
+                key.setAlpha(0)
+                exit.setAlpha(1)
+                opponent.setAlpha(0)
+                arrow.setAlpha(rules["track_exit"] ? 1 : 0)
+                break
         }
     }
 
