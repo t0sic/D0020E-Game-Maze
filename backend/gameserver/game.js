@@ -7,6 +7,7 @@ export default class Game {
         const spellTypes = Object.keys(spells)
 
         this.map = maps.random()
+        console.log(this.map)
         this.spells = [...this.map.spells].map((spell) => ({
             ...spell,
             spellType: spellTypes.random(),

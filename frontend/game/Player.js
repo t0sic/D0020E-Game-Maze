@@ -422,6 +422,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.playAnimation(resultantVector)
 
+        if (this.hasKey) {
+            eventEmitter.emit("onIndicatorData", this.opponent, this)
+        }
+
         this.setPosition(coords.x, coords.y)
         setTimeout(() => {
             if (coords.x === this.x && coords.y === this.y) {
@@ -463,15 +467,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(this.dir.x * this.maxSpeed)
             this.setVelocityY(this.dir.y * this.maxSpeed)
 
-            const coords = this.hasKey
-                ? this.scene.map.getDoorCoords()
-                : this.scene.key
+            let coords
 
-            eventEmitter.emit(
-                "onIndicatorData",
-                { x: this.x, y: this.y },
-                coords
-            )
+            if (!this.opponent.hasKey && !this.hasKey) {
+                coords = this.scene.key
+            } else if (this.hasKey) {
+                coords = this.scene.map.getDoorCoords()
+            } else if (this.opponent.hasKey) {
+                coords = this.opponent
+            }
+
+            if (coords) {
+                eventEmitter.emit("onIndicatorData", this, coords)
+            }
 
             if (!this.isStunned) this.playAnimation(this.dir)
         } else {
