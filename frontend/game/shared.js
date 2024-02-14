@@ -73,7 +73,7 @@ export const createKeyAnimations = (scene) => {
 export const preload = (scene) => {
     console.log("config", config)
 
-    const { spells, key, player, tiles, maps } = config
+    const { spells, key, player, tiles, maps, ui } = config
     const { confuse, stun, slow, haste } = spells
 
     // Viles
@@ -87,6 +87,10 @@ export const preload = (scene) => {
     scene.load.image("slow_button", slow["button_asset"])
     scene.load.image("haste_button", haste["button_asset"])
     scene.load.image("stun_button", stun["button_asset"])
+
+    // UI
+    scene.load.image("arrow", ui["arrow_asset"])
+    scene.load.image("exit", ui["exit_asset"])
 
     // Projectiles
     scene.load.spritesheet("slow_projectile", slow["projectile_asset"], {
