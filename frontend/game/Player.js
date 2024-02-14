@@ -222,6 +222,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.isSlowed = true
             this.maxSpeed = 0
             console.log("Player is immovable!")
+            this.scene.map.dropKey(this.x, this.y)
 
             setTimeout(() => {
                 this.removeStunEffect()

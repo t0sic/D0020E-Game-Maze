@@ -47,6 +47,7 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
     useEffect(() => {
         if (!websocketRoom) return
 
+        
         websocketRoom.eventHandler = (event, data) => {
             switch (event) {
                 case "connect":
@@ -70,7 +71,9 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
                     break
                 case "castSpell":
                     eventEmitter.emit("castSpell", data)
-                    console.log("recieved cast spell", data)
+                    break
+                case "dropKey":
+                    eventEmitter.emit("dropKey", data)
                     break
                 case "playerWon":
                     eventEmitter.emit("playerWon", false)
