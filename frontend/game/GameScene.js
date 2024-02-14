@@ -64,7 +64,7 @@ class GameScene extends Phaser.Scene {
         this.map.addCollisions([this.player])
 
         eventEmitter.on("moveOpponent", this.opponent.updatePlayerPosition)
-        eventEmitter.on("keyPickup", this.map.destroyKey)
+        eventEmitter.on("keyPickup", this.onKeyPickup)
         eventEmitter.on("spellPickup", this.map.destroySpell)
         eventEmitter.on(
             "onSpellButtonClicked",
@@ -82,6 +82,11 @@ class GameScene extends Phaser.Scene {
         spells.forEach((spell) => this.map.createSpell(spell, [this.player]))
 
         this.map.createKey(map.key.x, map.key.y, [this.player])
+    }
+
+    onKeyPickup = () => {
+        this.opponent.hasKey = true
+        this.map.destroyKey()
     }
 
     addCamera = () => {

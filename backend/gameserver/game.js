@@ -19,11 +19,11 @@ export default class Game {
         this.players = {
             [playerIds[0]]: new Player(
                 spawnpoints.players[0].x,
-                spawnpoints.players[0].y,
+                spawnpoints.players[0].y
             ),
             [playerIds[1]]: new Player(
                 spawnpoints.players[1].x,
-                spawnpoints.players[1].y,
+                spawnpoints.players[1].y
             ),
         }
     }

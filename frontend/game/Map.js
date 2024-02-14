@@ -87,6 +87,30 @@ export default class Map {
         this.scene.websocketRoom.sendEvent("keyPickup")
     }
 
+    getDoorCoords = () => {
+        const tiles = []
+
+        this.scene.doorLayer.forEachTile((tile) => {
+            if (tile.index !== -1) {
+                var worldX = this.scene.doorLayer.tileToWorldX(tile.x)
+                var worldY = this.scene.doorLayer.tileToWorldY(tile.y)
+                tiles.push({ x: worldX, y: worldY })
+            }
+        })
+
+        // Get smallest coord in tiles
+        const minX = Math.min(...tiles.map((tile) => tile.x))
+        const minY = Math.min(...tiles.map((tile) => tile.y))
+        const maxX = Math.max(...tiles.map((tile) => tile.x))
+        const maxY = Math.max(...tiles.map((tile) => tile.y))
+
+        // Get the center of the door
+        const centerX = (minX + maxX) / 2
+        const centerY = (minY + maxY) / 2
+
+        return { x: centerX, y: centerY }
+    }
+
     addCollisions = (players) => {
         players.forEach((player) => {
             this.scene.physics.add.collider(

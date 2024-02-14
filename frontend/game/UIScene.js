@@ -11,41 +11,57 @@ class UIScene extends Phaser.Scene {
     }
 
     create = () => {
-        this.createKeyIndicator()
+        this.createIndicator()
         this.createSpellButtons()
         this.createJoyStick()
 
         eventEmitter.on("onSpellData", this.updateSpellButtons)
+        eventEmitter.on("onIndicatorData", this.setIndicatorDirection)
         eventEmitter.on("onKeyData", this.updateKeyIndicator)
     }
 
-    createKeyIndicator = () => {
-        this.keyIndcator = this.add.container(1920 - 50 * 2 - 30, 50 * 2 - 30)
-        const circle = this.add.circle(0, 0, 50, 0x000f12)
-        const image = this.add.image(0, 0, "key")
-        image.setScale(2)
+    setIndicatorDirection = (playerCoords, targetCoords) => {
+        const angle = Phaser.Math.Angle.Between(
+            playerCoords.x,
+            playerCoords.y,
+            targetCoords.x,
+            targetCoords.y
+        )
+        this.keyIndcator.getAt(2).setRotation(angle + Math.PI / 2)
+    }
 
-        this.keyIndcator.add([circle, image])
+    createIndicator = () => {
+        this.keyIndcator = this.add.container(1920 - 50 * 2 - 30, 50 * 2)
+        const circle = this.add.circle(0, 0, 50, 0x000f12)
+        const key = this.add.image(0, 0, "key")
+        key.setScale(2)
+
+        const exit = this.add.image(0, 0, "exit")
+        exit.setScale(0.3)
+
+        const arrow = this.add.image(0, 0, "arrow")
+        arrow.setScale(0.4)
+        arrow.setOrigin(0.5, 1)
+
+        this.keyIndcator.add([circle, key, arrow, exit])
 
         this.updateKeyIndicator(false)
     }
 
     updateKeyIndicator = (hasKey) => {
         if (hasKey) {
-            this.keyIndcator.setAlpha(1)
+            this.keyIndcator.getAt(3).setAlpha(1)
+            this.keyIndcator.getAt(1).setAlpha(0)
         } else {
-            this.keyIndcator.setAlpha(0.5)
+            this.keyIndcator.getAt(1).setAlpha(1)
+            this.keyIndcator.getAt(3).setAlpha(0)
         }
     }
 
     createSpellButtons = () => {
-        const { spells } = config
-
         this.spellTypes.forEach((type, i) => {
             const offsetX = 1920 - 50 * 2 - 30
             const offsetY = 1080 - 50 * 2 - 30 * (i + 1) - 100 * i
-
-            console.log(spells[type]["button_asset"])
 
             this[type + "Button"] = this.add.container(offsetX, offsetY)
             const image = this.add.image(0, 0, type + "_button")

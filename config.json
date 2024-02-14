@@ -1,7 +1,10 @@
 {
-
     "key": {
         "asset": "/assets/pickups/key3.png"
+    },
+    "ui": {
+        "arrow_asset": "/assets/ui/arrow.png",
+        "exit_asset": "/assets/ui/exit.png"
     },
     "spells": {
         "haste": {
