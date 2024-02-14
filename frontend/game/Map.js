@@ -83,6 +83,7 @@ export default class Map {
 
     // Function to drop a new key at a valid location not inside a wall
     dropKey = (x, y) => {
+        console.log(this.scene.player.hasKey)
         if (this.scene.player.hasKey) {
             this.scene.player.hasKey = false
             const distance = 50 // Example distance in pixels
