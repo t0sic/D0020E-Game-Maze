@@ -222,7 +222,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.isClient) return
 
         if (!this.isStunned) {
-            this.isSlowed = true
+            this.isStunned = true
             this.maxSpeed = 0
 
             eventEmitter.emit("onObjectiveData", "key")
@@ -235,7 +235,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
     removeStunEffect = () => {
         this.maxSpeed = 100
-        this.isSlowed = false
+        this.isStunned = false
         console.log("Stun effect removed!")
     }
 
@@ -248,6 +248,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     castSpell = (spell) => {
+        if (this.isStunned) return
+
         this.spells = this.spells.filter(
             (spellType) => spellType !== spell.spellType
         )
