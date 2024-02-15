@@ -8,12 +8,25 @@ class UIScene extends Phaser.Scene {
         super({ key: "UIScene", active: true })
 
         this.spellTypes = Object.keys(config.spells)
+
+        this.scoreText = null
+        this.score = 0
     }
 
     create = () => {
         this.createKeyIndicator()
         this.createSpellButtons()
         this.createJoyStick()
+        this.scoreText = this.add.text(16, 16, "Score: " + this.score, {
+            fontSize: "50px",
+            fontFamily: "Magicfont",
+            fill: "#fff",
+        })
+
+        eventEmitter.on("updateScore", (score) => {
+            console.log("Received updateScore event with score:", score)
+            this.scoreText.setText("Score: " + score)
+        })
 
         eventEmitter.on("onSpellData", this.updateSpellButtons)
         eventEmitter.on("onKeyData", this.updateKeyIndicator)
