@@ -15,12 +15,14 @@ class UIScene extends Phaser.Scene {
     create = () => {
         this.createIndicator()
         this.createSpellButtons()
+        this.createFullScreenButton()
         this.createJoyStick()
 
         eventEmitter.on("onSpellData", this.updateSpellButtons)
         eventEmitter.on("onIndicatorData", this.setIndicatorDirection)
         eventEmitter.on("onObjectiveData", this.updateObjective)
         eventEmitter.on("onKeyData", this.updateKeyData)
+        this.updateObjective("key")
     }
 
     updateKeyData = (hasKey) => {
@@ -38,6 +40,26 @@ class UIScene extends Phaser.Scene {
         this.keyIndcator.getAt(2).setRotation(angle + Math.PI / 2)
     }
 
+    createFullScreenButton = () => {
+        this.fullScreenButton = this.add.container(50 * 2 - 30, 50 * 2)
+        const square = this.add.rectangle(0, 0, 50, 50, 0x000f12)
+
+        const fullScreen = this.add.image(0, 0, "fullscreen")
+        fullScreen.setScale(0.5)
+
+        this.fullScreenButton.add([square, fullScreen])
+        this.fullScreenButton.setSize(50, 50)
+        this.fullScreenButton.setInteractive()
+
+        this.fullScreenButton.on("pointerdown", () => {
+            if (this.scale.isFullscreen) {
+                this.scale.stopFullscreen()
+            } else {
+                this.scale.startFullscreen()
+            }
+        })
+    }
+
     createIndicator = () => {
         this.keyIndcator = this.add.container(1920 - 50 * 2 - 30, 50 * 2)
         const circle = this.add.circle(0, 0, 50, 0x000f12)
@@ -50,6 +72,7 @@ class UIScene extends Phaser.Scene {
         exit.setScale(0.3)
 
         const arrow = this.add.image(0, 0, "arrow")
+        exit.setAlpha(0)
         arrow.setScale(0.4)
         arrow.setOrigin(0.5, 1)
 
