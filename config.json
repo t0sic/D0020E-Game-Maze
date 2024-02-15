@@ -7,8 +7,8 @@
         "exit_asset": "/assets/ui/exit.png"
     },
     "rules": {
-        "track_key": true,
-        "track_exit": true,
+        "track_key": false,
+        "track_exit": false,
         "track_opponent": true
     },
     "spells": {
