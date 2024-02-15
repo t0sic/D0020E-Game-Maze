@@ -42,6 +42,9 @@ export default class Session {
             case "playerWon":
                 this.playerWon(socket)
                 break
+            case "dropKey":
+                this.dropKey(socket, data)
+                break
             case "spectate":
                 this.spectate(socket)
                 break
@@ -62,6 +65,13 @@ export default class Session {
         socket.broadcast.emit("castSpell", { ...projectile, id: socket.id })
     }
 
+    dropKey = (socket, data) => {
+        console.log("drop key", data, socket.id)
+        this.game.players[socket.id].hasKey = false
+        this.game.map.key = data
+        socket.broadcast.emit("dropKey", { ...data, id: socket.id })
+    }
+
     spellPickup = (socket, spell) => {
         this.game.spells = this.game.spells.filter((s) => {
             if (
@@ -73,8 +83,6 @@ export default class Session {
             }
             return true
         })
-
-        console.log("after", this.game.spells)
 
         this.game.players[socket.id].spells.push(spell.spellType)
         socket.broadcast.emit("spellPickup", { spell, id: socket.id })

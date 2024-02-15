@@ -16,7 +16,7 @@
             "button_asset": "/assets/ui/haste.png",
             "vile_asset": "/assets/pickups/haste.png",
             "speed": 200,
-            "duration": 10000
+            "duration": 1000000
         },
         "stun": {
             "button_asset": "/assets/ui/stun.png",

@@ -222,6 +222,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.isSlowed = true
             this.maxSpeed = 0
             console.log("Player is immovable!")
+            if (this.scene.opponent.haskey) {
+                this.scene.opponent.hasKey = false
+            }
+            if (this.scene.opponent != this) {
+                this.scene.map.dropKey(this.x, this.y)
+            }
 
             setTimeout(() => {
                 this.removeStunEffect()
@@ -348,6 +354,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.createProjectileCollision(projectile)
         switch (projectile.spellType) {
             case "stun":
+                console.log("test")
                 player.applyStunEffect()
                 break
             case "slow":

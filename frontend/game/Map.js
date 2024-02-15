@@ -82,6 +82,35 @@ export default class Map {
         this.destroyKey()
     }
 
+    // Function to drop a new key at a valid location not inside a wall
+    dropKey = (x, y) => {
+        console.log(this.scene.player.hasKey)
+        if (this.scene.player.hasKey) {
+            this.scene.player.hasKey = false
+            const distance = 50 // Example distance in pixels
+            let validPositionFound = false
+            let dropX, dropY
+
+            // Try until a valid position is found
+            while (!validPositionFound) {
+                const angle = Phaser.Math.Between(0, 360)
+                dropX = x + distance * Math.cos(Phaser.Math.DegToRad(angle))
+                dropY = y + distance * Math.sin(Phaser.Math.DegToRad(angle))
+
+                // Check if the drop position is inside a wall using the tilemap
+                const tile = this.scene.wallLayer.getTileAtWorldXY(dropX, dropY)
+                if (!tile || !tile.collides) {
+                    validPositionFound = true
+                }
+            }
+            this.createKey(dropX, dropY, [this.scene.player])
+            this.scene.websocketRoom.sendEvent("dropKey", {
+                x: dropX,
+                y: dropY,
+            })
+        }
+    }
+
     destroyKey = () => this.scene.key.destroy()
 
     emitRemoveKey = () => {
