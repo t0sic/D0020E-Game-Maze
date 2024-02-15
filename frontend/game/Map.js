@@ -95,8 +95,20 @@ export default class Map {
                 dropX = x + distance * Math.cos(Phaser.Math.DegToRad(angle))
                 dropY = y + distance * Math.sin(Phaser.Math.DegToRad(angle))
                 // Check if the drop position is inside a wall using the tilemap
-                const tile = this.scene.wallLayer.getTileAtWorldXY(dropX, dropY)
-                if (!tile || !tile.collides) {
+                const wallTile = this.scene.wallLayer.getTileAtWorldXY(
+                    dropX,
+                    dropY
+                )
+                const doorTile = this.scene.doorLayer.getTileAtWorldXY(
+                    dropX,
+                    dropY
+                )
+                if (
+                    !wallTile ||
+                    !wallTile.collides ||
+                    !doorTile ||
+                    !doorTile.collides
+                ) {
                     validPositionFound = true
                 }
             }

@@ -22,7 +22,7 @@
             "button_asset": "/assets/ui/stun.png",
             "vile_asset": "/assets/pickups/stun.png",
             "collision_asset": "/assets/projectiles/stun_collision.png",
-            "duration": 5000,
+            "duration": 2000,
             "projectile_speed": 200,
             "projectile_asset": "/assets/projectiles/stun_projectile.png"
         },
