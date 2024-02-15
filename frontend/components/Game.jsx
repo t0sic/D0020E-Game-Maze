@@ -16,8 +16,8 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
 
     const startGame = (gameData) => {
         const config = {
-            height: window.innerWidth,
-            width: window.innerHeight,
+            width: 1920,
+            height: 1080,
             type: Phaser.AUTO,
             pixelArt: true,
             parent: "phaser-game",
