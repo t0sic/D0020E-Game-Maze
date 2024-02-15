@@ -222,11 +222,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.isSlowed = true
             this.maxSpeed = 0
             console.log("Player is immovable!")
-            if (this.scene.opponent.haskey) {
-                this.scene.opponent.hasKey = false
+            if (this.opponent.haskey) {
+                this.opponent.hasKey = false
             }
-            if (this.scene.opponent != this) {
-                this.scene.map.dropKey(this.x, this.y)
+            if (this.opponent != this) {
+                this.scene.map.dropKey(this, this.x, this.y)
             }
 
             setTimeout(() => {

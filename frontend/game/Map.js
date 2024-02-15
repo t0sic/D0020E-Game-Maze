@@ -83,10 +83,9 @@ export default class Map {
     }
 
     // Function to drop a new key at a valid location not inside a wall
-    dropKey = (x, y) => {
-        console.log(this.scene.player.hasKey)
-        if (this.scene.player.hasKey) {
-            this.scene.player.hasKey = false
+    dropKey = (player, x, y) => {
+        if (player.hasKey) {
+            player.hasKey = false
             const distance = 50 // Example distance in pixels
             let validPositionFound = false
             let dropX, dropY
@@ -103,7 +102,7 @@ export default class Map {
                     validPositionFound = true
                 }
             }
-            this.createKey(dropX, dropY, [this.scene.player])
+            this.createKey(dropX, dropY, [player])
             this.scene.websocketRoom.sendEvent("dropKey", {
                 x: dropX,
                 y: dropY,

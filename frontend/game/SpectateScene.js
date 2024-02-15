@@ -41,7 +41,6 @@ export default class SpectateScene extends Phaser.Scene {
             camera.startFollow(this.players[player])
             camera.setZoom(this.zoom || 2)
         } else {
-            console.log(mapWidth, mapHeight)
             camera.stopFollow()
             camera.centerOn(mapWidth / 2, mapHeight / 2)
             camera.setZoom(this.zoom || 1)
@@ -55,6 +54,10 @@ export default class SpectateScene extends Phaser.Scene {
 
     onCastSpell = (spell) => {
         this.players[spell.id].castSpell(spell)
+    }
+
+    onKeyDrop = (coords) => {
+        this.map.createKey(coords.x, coords.y, [])
     }
 
     setGameData = (gameData) => {
@@ -84,6 +87,7 @@ export default class SpectateScene extends Phaser.Scene {
         eventEmitter.on("spellPickup", this.map.destroySpell)
         eventEmitter.on("cameraFocusPlayer", this.addCamera)
         eventEmitter.on("cameraZoom", this.zoomCamera)
+        eventEmitter.on("dropKey", this.onKeyDrop)
 
         this.addCamera()
     }
