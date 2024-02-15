@@ -6,6 +6,8 @@
     "type": "module",
     "scripts": {
         "start": "node backend/index.js",
+	"build:frontend": "webpack --mode production",
+	"build": "npm run build:frontend && npm run start",
         "dev:backend": "nodemon backend/index.js",
         "dev:frontend": "webpack --mode development --watch",
         "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
