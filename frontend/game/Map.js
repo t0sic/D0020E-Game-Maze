@@ -103,6 +103,7 @@ export default class Map {
                     dropX,
                     dropY
                 )
+
                 if (
                     !wallTile ||
                     !wallTile.collides ||
