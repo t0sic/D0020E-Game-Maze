@@ -4,7 +4,7 @@ import eventEmitter from "../eventEmitter.js"
 import config from "../../config.json"
 
 class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, spawnX, spawnY) {
+    constructor(scene, spawnX, spawnY, isClient) {
         super(scene, spawnX, spawnY, "player")
 
         const { player, spells } = config
@@ -14,6 +14,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxSpeed = player["speed"]
         this.isAttacking = false
         this.hasKey = false
+        this.isClient = isClient
         this.spells = []
         this.isHasted = false
         this.hasteDuration = spells["haste"]["duration"]
@@ -218,16 +219,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     applyStunEffect = () => {
+        if (!this.isClient) return
+
         if (!this.isStunned) {
             this.isSlowed = true
             this.maxSpeed = 0
-            console.log("Player is immovable!")
-            if (this.opponent.haskey) {
-                this.opponent.hasKey = false
-            }
-            if (this.opponent != this) {
-                this.scene.map.dropKey(this, this.x, this.y)
-            }
+
+            eventEmitter.emit("onObjectiveData", "key")
+            this.scene.map.dropKey(this.x, this.y)
 
             setTimeout(() => {
                 this.removeStunEffect()
@@ -350,11 +349,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             projectile.destroy()
         })
     }
+
     handleProjectileCollision = (projectile, player) => {
         this.createProjectileCollision(projectile)
+
         switch (projectile.spellType) {
             case "stun":
-                console.log("test")
                 player.applyStunEffect()
                 break
             case "slow":

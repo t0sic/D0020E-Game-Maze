@@ -50,12 +50,14 @@ class GameScene extends Phaser.Scene {
         this.player = new Player(
             this,
             players[this.socketId].x,
-            players[this.socketId].y
+            players[this.socketId].y,
+            true
         )
         this.opponent = new Player(
             this,
             players[this.opponentId].x,
-            players[this.opponentId].y
+            players[this.opponentId].y,
+            false
         )
 
         this.opponent.playIdleAnimation(new Phaser.Math.Vector2(1, 0))
@@ -89,6 +91,7 @@ class GameScene extends Phaser.Scene {
 
     onKeyDrop = (coords) => {
         this.map.createKey(coords.x, coords.y, [this.player])
+        eventEmitter.emit("onObjectiveData", "key")
     }
 
     onKeyPickup = () => {
