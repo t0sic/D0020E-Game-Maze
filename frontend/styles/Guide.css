@@ -6,7 +6,11 @@
 }
 
 .textbox {
-    width: 100%;
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     color: white;
     background-color: #000017;
     border-radius: 10px;
@@ -24,17 +28,24 @@
     word-wrap: break-word;
 }
 
-.picture {
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    width: 100%;
-    aspect-ratio: 1/1;
-    margin-top: 30px;
+
+
+.key-animation {
+    /* Add styles for the key-animation container */
+    height: 100%;
 }
 
-@media screen and (min-width: 1000px) {
-    .textbox {
-        width: 600px;
-    }
+.goal-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+
+.door-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
