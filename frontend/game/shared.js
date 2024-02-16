@@ -92,6 +92,10 @@ export const preload = (scene) => {
     scene.load.image("arrow", ui["arrow_asset"])
     scene.load.image("exit", ui["exit_asset"])
 
+    // Fullscreen Button
+    scene.load.image("fullscreen_enter", ui["fullscreen_enter_asset"])
+    scene.load.image("fullscreen_exit", ui["fullscreen_exit_asset"])
+
     // Projectiles
     scene.load.spritesheet("slow_projectile", slow["projectile_asset"], {
         frameWidth: 16,

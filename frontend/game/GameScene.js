@@ -33,8 +33,6 @@ class GameScene extends Phaser.Scene {
 
         eventEmitter.on("setGameData", this.setGameData)
         eventEmitter.emit("sceneCreated")
-
-        this.scale.startFullscreen()
     }
 
     setGameData = (gameData) => {

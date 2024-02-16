@@ -42,19 +42,43 @@ class UIScene extends Phaser.Scene {
 
     createFullScreenButton = () => {
         this.fullScreenButton = this.add.container(50 * 2 - 30, 50 * 2)
-        const square = this.add.rectangle(0, 0, 50, 50, 0x000f12)
+        const square = this.add.rectangle(0, 0, 100, 100, 0x000f12)
 
-        const fullScreen = this.add.image(0, 0, "fullscreen")
-        fullScreen.setScale(0.5)
+        const fullScreenEnter = this.add.image(0, 0, "fullscreen_enter")
+        const fullScreenExit = this.add.image(0, 0, "fullscreen_exit")
 
-        this.fullScreenButton.add([square, fullScreen])
+        fullScreenEnter.setScale(0.75)
+        fullScreenExit.setScale(0.75)
+
+        this.scale.startFullscreen()
+
+        this.scale.on("enterfullscreen", () => {
+            fullScreenEnter.setAlpha(0)
+            fullScreenExit.setAlpha(1)
+        })
+
+        this.scale.on("leavefullscreen", () => {
+            fullScreenEnter.setAlpha(1)
+            fullScreenExit.setAlpha(0)
+        })
+
+        const isFullScreen = this.scale.isFullscreen
+
+        fullScreenEnter.setAlpha(isFullScreen ? 0 : 1)
+        fullScreenExit.setAlpha(isFullScreen ? 1 : 0)
+
+        this.fullScreenButton.add([square, fullScreenEnter, fullScreenExit])
         this.fullScreenButton.setSize(50, 50)
         this.fullScreenButton.setInteractive()
 
         this.fullScreenButton.on("pointerdown", () => {
             if (this.scale.isFullscreen) {
+                fullScreenEnter.setAlpha(1)
+                fullScreenExit.setAlpha(0)
                 this.scale.stopFullscreen()
             } else {
+                fullScreenEnter.setAlpha(0)
+                fullScreenExit.setAlpha(1)
                 this.scale.startFullscreen()
             }
         })

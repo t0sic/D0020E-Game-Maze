@@ -4,7 +4,9 @@
     },
     "ui": {
         "arrow_asset": "/assets/ui/arrow.png",
-        "exit_asset": "/assets/ui/exit.png"
+        "exit_asset": "/assets/ui/exit.png",
+        "fullscreen_enter_asset": "/assets/ui/fullscreen_enter.png",
+        "fullscreen_exit_asset": "/assets/ui/fullscreen_exit.png"
     },
     "rules": {
         "track_key": false,
