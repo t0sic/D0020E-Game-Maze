@@ -49,3 +49,36 @@
     justify-content: center;
 }
 
+.gif {
+    width: 400px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spell-explanationContainer {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 1rem;
+    justify-content: center;
+}
+
+.spellinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.spellimage {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+
+
