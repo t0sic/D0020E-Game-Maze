@@ -49,6 +49,9 @@
         "speed": 100,
         "asset": "/assets/player/player.png"
     },
+    "opponent": {
+        "asset": "/assets/player/opponent.png"
+    },
     "tiles": {
         "asset": "/assets/tiles/dungeon_tiles.png",
         "decor_asset": "/assets/tiles/decorative.png"

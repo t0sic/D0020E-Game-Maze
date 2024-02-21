@@ -73,7 +73,7 @@ export const createKeyAnimations = (scene) => {
 export const preload = (scene) => {
     console.log("config", config)
 
-    const { spells, key, player, tiles, maps, ui } = config
+    const { spells, key, player, tiles, maps, ui, opponent } = config
     const { confuse, stun, slow, haste } = spells
 
     // Viles
@@ -126,6 +126,10 @@ export const preload = (scene) => {
 
     // Player
     scene.load.spritesheet("player", player["asset"], {
+        frameWidth: 32,
+        frameHeight: 32,
+    })
+    scene.load.spritesheet("opponent", opponent["asset"], {
         frameWidth: 32,
         frameHeight: 32,
     })

@@ -5,7 +5,7 @@ import config from "../../config.json"
 
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, spawnX, spawnY, isClient) {
-        super(scene, spawnX, spawnY, "player")
+        super(scene, spawnX, spawnY, isClient ? "player" : "opponent")
 
         const { player, spells } = config
 
@@ -33,9 +33,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     createAnimations = () => {
+        const spritesheet = this.isClient ? "player" : "opponent"
+
         this.anims.create({
             key: "attackhorizontal_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 88,
                 end: 93,
             }),
@@ -44,7 +46,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "attackup_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 96,
                 end: 101,
             }),
@@ -53,7 +55,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "attackdown_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 104,
                 end: 109,
             }),
@@ -62,7 +64,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "idleup_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 112,
                 end: 115,
             }),
@@ -71,7 +73,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "idledown_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 120,
                 end: 123,
             }),
@@ -80,7 +82,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "idlehorizontal_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 64,
                 end: 67,
             }),
@@ -89,7 +91,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "down_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 48,
                 end: 51,
             }),
@@ -98,7 +100,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "downright_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 56,
                 end: 59,
             }),
@@ -107,7 +109,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "downleft_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 40,
                 end: 43,
             }),
@@ -117,7 +119,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.anims.create({
             key: "left_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 32,
                 end: 39,
             }),
@@ -127,7 +129,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.anims.create({
             key: "right_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 0,
                 end: 7,
             }),
@@ -137,7 +139,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.anims.create({
             key: "up_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 16,
                 end: 19,
             }),
@@ -146,7 +148,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "upright_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 8,
                 end: 11,
             }),
@@ -155,7 +157,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
         this.anims.create({
             key: "upleft_animation",
-            frames: this.anims.generateFrameNumbers("player", {
+            frames: this.anims.generateFrameNumbers(spritesheet, {
                 start: 24,
                 end: 27,
             }),
