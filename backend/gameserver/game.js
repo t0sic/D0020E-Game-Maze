@@ -4,7 +4,9 @@ import config from "../../config.json" assert { type: "json" }
 export default class Game {
     constructor(playerIds) {
         const { maps, spells } = config
-        const spellTypes = Object.keys(spells)
+        const spellTypes = Object.keys(spells).filter(
+            (spell) => spell !== "stun"
+        )
 
         this.map = maps.random()
 
