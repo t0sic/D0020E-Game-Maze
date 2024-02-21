@@ -4,20 +4,27 @@
     },
     "ui": {
         "arrow_asset": "/assets/ui/arrow.png",
-        "exit_asset": "/assets/ui/exit.png"
+        "exit_asset": "/assets/ui/exit.png",
+        "fullscreen_enter_asset": "/assets/ui/fullscreen_enter.png",
+        "fullscreen_exit_asset": "/assets/ui/fullscreen_exit.png"
+    },
+    "rules": {
+        "track_key": false,
+        "track_exit": false,
+        "track_opponent": true
     },
     "spells": {
         "haste": {
             "button_asset": "/assets/ui/haste.png",
             "vile_asset": "/assets/pickups/haste.png",
-            "speed": 200,
-            "duration": 1000000
+            "speed": 125,
+            "duration": 5000
         },
         "stun": {
             "button_asset": "/assets/ui/stun.png",
             "vile_asset": "/assets/pickups/stun.png",
             "collision_asset": "/assets/projectiles/stun_collision.png",
-            "duration": 5000,
+            "duration": 2000,
             "projectile_speed": 200,
             "projectile_asset": "/assets/projectiles/stun_projectile.png"
         },

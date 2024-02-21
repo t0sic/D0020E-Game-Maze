@@ -4,7 +4,7 @@ import eventEmitter from "../eventEmitter.js"
 import config from "../../config.json"
 
 class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, spawnX, spawnY) {
+    constructor(scene, spawnX, spawnY, isClient) {
         super(scene, spawnX, spawnY, "player")
 
         const { player, spells } = config
@@ -14,6 +14,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.maxSpeed = player["speed"]
         this.isAttacking = false
         this.hasKey = false
+        this.isClient = isClient
         this.spells = []
         this.isHasted = false
         this.hasteDuration = spells["haste"]["duration"]
@@ -218,16 +219,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     applyStunEffect = () => {
+        if (!this.isClient) return
+
         if (!this.isStunned) {
-            this.isSlowed = true
+            this.isStunned = true
             this.maxSpeed = 0
-            console.log("Player is immovable!")
-            if (this.scene.opponent.haskey) {
-                this.scene.opponent.hasKey = false
-            }
-            if (this.scene.opponent != this) {
-                this.scene.map.dropKey(this.x, this.y)
-            }
+
+            eventEmitter.emit("onObjectiveData", "key")
+            this.scene.map.dropKey(this.x, this.y)
 
             setTimeout(() => {
                 this.removeStunEffect()
@@ -236,7 +235,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
     removeStunEffect = () => {
         this.maxSpeed = 100
-        this.isSlowed = false
+        this.isStunned = false
         console.log("Stun effect removed!")
     }
 
@@ -249,6 +248,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     castSpell = (spell) => {
+        if (this.isStunned) return
+
         this.spells = this.spells.filter(
             (spellType) => spellType !== spell.spellType
         )
@@ -350,11 +351,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             projectile.destroy()
         })
     }
+
     handleProjectileCollision = (projectile, player) => {
         this.createProjectileCollision(projectile)
+
         switch (projectile.spellType) {
             case "stun":
-                console.log("test")
                 player.applyStunEffect()
                 break
             case "slow":
@@ -423,13 +425,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     updatePlayerPosition = (coords) => {
+        const { rules } = config
+
         const dx = coords.x - this.x
         const dy = coords.y - this.y
         const resultantVector = new Phaser.Math.Vector2(dx, dy)
 
         this.playAnimation(resultantVector)
 
-        if (this.hasKey) {
+        if (this.hasKey && rules["track_opponent"]) {
             eventEmitter.emit("onIndicatorData", this.opponent, this)
         }
 
@@ -462,6 +466,22 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     joystickMove = (joystick) => {
+        const { rules } = config
+
+        let coords
+
+        if (!this.opponent.hasKey && !this.hasKey && rules["track_key"]) {
+            coords = this.scene.key
+        } else if (this.hasKey && rules["track_exit"]) {
+            coords = this.scene.map.getDoorCoords()
+        } else if (this.opponent.hasKey && rules["track_opponent"]) {
+            coords = this.opponent
+        }
+
+        if (coords) {
+            eventEmitter.emit("onIndicatorData", this, coords)
+        }
+
         if (joystick.forceX || joystick.forceY) {
             const vector = new Phaser.Math.Vector2(
                 joystick.forceX,
@@ -473,20 +493,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.setVelocityX(this.dir.x * this.maxSpeed)
             this.setVelocityY(this.dir.y * this.maxSpeed)
-
-            let coords
-
-            if (!this.opponent.hasKey && !this.hasKey) {
-                coords = this.scene.key
-            } else if (this.hasKey) {
-                coords = this.scene.map.getDoorCoords()
-            } else if (this.opponent.hasKey) {
-                coords = this.opponent
-            }
-
-            if (coords) {
-                eventEmitter.emit("onIndicatorData", this, coords)
-            }
 
             if (!this.isStunned) this.playAnimation(this.dir)
         } else {

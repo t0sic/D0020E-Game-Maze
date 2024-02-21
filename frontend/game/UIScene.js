@@ -8,16 +8,25 @@ class UIScene extends Phaser.Scene {
         super({ key: "UIScene", active: true })
 
         this.spellTypes = Object.keys(config.spells)
+        this.objective = "key"
+        this.hasKey = false
     }
 
     create = () => {
         this.createIndicator()
         this.createSpellButtons()
+        this.createFullScreenButton()
         this.createJoyStick()
 
         eventEmitter.on("onSpellData", this.updateSpellButtons)
         eventEmitter.on("onIndicatorData", this.setIndicatorDirection)
-        eventEmitter.on("onKeyData", this.updateKeyIndicator)
+        eventEmitter.on("onObjectiveData", this.updateObjective)
+        eventEmitter.on("onKeyData", this.updateKeyData)
+        this.updateObjective("key")
+    }
+
+    updateKeyData = (hasKey) => {
+        this.hasKey = hasKey
     }
 
     setIndicatorDirection = (playerCoords, targetCoords) => {
@@ -27,34 +36,106 @@ class UIScene extends Phaser.Scene {
             targetCoords.x,
             targetCoords.y
         )
+
         this.keyIndcator.getAt(2).setRotation(angle + Math.PI / 2)
+    }
+
+    createFullScreenButton = () => {
+        this.fullScreenButton = this.add.container(50 * 2 - 30, 50 * 2)
+        const square = this.add.rectangle(0, 0, 100, 100, 0x000f12)
+
+        const fullScreenEnter = this.add.image(0, 0, "fullscreen_enter")
+        const fullScreenExit = this.add.image(0, 0, "fullscreen_exit")
+
+        fullScreenEnter.setScale(0.75)
+        fullScreenExit.setScale(0.75)
+
+        this.scale.startFullscreen()
+
+        this.scale.on("enterfullscreen", () => {
+            fullScreenEnter.setAlpha(0)
+            fullScreenExit.setAlpha(1)
+        })
+
+        this.scale.on("leavefullscreen", () => {
+            fullScreenEnter.setAlpha(1)
+            fullScreenExit.setAlpha(0)
+        })
+
+        const isFullScreen = this.scale.isFullscreen
+
+        fullScreenEnter.setAlpha(isFullScreen ? 0 : 1)
+        fullScreenExit.setAlpha(isFullScreen ? 1 : 0)
+
+        this.fullScreenButton.add([square, fullScreenEnter, fullScreenExit])
+        this.fullScreenButton.setSize(50, 50)
+        this.fullScreenButton.setInteractive()
+
+        this.fullScreenButton.on("pointerdown", () => {
+            if (this.scale.isFullscreen) {
+                fullScreenEnter.setAlpha(1)
+                fullScreenExit.setAlpha(0)
+                this.scale.stopFullscreen()
+            } else {
+                fullScreenEnter.setAlpha(0)
+                fullScreenExit.setAlpha(1)
+                this.scale.startFullscreen()
+            }
+        })
     }
 
     createIndicator = () => {
         this.keyIndcator = this.add.container(1920 - 50 * 2 - 30, 50 * 2)
         const circle = this.add.circle(0, 0, 50, 0x000f12)
         const key = this.add.image(0, 0, "key")
+        key.setAlpha(0.5)
         key.setScale(2)
 
         const exit = this.add.image(0, 0, "exit")
+        exit.setAlpha(0)
         exit.setScale(0.3)
 
         const arrow = this.add.image(0, 0, "arrow")
+        exit.setAlpha(0)
         arrow.setScale(0.4)
         arrow.setOrigin(0.5, 1)
 
-        this.keyIndcator.add([circle, key, arrow, exit])
+        const opponent = this.add.image(0, 0, "player")
+        opponent.setScale(2)
+        opponent.setAlpha(0)
 
-        this.updateKeyIndicator(false)
+        this.keyIndcator.add([circle, key, arrow, exit, opponent])
     }
 
-    updateKeyIndicator = (hasKey) => {
-        if (hasKey) {
-            this.keyIndcator.getAt(3).setAlpha(1)
-            this.keyIndcator.getAt(1).setAlpha(0)
-        } else {
-            this.keyIndcator.getAt(1).setAlpha(1)
-            this.keyIndcator.getAt(3).setAlpha(0)
+    updateObjective = (objective) => {
+        const { rules } = config
+
+        this.objective = objective
+
+        const arrow = this.keyIndcator.getAt(2)
+        const key = this.keyIndcator.getAt(1)
+        const exit = this.keyIndcator.getAt(3)
+        const opponent = this.keyIndcator.getAt(4)
+
+        switch (objective) {
+            case "key":
+                key.setAlpha(this.hasKey ? 1 : 0.5)
+                exit.setAlpha(0)
+                opponent.setAlpha(0)
+                arrow.setAlpha(rules["track_key"] ? 1 : 0)
+                break
+            case "opponent":
+                key.setAlpha(0)
+                exit.setAlpha(0)
+                opponent.setAlpha(1)
+                arrow.setAlpha(rules["track_opponent"] ? 1 : 0)
+                break
+            case "exit":
+                key.setAlpha(0)
+                exit.setAlpha(1)
+                opponent.setAlpha(0)
+                arrow.setAlpha(rules["track_exit"] ? 1 : 0)
+                break
         }
     }
 
@@ -66,27 +147,64 @@ class UIScene extends Phaser.Scene {
             this[type + "Button"] = this.add.container(offsetX, offsetY)
             const image = this.add.image(0, 0, type + "_button")
             image.setScale(8)
+            console.log("logging spelltype in uiscene", type)
 
             this[type + "Button"].add([image])
             // Add hit area to container
             this[type + "Button"].setSize(100, 100)
             this[type + "Button"].setInteractive()
+
             this[type + "Button"].on("pointerdown", () => {
                 if (this[type + "Button"].alpha !== 1) return
                 this[type + "Button"].setAlpha(0.5)
+                if (type === "stun") {
+                    const cooldownOverlay = this.setupCooldownOverlay()
+                    this.triggerCooldown(cooldownOverlay)
+                }
                 eventEmitter.emit("onSpellButtonClicked", type)
             })
         })
 
         this.updateSpellButtons([])
     }
+    setupCooldownOverlay = () => {
+        console.log("In cooldownSetup")
+        const cooldownOverlay = this.add.graphics()
+        cooldownOverlay.setAlpha(0)
+        console.log("logging container", this.stunButton)
+        this.stunButton.setAlpha(1)
+        cooldownOverlay.fillStyle(0x0000ff, 0.5) // Black with 50% transparency
+        cooldownOverlay.fillRect(0 - 50, 0 - 50, 100, 100) // Draw a square shape (100x100)
+        console.log(cooldownOverlay)
+        this.stunButton.add(cooldownOverlay)
+        return cooldownOverlay
+    }
+
+    triggerCooldown = (cooldownOverlay) => {
+        this.stunButton.setAlpha(0.5)
+        cooldownOverlay.setAlpha(1)
+        const cooldownTween = this.tweens.add({
+            targets: cooldownOverlay,
+            scaleY: 0, // Shrink the height to 0
+            y: 50,
+            duration: 1000, // Duration of the cooldown effect (5000 milliseconds = 5 seconds)
+            transformOrigin: { x: 0, y: 0 }, // Set the transform origin to the top-left corner
+            onComplete: () => {
+                this.stunButton.setAlpha(1)
+                cooldownOverlay.setAlpha(0)
+            },
+        })
+    }
 
     updateSpellButtons = (spells) => {
         this.spellTypes.forEach((spell) => {
-            if (spells.includes(spell)) {
-                this[spell + "Button"].setAlpha(1)
-            } else {
-                this[spell + "Button"].setAlpha(0.5)
+            if (spell != "stun") {
+                console.log("this is not a stun", spell)
+                if (spells.includes(spell)) {
+                    this[spell + "Button"].setAlpha(1)
+                } else {
+                    this[spell + "Button"].setAlpha(0.5)
+                }
             }
         })
     }

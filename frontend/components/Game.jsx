@@ -16,11 +16,14 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
 
     const startGame = (gameData) => {
         const config = {
-            height: 1080,
             width: 1920,
+            height: 1080,
             type: Phaser.AUTO,
             pixelArt: true,
             parent: "phaser-game",
+            input: {
+                activePointers: 3,
+            },
             physics: {
                 default: "arcade",
                 arcade: {
@@ -47,7 +50,6 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
     useEffect(() => {
         if (!websocketRoom) return
 
-        
         websocketRoom.eventHandler = (event, data) => {
             switch (event) {
                 case "connect":

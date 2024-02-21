@@ -71,6 +71,17 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
         }
     }
 
+    const handleKeyDrop = (data) => {
+        eventEmitter.emit("dropKey", data)
+
+        let currentGameData = { ...gameDataRef.current }
+
+        if (currentGameData && currentGameData.players[data.id]) {
+            currentGameData.players[data.id].hasKey = false
+            setGameData(currentGameData)
+        }
+    }
+
     const handleKeyPickup = (id) => {
         eventEmitter.emit("keyPickup", id)
         let currentGameData = { ...gameDataRef.current }
@@ -108,6 +119,9 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                     break
                 case "castSpell":
                     handleSpellCast(data)
+                    break
+                case "dropKey":
+                    handleKeyDrop(data)
                     break
                 case "endSession":
                     onSessionEnd()
@@ -197,21 +211,6 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                                                     player
                                                                 ].spells.includes(
                                                                     "haste"
-                                                                )
-                                                                    ? 1
-                                                                    : 0.5,
-                                                        }}
-                                                    ></div>
-                                                    <div
-                                                        className="game-player-pickup"
-                                                        style={{
-                                                            backgroundImage:
-                                                                "url(/assets/pickups/stun.png)",
-                                                            opacity:
-                                                                gameData.players[
-                                                                    player
-                                                                ].spells.includes(
-                                                                    "stun"
                                                                 )
                                                                     ? 1
                                                                     : 0.5,
