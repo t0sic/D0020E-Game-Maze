@@ -164,6 +164,24 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             frameRate: 8,
             repeat: -1,
         })
+        this.anims.create({
+            key: "stun_animation",
+            frames: this.anims.generateFrameNumbers(spritesheet, {
+                start: 80,
+                end: 86,
+            }),
+            frameRate: 8,
+            repeat: 0,
+        })
+        this.anims.create({
+            key: "stun_animation_reverse",
+            frames: this.anims.generateFrameNumbers(spritesheet, {
+                start: 86,
+                end: 80,
+            }),
+            frameRate: 8,
+            repeat: 0,
+        })
     }
 
     applyHasteEffect = () => {
@@ -222,6 +240,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     applyStunEffect = () => {
+        this.play("stun_animation", true)
+        this.on("animationcomplete", () => {
+            this.play("stun_animation_reverse", true)
+            this.on("animationcomplete", () => {
+                this.play("idlehorizontal_animation", true)
+            })
+        })
+
         if (!this.isClient) return
 
         if (!this.isStunned) {
@@ -240,6 +266,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     removeStunEffect = () => {
         this.maxSpeed = 100
         this.isStunned = false
+        this.playIdleAnimation(this.dir)
     }
 
     onSpellButtonClicked = (spellType) => {
@@ -459,7 +486,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     playIdleAnimation = (vector) => {
-        if (this.isAttacking) return
+        if (this.isAttacking || this.isStunned) return
 
         const frameIndex = this.calculateFrameIndex(vector)
 
