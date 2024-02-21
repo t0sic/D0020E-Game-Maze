@@ -57,6 +57,8 @@ export default class Session {
     }
 
     playerWon = (socket) => {
+        this.state = "Ended"
+
         socket.broadcast.emit("playerWon")
         this.gameserver.endSession(this)
     }
@@ -84,6 +86,12 @@ export default class Session {
             return true
         })
 
+        setTimeout(() => {
+            if (this.state === "Started") {
+                this.websocketRoom.sendEvent("spawnSpell", spell)
+            }
+        }, 15000)
+
         this.game.players[socket.id].spells.push(spell.spellType)
         socket.broadcast.emit("spellPickup", { spell, id: socket.id })
     }
@@ -96,6 +104,8 @@ export default class Session {
 
     onDisconnect = (socket) => {
         console.log("Session Disconnect", socket.id)
+
+        this.state = "Ended"
 
         const isPlayer = this.users.some((user) => user.id === socket.id)
 

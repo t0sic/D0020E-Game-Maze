@@ -74,6 +74,7 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("castSpell", this.opponent.castSpell)
         eventEmitter.on("playerWon", this.onPlayerWon)
         eventEmitter.on("dropKey", this.onKeyDrop)
+        eventEmitter.on("spawnSpell", this.createSpell)
 
         this.scene
             .get("UIScene")
@@ -84,6 +85,12 @@ class GameScene extends Phaser.Scene {
         spells.forEach((spell) => this.map.createSpell(spell, [this.player]))
 
         this.map.createKey(map.key.x, map.key.y, [this.player])
+    }
+
+    createSpell = (spell) => {
+        const newSpell = this.map.createSpell(spell, [this.player])
+
+        this.spells.push(newSpell)
     }
 
     onKeyDrop = (coords) => {

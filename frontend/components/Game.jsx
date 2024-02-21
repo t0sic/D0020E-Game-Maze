@@ -80,6 +80,9 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
                 case "playerWon":
                     eventEmitter.emit("playerWon", false)
                     break
+                case "spawnSpell":
+                    eventEmitter.emit("spawnSpell", data)
+                    break
             }
         }
     }, [websocketRoom])
