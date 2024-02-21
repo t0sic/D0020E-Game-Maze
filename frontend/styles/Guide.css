@@ -6,13 +6,16 @@
 }
 
 .textbox {
-    width: 100%;
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     color: white;
     background-color: #000017;
     border-radius: 10px;
     padding: 15px;
-    margin-bottom: 15px;
-    margin-top: 15px;
+    margin: 15px;
 }
 
 .header {
@@ -24,17 +27,51 @@
     word-wrap: break-word;
 }
 
-.picture {
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    width: 100%;
-    aspect-ratio: 1/1;
-    margin-top: 30px;
+.key-animation {
+    /* Add styles for the key-animation container */
+    height: 100%;
 }
 
-@media screen and (min-width: 1000px) {
-    .textbox {
-        width: 600px;
-    }
+.goal-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.door-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.gif {
+    width: 100%;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spell-explanationContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.spellinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.spellimage {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }

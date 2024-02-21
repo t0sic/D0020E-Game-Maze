@@ -1,0 +1,12 @@
+
+    .sprite {
+        width: 14px; /* Width of a single frame */
+        height: 27px; /* Height of a single frame */
+        background-repeat: no-repeat;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+        background-size: cover;
+        transform: scale(5);
+        
+      }
