@@ -13,16 +13,22 @@ class UIScene extends Phaser.Scene {
     }
 
     create = () => {
-        this.createIndicator()
-        this.createSpellButtons()
-        this.createFullScreenButton()
         this.createJoyStick()
 
-        eventEmitter.on("onSpellData", this.updateSpellButtons)
-        eventEmitter.on("onIndicatorData", this.setIndicatorDirection)
-        eventEmitter.on("onObjectiveData", this.updateObjective)
-        eventEmitter.on("onKeyData", this.updateKeyData)
-        this.updateObjective("key")
+        eventEmitter.on("sceneCreated", () => {
+            this.createIndicator()
+            this.createSpellButtons()
+            this.createFullScreenButton()
+            this.createEffects()
+            this.updateObjective("key")
+
+            eventEmitter.on("onSpellData", this.updateSpellButtons)
+            eventEmitter.on("onIndicatorData", this.setIndicatorDirection)
+            eventEmitter.on("onObjectiveData", this.updateObjective)
+            eventEmitter.on("onKeyData", this.updateKeyData)
+            eventEmitter.on("onAddEffect", this.addEffect)
+            eventEmitter.on("onRemoveEffect", this.removeEffect)
+        })
     }
 
     updateKeyData = (hasKey) => {
@@ -40,6 +46,48 @@ class UIScene extends Phaser.Scene {
         this.keyIndcator.getAt(2).setRotation(angle + Math.PI / 2)
     }
 
+    createEffects = () => {
+        this.effects = this.add.container(1920 - 300, 50 * 2)
+    }
+
+    removeEffect = (effect) => {
+        const effectImage = this.effects.list.find(
+            (image) => image.texture.key === effect + "_button"
+        )
+
+        if (!effectImage) return
+
+        this.effects.remove(effectImage)
+        effectImage.destroy()
+
+        this.effects.list.forEach((image, i) => {
+            image.x = i * -75
+        })
+    }
+
+    addEffect = (effect) => {
+        const activeEffects = this.effects.list.length
+        const effectImage = this.add.image(
+            activeEffects * -75,
+            0,
+            effect + "_button"
+        )
+        effectImage.setScale(4)
+
+        console.log("runs addEffect", effect)
+
+        this.effects.add(effectImage)
+
+        this.tweens.add({
+            targets: effectImage,
+            alpha: 0.2,
+            duration: 1000,
+            ease: "Sine.easeInOut",
+            repeat: -1,
+            yoyo: true,
+        })
+    }
+
     createFullScreenButton = () => {
         this.fullScreenButton = this.add.container(50 * 2 - 30, 50 * 2)
         const square = this.add.rectangle(0, 0, 100, 100, 0x000f12)
@@ -50,7 +98,13 @@ class UIScene extends Phaser.Scene {
         fullScreenEnter.setScale(0.75)
         fullScreenExit.setScale(0.75)
 
-        this.scale.startFullscreen()
+        try {
+            if (document.fullscreenEnabled) {
+                this.scale.startFullscreen()
+            }
+        } catch (error) {
+            console.log("Fullscreen denied by browser.")
+        }
 
         this.scale.on("enterfullscreen", () => {
             fullScreenEnter.setAlpha(0)
@@ -147,7 +201,6 @@ class UIScene extends Phaser.Scene {
             this[type + "Button"] = this.add.container(offsetX, offsetY)
             const image = this.add.image(0, 0, type + "_button")
             image.setScale(8)
-            console.log("logging spelltype in uiscene", type)
 
             this[type + "Button"].add([image])
             // Add hit area to container
@@ -168,14 +221,11 @@ class UIScene extends Phaser.Scene {
         this.updateSpellButtons([])
     }
     setupCooldownOverlay = () => {
-        console.log("In cooldownSetup")
         const cooldownOverlay = this.add.graphics()
         cooldownOverlay.setAlpha(0)
-        console.log("logging container", this.stunButton)
         this.stunButton.setAlpha(1)
         cooldownOverlay.fillStyle(0x0000ff, 0.5) // Black with 50% transparency
         cooldownOverlay.fillRect(0 - 50, 0 - 50, 100, 100) // Draw a square shape (100x100)
-        console.log(cooldownOverlay)
         this.stunButton.add(cooldownOverlay)
         return cooldownOverlay
     }
@@ -199,7 +249,6 @@ class UIScene extends Phaser.Scene {
     updateSpellButtons = (spells) => {
         this.spellTypes.forEach((spell) => {
             if (spell != "stun") {
-                console.log("this is not a stun", spell)
                 if (spells.includes(spell)) {
                     this[spell + "Button"].setAlpha(1)
                 } else {

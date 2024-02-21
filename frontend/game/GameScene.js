@@ -29,7 +29,6 @@ class GameScene extends Phaser.Scene {
 
         createProjectileAnimations(this)
         createKeyAnimations(this)
-        this.scene.launch("UIScene")
 
         eventEmitter.on("setGameData", this.setGameData)
         eventEmitter.emit("sceneCreated")

@@ -12,6 +12,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.websocketRoom = this.scene.registry.get("websocketRoom")
         this.opponent
         this.maxSpeed = player["speed"]
+        this.dir = new Phaser.Math.Vector2(1, 0)
         this.isAttacking = false
         this.hasKey = false
         this.isClient = isClient
@@ -167,9 +168,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         const { spells } = config
 
         if (!this.isHasted) {
+            this.emitUIEffect("haste")
+
             this.isHasted = true
             this.maxSpeed = spells["haste"]["speed"]
-            console.log("Player speed has been multiplied")
             setTimeout(() => {
                 this.removeHasteEffects()
             }, this.hasteDuration)
@@ -181,12 +183,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.maxSpeed = player["speed"]
         this.isHasted = false
-        console.log("Speed effect removed!")
     }
 
     applyConfusionEffect = () => {
         this.isConfused = true
-        console.log("Player controls are confused!")
+        this.emitUIEffect("confuse")
 
         setTimeout(() => {
             this.removeConfusionEffect()
@@ -202,9 +203,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         const { spells } = config
 
         if (!this.isSlowed) {
+            this.emitUIEffect("slow")
             this.isSlowed = true
             this.maxSpeed = spells["slow"]["speed"]
-            console.log("Player is slowed!")
 
             setTimeout(() => {
                 this.removeSlowEffect()
@@ -213,15 +214,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     removeSlowEffect = () => {
-        this.maxSpeed = 100
+        this.maxSpeed = player["speed"]
         this.isSlowed = false
-        console.log("Slow effect removed!")
     }
 
     applyStunEffect = () => {
         if (!this.isClient) return
 
         if (!this.isStunned) {
+            this.emitUIEffect("stun")
             this.isStunned = true
             this.maxSpeed = 0
 
@@ -236,10 +237,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     removeStunEffect = () => {
         this.maxSpeed = 100
         this.isStunned = false
-        console.log("Stun effect removed!")
     }
 
     onSpellButtonClicked = (spellType) => {
+        if (this.isStunned) return
+
         this.websocketRoom.sendEvent("castSpell", {
             spellType,
             direction: this.dir,
@@ -248,8 +250,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     castSpell = (spell) => {
-        if (this.isStunned) return
-
         this.spells = this.spells.filter(
             (spellType) => spellType !== spell.spellType
         )
@@ -350,6 +350,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         projectile.on("animationcomplete", () => {
             projectile.destroy()
         })
+    }
+
+    emitUIEffect = (effect) => {
+        if (this.isClient) {
+            console.log("runs emitUIEffect", effect)
+            eventEmitter.emit("onAddEffect", effect)
+            setTimeout(() => {
+                eventEmitter.emit("onRemoveEffect", effect)
+            }, this[effect + "Duration"])
+        }
     }
 
     handleProjectileCollision = (projectile, player) => {
