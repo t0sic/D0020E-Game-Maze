@@ -24,6 +24,8 @@ export default class Map {
         this.height = map.heightInPixels
         this.scene.wallLayer = wallLayer
         this.scene.doorLayer = doorLayer
+
+        console.log(this.width, this.height)
     }
 
     createSpell = ({ x, y, spellType }, players) => {
@@ -90,16 +92,26 @@ export default class Map {
             let validPositionFound = false
             let dropX, dropY
 
-            // Try until a valid position is found
+            const worldBounds = this.scene.physics.world.bounds
+
             while (!validPositionFound) {
                 const angle = Phaser.Math.Between(0, 360)
                 dropX = x + distance * Math.cos(Phaser.Math.DegToRad(angle))
                 dropY = y + distance * Math.sin(Phaser.Math.DegToRad(angle))
 
-                // Check if the drop position is inside a wall using the tilemap
-                const tile = this.scene.wallLayer.getTileAtWorldXY(dropX, dropY)
-                if (!tile || !tile.collides) {
-                    validPositionFound = true
+                if (
+                    dropX >= 0 &&
+                    dropX <= this.width &&
+                    dropY >= 0 &&
+                    dropY <= this.height
+                ) {
+                    const tile = this.scene.wallLayer.getTileAtWorldXY(
+                        dropX,
+                        dropY
+                    )
+                    if (!tile || !tile.collides) {
+                        validPositionFound = true
+                    }
                 }
             }
             this.createKey(dropX, dropY, [this.scene.player])
