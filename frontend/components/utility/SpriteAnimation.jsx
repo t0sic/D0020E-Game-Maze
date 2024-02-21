@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
-import "/frontend/styles/SpriteAnimation.css" // Import your CSS
-import spritesheet from "/public/assets/pickups/key3.png" // Import your spritesheet
+import "/frontend/styles/SpriteAnimation.css"
 
 const SpriteAnimation = ({ frameCount, frameWidth }) => {
     const [frame, setFrame] = useState(0)
@@ -20,7 +19,7 @@ const SpriteAnimation = ({ frameCount, frameWidth }) => {
         <div
             className="sprite"
             style={{
-                backgroundImage: `url(${spritesheet})`,
+                backgroundImage: "url(/assets/pickups/key3.png)",
                 backgroundPosition: `${xPos}px 0px`,
             }}
         />
