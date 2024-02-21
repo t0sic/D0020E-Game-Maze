@@ -20,7 +20,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.isHasted = false
         this.hasteDuration = spells["haste"]["duration"]
         this.isConfused = false
-        this.confusionDuration = spells["confuse"]["duration"]
+        this.confuseDuration = spells["confuse"]["duration"]
         this.isSlowed = false
         this.slowDuration = spells["slow"]["duration"]
         this.isStunned = false
@@ -191,12 +191,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         setTimeout(() => {
             this.removeConfusionEffect()
-        }, this.confusionDuration)
+        }, this.confuseDuration)
     }
 
     removeConfusionEffect = () => {
         this.isConfused = false
-        console.log("Confusion effect removed!")
     }
 
     applySlowEffect = () => {
@@ -214,6 +213,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     removeSlowEffect = () => {
+        const { player } = config
+
         this.maxSpeed = player["speed"]
         this.isSlowed = false
     }

@@ -10,6 +10,8 @@ class UIScene extends Phaser.Scene {
         this.spellTypes = Object.keys(config.spells)
         this.objective = "key"
         this.hasKey = false
+
+        this.spells = []
     }
 
     create = () => {
@@ -51,6 +53,10 @@ class UIScene extends Phaser.Scene {
     }
 
     removeEffect = (effect) => {
+        if (effect === "stun") {
+            this.unlockButtons()
+        }
+
         const effectImage = this.effects.list.find(
             (image) => image.texture.key === effect + "_button"
         )
@@ -65,7 +71,25 @@ class UIScene extends Phaser.Scene {
         })
     }
 
+    unlockButtons = () => {
+        this.spellTypes.forEach((type) => {
+            if (this.spells.includes(type) || type === "stun") {
+                this[type + "Button"].setAlpha(1)
+            }
+        })
+    }
+
+    lockButtons = () => {
+        this.spellTypes.forEach((type) => {
+            this[type + "Button"].setAlpha(0.5)
+        })
+    }
+
     addEffect = (effect) => {
+        if (effect === "stun") {
+            this.lockButtons()
+        }
+
         const activeEffects = this.effects.list.length
         const effectImage = this.add.image(
             activeEffects * -75,
@@ -247,6 +271,8 @@ class UIScene extends Phaser.Scene {
     }
 
     updateSpellButtons = (spells) => {
+        this.spells = spells
+
         this.spellTypes.forEach((spell) => {
             if (spell != "stun") {
                 if (spells.includes(spell)) {
