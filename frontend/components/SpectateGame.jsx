@@ -126,6 +126,9 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                 case "endSession":
                     onSessionEnd()
                     break
+                case "spawnSpell":
+                    eventEmitter.emit("spawnSpell", data)
+                    break
             }
         }
     }, [websocketRoom])

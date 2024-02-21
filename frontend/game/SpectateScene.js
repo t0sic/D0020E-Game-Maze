@@ -60,6 +60,10 @@ export default class SpectateScene extends Phaser.Scene {
         this.map.createKey(coords.x, coords.y, [])
     }
 
+    createSpell = (spell) => {
+        this.map.createSpell(spell, [])
+    }
+
     setGameData = (gameData) => {
         const { map, players, spells } = gameData
 
@@ -75,6 +79,9 @@ export default class SpectateScene extends Phaser.Scene {
         this.players[ids[0]].opponent = this.players[ids[1]]
         this.players[ids[1]].opponent = this.players[ids[0]]
 
+        this.players[ids[0]].playIdleAnimation(new Phaser.Math.Vector2(1, 0))
+        this.players[ids[1]].playIdleAnimation(new Phaser.Math.Vector2(1, 0))
+
         spells.forEach((spell) => this.map.createSpell(spell, []))
 
         if (map.key) {
@@ -88,6 +95,7 @@ export default class SpectateScene extends Phaser.Scene {
         eventEmitter.on("cameraFocusPlayer", this.addCamera)
         eventEmitter.on("cameraZoom", this.zoomCamera)
         eventEmitter.on("dropKey", this.onKeyDrop)
+        eventEmitter.on("spawnSpell", this.createSpell)
 
         this.addCamera()
     }
