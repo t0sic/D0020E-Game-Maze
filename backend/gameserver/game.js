@@ -5,7 +5,6 @@ export default class Game {
     constructor(playerIds) {
         const { maps, spells } = config
         const spellTypes = Object.keys(spells)
-
         this.map = maps.random()
 
         const spawnpoints = this.map.spawnpoints.random()
