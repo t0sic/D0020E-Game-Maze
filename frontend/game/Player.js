@@ -261,6 +261,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.spells.push(spell.spellType)
 
         eventEmitter.emit("onSpellData", this.spells)
+
         //Update score on spell pickup
         this.updateScore(10)
 
@@ -270,7 +271,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     updateScore = (score) => {
         this.score += score
-        eventEmitter.emit("updateScore", this.score)
+        eventEmitter.emit("updateScoreText", this.score)
     }
 
     emitRemoveSpell = (spell) => {

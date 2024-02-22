@@ -66,6 +66,7 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("moveOpponent", this.opponent.updatePlayerPosition)
         eventEmitter.on("keyPickup", this.map.destroyKey)
         eventEmitter.on("spellPickup", this.map.destroySpell)
+        eventEmitter.on("updateScore", this.setOpponetScore)
         eventEmitter.on(
             "onSpellButtonClicked",
             this.player.onSpellButtonClicked
@@ -84,6 +85,11 @@ class GameScene extends Phaser.Scene {
         this.map.createKey(map.key.x, map.key.y, [this.player])
     }
 
+    setOpponetScore = (score) => {
+        console.log("wow1", score)
+        this.opponent.score = score
+    }
+
     addCamera = () => {
         const camera = this.cameras.main
         camera.startFollow(this.player)
@@ -99,7 +105,11 @@ class GameScene extends Phaser.Scene {
 
     onPlayerWon = (isWinner) => {
         this.scene.remove("UIScene")
-        this.scene.start("EndScene", { win: isWinner })
+
+        this.scene.start("EndScene", {
+            win: isWinner,
+            playerScore: this.player.score,
+        })
     }
 }
 

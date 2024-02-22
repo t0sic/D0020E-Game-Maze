@@ -72,6 +72,9 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
                     eventEmitter.emit("castSpell", data)
                     console.log("recieved cast spell", data)
                     break
+                case "updateScore":
+                    eventEmitter.emit("updateScore", data)
+                    break
                 case "playerWon":
                     eventEmitter.emit("playerWon", false)
                     break

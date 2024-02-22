@@ -75,6 +75,8 @@ export default class Map {
     handleKeyCollision = (player, key) => {
         player.hasKey = true
 
+        player.updateScore(100)
+
         eventEmitter.emit("onKeyData", true)
 
         this.emitRemoveKey()

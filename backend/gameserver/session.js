@@ -14,6 +14,11 @@ export default class Session {
         this.time = new Date().getTime()
     }
 
+    updateScore = (socket, score) => {
+        this.game.players[socket.id].score = score
+        socket.broadcast.emit("updateScore", score)
+    }
+
     eventHandler = (socket, event, data) => {
         console.log("Session Event", socket.id, event, data)
 
@@ -44,6 +49,9 @@ export default class Session {
                 break
             case "spectate":
                 this.spectate(socket)
+                break
+            case "updateScore":
+                this.updateScore(socket, data)
                 break
         }
     }
