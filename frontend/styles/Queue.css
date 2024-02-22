@@ -3,14 +3,22 @@
     height: 100%;
     background-repeat: no-repeat;
     background-position: center;
+    background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
 
+.queue-container {
+    max-width: 400px;
+    width: 100%;
+    margin: 15px;
+}
+
 .state {
     background: #000f12;
+    text-align: center;
     padding: 15px;
     color: white;
     font-size: 1.5rem;

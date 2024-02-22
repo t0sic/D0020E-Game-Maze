@@ -1,30 +1,60 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import "../styles/Leaderboard.css"
 
 const Leaderboard = ({ setPath }) => {
-    const [leaderboard, setLeaderboard] = useState([
-        { name: "Player 1", score: 3400 },
-        { name: "Player 2", score: 3400 },
-        { name: "Player 3", score: 3400 },
-        { name: "Player 4", score: 3400 },
-        { name: "Player 5", score: 3400 },
-        { name: "Player 6", score: 3400 },
-        { name: "Player 7", score: 3400 },
-        { name: "Player 8", score: 3400 },
-        { name: "Player 9", score: 3400 },
-        { name: "Player 10", score: 3400 },
-    ])
+    const [leaderboard, setLeaderboard] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        fetchLeaderboard()
+    }, [])
+
+    const fetchLeaderboard = async () => {
+        setIsLoading(true)
+        const res = await fetch("/api/leaderboard")
+        const data = await res.json()
+        setLeaderboard(data)
+        setIsLoading(false)
+    }
 
     return (
-        <div className="leaderboard">
-            <div className="highscorehead">High Score Leaderboard</div>
-            <ol className="highscorelist">
-                {leaderboard.map(({ name, score }) => (
-                    <li>
-                        {name} : {score}
-                    </li>
-                ))}
-            </ol>
+        <div className="leaderboard-wrapper">
+            <div className="leaderboard">
+                <div className="highscorehead">High Score Leaderboard</div>
+                <div className="highscorelist">
+                    {isLoading ? (
+                        <div className="sepctate-session-loader">
+                            Loading...
+                        </div>
+                    ) : (
+                        <>
+                            {leaderboard.length ? (
+                                <>
+                                    {leaderboard.map(({ name, score }, i) => (
+                                        <div className="highscore">
+                                            <div className="highscore-index">
+                                                {i + 1}.
+                                            </div>
+                                            <div className="highscore-info">
+                                                <div>Name</div>
+                                                <span>{name}</span>
+                                            </div>
+                                            <div className="highscore-info">
+                                                <div>Score</div>
+                                                <span>{score}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </>
+                            ) : (
+                                <div className="sepctate-session-loader">
+                                    No highscores yet
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

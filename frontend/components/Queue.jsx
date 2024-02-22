@@ -23,10 +23,12 @@ const Queue = ({ queueState, onLeave }) => {
             className="queue"
             style={{ background: "url(/assets/ui/background3.png)" }}
         >
-            <div className="state">{stateText}...</div>
-            <button onClick={onLeave} className="button">
-                Leave
-            </button>
+            <div className="queue-container">
+                <div className="state">{stateText}...</div>
+                <button onClick={onLeave} className="button">
+                    Leave
+                </button>
+            </div>
         </div>
     )
 }

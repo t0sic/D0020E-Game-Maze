@@ -61,15 +61,15 @@
     transition-duration: 200ms;
 }
 
+.spectate-button:hover {
+    transform: scale(1.1);
+}
+
 .game-controlls-header {
     color: white;
     text-align: center;
     width: 100%;
     margin: 15px 0;
-}
-
-.spectate-button:hover {
-    transform: scale(1.1);
 }
 
 .spectate-button:active {

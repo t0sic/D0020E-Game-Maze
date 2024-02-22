@@ -1,11 +1,20 @@
-.leaderboard {
-    max-width: 450px;
-    margin: 0 auto;
-    background-color: #000017;
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 4em;
+.leaderboard-wrapper {
+    display: flex;
+    justify-content: center;
+    height: 100%;
 }
+
+.leaderboard {
+    width: 100%;
+    max-width: 600px;
+    background-color: #000017;
+    padding: 30px;
+    border-radius: 10px;
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
 .highscorehead {
     font-size: 1.5rem;
     color: white;
@@ -14,20 +23,30 @@
 }
 
 .highscorelist {
-    margin-left: 2em;
-    margin-top: 20px;
+    margin-top: 15px;
     color: white;
     font-size: 1.2rem;
 }
 
-.highscorelist li {
-    text-align: center;
-    justify-content: space-between;
+.highscore {
+    display: flex;
+    justify-items: center;
     margin-bottom: 10px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #7153bf;
 }
 
-@media screen and (min-width: 1000px) {
-    .textbox {
-        width: 600px;
-    }
+.highscore-index {
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.highscore-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.highscore-info div {
+    color: gray;
 }

@@ -6,6 +6,7 @@ export default class Gameserver {
     constructor(webserver) {
         this.queue = []
         this.sessions = []
+        this.leaderboard = []
         this.webserver = webserver
 
         this.websocketRoom = new WebsocketRoom(
@@ -91,5 +92,15 @@ export default class Gameserver {
             throw new Error("Atleast 2 players must be in queue to get pair")
 
         return this.queue.splice(0, 2)
+    }
+
+    isLeaderboardEntry = (score) => {
+        return this.leaderboard.length < 10 || score > this.leaderboard[9].score
+    }
+
+    addLeaderboardEntry = (entry) => {
+        this.leaderboard.push(entry)
+        this.leaderboard.sort((a, b) => b.score - a.score)
+        this.leaderboard = this.leaderboard.slice(0, 10)
     }
 }
