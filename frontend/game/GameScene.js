@@ -11,7 +11,6 @@ import Map from "./Map.js"
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" })
-        this.score = 0
     }
 
     preload = () => {
@@ -67,12 +66,6 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("moveOpponent", this.opponent.updatePlayerPosition)
         eventEmitter.on("keyPickup", this.map.destroyKey)
         eventEmitter.on("spellPickup", this.map.destroySpell)
-        eventEmitter.on("spellPickup", () => {
-            this.score += 10
-
-            eventEmitter.emit("updateScore", this.score)
-            console.log("Score Updated:", this.score)
-        })
         eventEmitter.on(
             "onSpellButtonClicked",
             this.player.onSpellButtonClicked

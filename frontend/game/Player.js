@@ -23,6 +23,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.slowDuration = spells["slow"]["duration"]
         this.isStunned = false
         this.stunDuration = spells["stun"]["duration"]
+        this.score = 0
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
@@ -260,9 +261,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.spells.push(spell.spellType)
 
         eventEmitter.emit("onSpellData", this.spells)
+        //Update score on spell pickup
+        this.updateScore(10)
 
         spell.destroy()
         this.emitRemoveSpell(spell)
+    }
+
+    updateScore = (score) => {
+        this.score += score
+        eventEmitter.emit("updateScore", this.score)
     }
 
     emitRemoveSpell = (spell) => {
@@ -345,6 +353,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         })
     }
     handleProjectileCollision = (projectile, player) => {
+        if (player === this.scene.opponent) {
+            console.log("hitting player", player, this.scene.opponent)
+            this.updateScore(50)
+        }
         this.createProjectileCollision(projectile)
         switch (projectile.spellType) {
             case "stun":
