@@ -15,6 +15,9 @@ class UIScene extends Phaser.Scene {
     }
 
     create = () => {
+        this.gameWidth = this.sys.game.config.width
+        this.gameHeight = this.sys.game.config.height
+
         this.createJoyStick()
 
         eventEmitter.on("sceneCreated", () => {
@@ -49,7 +52,7 @@ class UIScene extends Phaser.Scene {
     }
 
     createEffects = () => {
-        this.effects = this.add.container(1920 - 300, 50 * 2)
+        this.effects = this.add.container(this.gameWidth - 300, 50 * 2)
     }
 
     removeEffect = (effect) => {
@@ -123,11 +126,11 @@ class UIScene extends Phaser.Scene {
         fullScreenExit.setScale(0.75)
 
         try {
-            if (document.fullscreenEnabled) {
-                this.scale.startFullscreen()
-            }
+            this.scale.startFullscreen().catch((err) => {
+                console.log("Failed to enter fullscreen mode:", err.message)
+            })
         } catch (error) {
-            console.log("Fullscreen denied by browser.")
+            console.log("Fullscreen denied by browser.", error)
         }
 
         this.scale.on("enterfullscreen", () => {
@@ -157,13 +160,18 @@ class UIScene extends Phaser.Scene {
             } else {
                 fullScreenEnter.setAlpha(0)
                 fullScreenExit.setAlpha(1)
-                this.scale.startFullscreen()
+                this.scale.startFullscreen().catch((err) => {
+                    console.log("Failed to enter fullscreen mode:", err.message)
+                })
             }
         })
     }
 
     createIndicator = () => {
-        this.keyIndcator = this.add.container(1920 - 50 * 2 - 30, 50 * 2)
+        this.keyIndcator = this.add.container(
+            this.gameWidth - 50 * 2 - 30,
+            50 * 2
+        )
         const circle = this.add.circle(0, 0, 50, 0x000f12)
         const key = this.add.image(0, 0, "key")
         key.setAlpha(0.5)
@@ -219,7 +227,7 @@ class UIScene extends Phaser.Scene {
 
     createSpellButtons = () => {
         this.spellTypes.forEach((type, i) => {
-            const offsetX = 1920 - 50 * 2 - 30
+            const offsetX = this.gameWidth - 50 * 2 - 30
             const offsetY = 1080 - 50 * 2 - 30 * (i + 1) - 100 * i
 
             this[type + "Button"] = this.add.container(offsetX, offsetY)

@@ -15,9 +15,38 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
     }, [])
 
     const startGame = (gameData) => {
+        const screenWidth = window.innerWidth
+        const screenHeight = window.innerHeight
+
+        const aspectRatio = screenWidth / screenHeight
+
+        let calculatedWidth, calculatedHeight
+
+        if (screenWidth < 1920 || screenHeight < 1080) {
+            if (aspectRatio >= 1920 / 1080) {
+                calculatedHeight = 1080
+                calculatedWidth = calculatedHeight * aspectRatio
+            } else {
+                calculatedWidth = 1920
+                calculatedHeight = calculatedWidth / aspectRatio
+            }
+        } else {
+            if (aspectRatio >= 1920 / 1080) {
+                calculatedHeight = screenHeight
+                calculatedWidth = calculatedHeight * aspectRatio
+            } else {
+                calculatedWidth = screenWidth
+                calculatedHeight = calculatedWidth / aspectRatio
+            }
+        }
+        calculatedWidth = Math.max(calculatedWidth, 1920)
+        calculatedHeight = Math.max(calculatedHeight, 1080)
+
+        // Continue with your config
         const config = {
-            width: 1920,
-            height: 1080,
+            width: calculatedWidth,
+            height: calculatedHeight,
+
             type: Phaser.AUTO,
             pixelArt: true,
             parent: "phaser-game",
