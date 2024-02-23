@@ -8,27 +8,10 @@ export default class EndScene extends Phaser.Scene {
 
     init = () => {
         this.websocketRoom = this.registry.get("websocketRoom")
-        eventEmitter.on("updateScore", this.updateOpponentScore)
     }
 
     preload = () => {
         this.load.image("background3", "/assets/ui/background3.png")
-    }
-
-    updateOpponentScore = (score) => {
-        this.opponentScoreText = this.add
-            .text(
-                this.scale.width / 2,
-                this.scale.height / 4 + 60,
-                `Opponent's Score: ${score}`,
-                {
-                    fontSize: 50,
-                    color: "#fff",
-                    backgroundColor: "#000",
-                    fontFamily: "Magicfont",
-                }
-            )
-            .setOrigin(0.5)
     }
 
     create = (data) => {
@@ -54,6 +37,12 @@ export default class EndScene extends Phaser.Scene {
                     color: "#fff",
                     backgroundColor: "#000",
                     fontFamily: "Magicfont",
+                    padding: {
+                        x: 10,
+                        y: 5,
+                        stroke: "#000",
+                        strokeThickness: 5,
+                    },
                 }
             )
             .setOrigin(0.5)
@@ -66,8 +55,16 @@ export default class EndScene extends Phaser.Scene {
                 {
                     fontSize: 60,
                     color: "#fff",
+                    backgroundColor: "#000",
                     stroke: "#000",
                     strokeThickness: 5,
+                    fontFamily: "Magicfont",
+                    padding: {
+                        x: 10,
+                        y: 5,
+                        stroke: "#000",
+                        strokeThickness: 5,
+                    },
                 }
             )
             .setOrigin(0.5)
@@ -75,12 +72,13 @@ export default class EndScene extends Phaser.Scene {
         const leaveButton = this.add
             .text(
                 this.scale.width / 2,
-                text.y + text.displayHeight / 2 + 20,
+                text.y + text.displayHeight / 2 + 200,
                 "Leave",
                 {
                     fontSize: 40,
                     color: "#fff",
                     backgroundColor: "#000",
+                    fontFamily: "Magicfont",
                     padding: {
                         x: 10,
                         y: 5,

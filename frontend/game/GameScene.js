@@ -85,11 +85,6 @@ class GameScene extends Phaser.Scene {
         this.map.createKey(map.key.x, map.key.y, [this.player])
     }
 
-    setOpponetScore = (score) => {
-        console.log("wow1", score)
-        this.opponent.score = score
-    }
-
     addCamera = () => {
         const camera = this.cameras.main
         camera.startFollow(this.player)
