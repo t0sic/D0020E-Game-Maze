@@ -19,6 +19,9 @@ class UIScene extends Phaser.Scene {
         this.gameHeight = this.sys.game.config.height
 
         this.createJoyStick()
+        this.createScoreText()
+
+        eventEmitter.on("updateScoreText", this.updateScoreText)
 
         eventEmitter.on("sceneCreated", () => {
             this.createIndicator()
@@ -38,6 +41,22 @@ class UIScene extends Phaser.Scene {
 
     updateKeyData = (hasKey) => {
         this.hasKey = hasKey
+    }
+
+    updateScoreText = (score) => {
+        this.scoreText.setText(`Score: ${score}`)
+    }
+
+    createScoreText = () => {
+        const x = this.cameras.main.width / 2
+        const y = 16
+        this.scoreText = this.add
+            .text(x, y, `Score: 0`, {
+                fontSize: "50px",
+                fontFamily: "Magicfont",
+                fill: "#fff",
+            })
+            .setOrigin(0.5, 0)
     }
 
     setIndicatorDirection = (playerCoords, targetCoords) => {

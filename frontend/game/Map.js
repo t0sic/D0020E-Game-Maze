@@ -78,6 +78,8 @@ export default class Map {
         player.hasKey = true
 
         eventEmitter.emit("onObjectiveData", "exit")
+        player.updateScore(100)
+
         eventEmitter.emit("onKeyData", true)
 
         this.emitRemoveKey()

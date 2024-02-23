@@ -67,6 +67,7 @@ class GameScene extends Phaser.Scene {
         eventEmitter.on("moveOpponent", this.opponent.updatePlayerPosition)
         eventEmitter.on("keyPickup", this.onKeyPickup)
         eventEmitter.on("spellPickup", this.map.destroySpell)
+        eventEmitter.on("updateScore", this.setOpponetScore)
         eventEmitter.on(
             "onSpellButtonClicked",
             this.player.onSpellButtonClicked
@@ -119,7 +120,11 @@ class GameScene extends Phaser.Scene {
 
     onPlayerWon = (isWinner) => {
         this.scene.remove("UIScene")
-        this.scene.start("EndScene", { win: isWinner })
+
+        this.scene.start("EndScene", {
+            win: isWinner,
+            playerScore: this.player.score,
+        })
     }
 }
 
