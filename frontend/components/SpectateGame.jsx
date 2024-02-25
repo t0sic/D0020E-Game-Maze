@@ -268,9 +268,25 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                                 )}
                             </>
                         ) : null}
+                        <div
+                            className="qrcode"
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <h2 style={{ color: "white" }}> Scan to play!</h2>
+                            <img
+                                style={{ marginTop: "2rem" }}
+                                src="/assets/qrcode.png"
+                            ></img>
+                        </div>
                     </div>
                 ) : null}
             </div>
+            <div>HELLO</div>
         </div>
     )
 }

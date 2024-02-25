@@ -4,6 +4,10 @@ import express from "express"
 import * as url from "url"
 import path from "path"
 import http from "http"
+import fs from "fs"
+import os from "os"
+import { fileURLToPath } from "url"
+import qr from "qr-image"
 
 export default class Webserver {
     constructor(port) {
@@ -21,10 +25,22 @@ export default class Webserver {
             this.io = new Server(this.server)
             this.gameserver = new Gameserver(this)
         })
+        this.generateQr()
     }
 
     middleware = () => {
         this.app.use(express.static("public"))
+    }
+
+    generateQr = async () => {
+        const response = await fetch("https://api.myip.com/")
+        const data = await response.json()
+        console.log("logging data", data)
+        const ipv4address = data.ip
+        const url = `http://${ipv4address}:3000`
+        const savePath = path.join(process.cwd(), "/public/assets/qrcode.png")
+        console.log(savePath)
+        qr.image(url, { type: "png" }).pipe(fs.createWriteStream(savePath))
     }
 
     routes = () => {
