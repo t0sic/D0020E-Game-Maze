@@ -241,6 +241,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     applyStunEffect = () => {
+        if (this.isStunned) return
+
+        this.isStunned = true
+
         this.play("stun_animation", true)
         this.on("animationcomplete", () => {
             this.play("stun_animation_reverse", true)
@@ -249,21 +253,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             })
         })
 
+        setTimeout(() => {
+            this.removeStunEffect()
+        }, this.stunDuration)
+
         if (!this.isClient) return
 
-        if (!this.isStunned) {
-            this.emitUIEffect("stun")
-            this.isStunned = true
-            this.maxSpeed = 0
+        this.emitUIEffect("stun")
+        this.maxSpeed = 0
 
-            eventEmitter.emit("onObjectiveData", "key")
-            this.scene.map.dropKey(this.x, this.y)
-
-            setTimeout(() => {
-                this.removeStunEffect()
-            }, this.stunDuration)
-        }
+        eventEmitter.emit("onObjectiveData", "key")
+        this.scene.map.dropKey(this.x, this.y)
     }
+
     removeStunEffect = () => {
         this.maxSpeed = 100
         this.isStunned = false
@@ -425,6 +427,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.websocketRoom.sendEvent("updatePlayerPosition", {
             x: this.x,
             y: this.y,
+            direction: this.dir,
+            velocity: this.body.velocity,
         })
     }
 
@@ -457,7 +461,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     playAnimation = (vector) => {
-        if (this.isAttacking) return
+        if (this.isAttacking || this.isStunned) return
 
         this.setFlipX(false)
         const frameIndex = this.calculateFrameIndex(vector)
@@ -477,25 +481,26 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.play(`${animationKey}_animation`, true)
     }
 
-    updatePlayerPosition = (coords) => {
+    updatePlayerPosition = ({ x, y, direction, velocity }) => {
         const { rules } = config
 
-        const dx = coords.x - this.x
-        const dy = coords.y - this.y
-        const resultantVector = new Phaser.Math.Vector2(dx, dy)
+        const resultantVector = new Phaser.Math.Vector2(
+            direction.x,
+            direction.y
+        )
 
-        this.playAnimation(resultantVector)
+        // Play idle if no velocity
+        if (velocity.x === 0 && velocity.y === 0) {
+            this.playIdleAnimation(resultantVector)
+        } else {
+            this.playAnimation(resultantVector)
+        }
 
         if (this.hasKey && rules["track_opponent"]) {
             eventEmitter.emit("onIndicatorData", this.opponent, this)
         }
 
-        this.setPosition(coords.x, coords.y)
-        setTimeout(() => {
-            if (coords.x === this.x && coords.y === this.y) {
-                this.playIdleAnimation(resultantVector)
-            }
-        }, 100)
+        this.setPosition(x, y)
     }
 
     playIdleAnimation = (vector) => {
@@ -540,20 +545,23 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 joystick.forceX,
                 joystick.forceY
             )
-            this.sendPlayerPosition()
             this.dir = vector.normalize()
             this.isConfused ? (this.dir = this.dir.negate()) : this.dir
 
             this.setVelocityX(this.dir.x * this.maxSpeed)
             this.setVelocityY(this.dir.y * this.maxSpeed)
 
-            if (!this.isStunned) this.playAnimation(this.dir)
+            this.playAnimation(this.dir)
         } else {
             this.setVelocityX(0)
             this.setVelocityY(0)
 
-            this.playIdleAnimation(this.dir || new Phaser.Math.Vector2(1, 0))
+            this.dir = this.dir || new Phaser.Math.Vector2(1, 0)
+
+            this.playIdleAnimation(this.dir)
         }
+
+        this.sendPlayerPosition()
     }
 }
 

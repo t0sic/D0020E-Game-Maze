@@ -89,11 +89,9 @@ export default class Map {
     dropKey = (x, y) => {
         if (this.scene.player.hasKey) {
             this.scene.player.hasKey = false
-            const distance = 50 // Example distance in pixels
+            const distance = 50 // Distance in pixels
             let validPositionFound = false
             let dropX, dropY
-
-            const worldBounds = this.scene.physics.world.bounds
 
             while (!validPositionFound) {
                 const angle = Phaser.Math.Between(0, 360)
