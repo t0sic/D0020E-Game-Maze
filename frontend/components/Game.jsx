@@ -71,8 +71,8 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
         eventEmitter.on("sceneCreated", () => {
             eventEmitter.emit("setGameData", gameData)
         })
-        eventEmitter.on("endGame", () => {
-            onGameEnd()
+        eventEmitter.on("endGame", (leaderboardEntry) => {
+            onGameEnd(leaderboardEntry)
         })
     }
 
@@ -90,6 +90,9 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
                 case "endSession":
                     console.log("end session")
                     onSessionEnd()
+                    break
+                case "enableLeaderboardEntry":
+                    eventEmitter.emit("enableLeaderboardEntry", data)
                     break
                 case "updatePlayerPosition":
                     eventEmitter.emit("moveOpponent", data.coords)

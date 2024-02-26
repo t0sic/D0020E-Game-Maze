@@ -1,16 +1,18 @@
+import LeaderboardEntry from "./components/LeaderboardEntry.jsx"
 import SpectateGame from "./components/SpectateGame.jsx"
 import React, { useState, useEffect } from "react"
-import Layout from "./components/Layout.jsx"
+import Tutorial from "./components/Tutorial.jsx"
 import WebsocketRoom from "./websocketRoom.js"
+import Layout from "./components/Layout.jsx"
 import Queue from "./components/Queue.jsx"
 import Game from "./components/Game.jsx"
-import Tutorial from "./components/Tutorial.jsx"
 
 const App = () => {
     const [path, setPath] = useState("Home")
     const [queueState, setQueueState] = useState("Error")
     const [websocketRoom, setWebsocketRoom] = useState()
     const [isPlayerNew, setIsPlayerNew] = useState(true)
+    const [leaderboardEntry, setLeaderboardEntry] = useState()
     const [sessionId, setSessionId] = useState()
 
     useEffect(() => {
@@ -59,9 +61,15 @@ const App = () => {
         setPath("Home")
     }
 
-    const handleGameEnd = () => {
+    const handleGameEnd = (leaderboardEntry) => {
         sessionStorage.setItem("isPlayerNew", "false")
-        setPath("Home")
+
+        if (leaderboardEntry) {
+            setLeaderboardEntry(leaderboardEntry)
+            setPath("LeaderboardEntry")
+        } else {
+            setPath("Home")
+        }
     }
 
     const handleSessionEnd = () => {
@@ -89,6 +97,11 @@ const App = () => {
                 <Queue queueState={queueState} onLeave={handleLeave} />
             ) : path === "Tutorial" ? (
                 <Tutorial onTutorialExit={handlePlay} />
+            ) : path === "LeaderboardEntry" ? (
+                <LeaderboardEntry
+                    leaderboardEntry={leaderboardEntry}
+                    setPath={setPath}
+                />
             ) : path === "Game" ? (
                 <Game
                     sessionId={sessionId}

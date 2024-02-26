@@ -1,13 +1,12 @@
 import Gameserver from "../gameserver/gameserver.js"
+import bodyParser from "body-parser"
 import { Server } from "socket.io"
 import express from "express"
 import * as url from "url"
+import qr from "qr-image"
 import path from "path"
 import http from "http"
 import fs from "fs"
-import os from "os"
-import { fileURLToPath } from "url"
-import qr from "qr-image"
 
 export default class Webserver {
     constructor(port) {
@@ -16,8 +15,8 @@ export default class Webserver {
     }
 
     start = async () => {
-        this.routes()
         this.middleware()
+        this.routes()
 
         this.server = http.createServer(this.app).listen(this.port, () => {
             console.log("Started Webserver on port:", this.port)
@@ -29,17 +28,19 @@ export default class Webserver {
     }
 
     middleware = () => {
+        const { urlencoded } = bodyParser
+
         this.app.use(express.static("public"))
+        this.app.use(urlencoded({ extended: true }))
+        this.app.use(express.json())
     }
 
     generateQr = async () => {
         const response = await fetch("https://api.myip.com/")
         const data = await response.json()
-        console.log("logging data", data)
         const ipv4address = data.ip
         const url = `http://${ipv4address}:3000`
         const savePath = path.join(process.cwd(), "/public/assets/qrcode.png")
-        console.log(savePath)
         qr.image(url, { type: "png" }).pipe(fs.createWriteStream(savePath))
     }
 
@@ -47,15 +48,23 @@ export default class Webserver {
         const __dirname = url.fileURLToPath(new URL(".", import.meta.url))
         const options = { root: path.join(__dirname, "../../public") }
 
-        this.app.get("/", (req, res) => {
+        this.app.get("/", (_req, res) => {
             res.sendFile("index.html", options)
         })
 
-        this.app.get("/api/leaderboard", (req, res) => {
+        this.app.get("/api/leaderboard", (_req, res) => {
             res.json(this.gameserver.leaderboard)
         })
 
-        this.app.get("/api/sessions", (req, res) => {
+        this.app.post("/api/leaderboard", (req, _res) => {
+            console.log(req, req.body)
+
+            const { name, id } = req.body
+
+            this.gameserver.addLeaderboardEntry(name, id)
+        })
+
+        this.app.get("/api/sessions", (_req, res) => {
             const sessions = [...this.gameserver.sessions].map((session) => ({
                 id: session.id,
                 time: session.time,

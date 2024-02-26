@@ -14,11 +14,6 @@ export default class Session {
         this.time = new Date().getTime()
     }
 
-    updateScore = (socket, score) => {
-        this.game.players[socket.id].score = score
-        socket.broadcast.emit("updateScore", score)
-    }
-
     eventHandler = (socket, event, data) => {
         console.log("Session Event", socket.id, event, data)
 
@@ -59,6 +54,20 @@ export default class Session {
         }
     }
 
+    updateScore = (socket, score) => {
+        this.game.players[socket.id].score = score
+
+        if (this.game.players[socket.id].isWinner) {
+            const isLeaderboardEntry = this.gameserver.isLeaderboardEntry(score)
+
+            if (isLeaderboardEntry) {
+                this.gameserver.enableLeaderboardEntry(socket, score)
+            }
+        }
+
+        socket.broadcast.emit("updateScore", score)
+    }
+
     spectate = (socket) => {
         console.log("Spectator joined")
         socket.emit("data", this.game)
@@ -66,6 +75,8 @@ export default class Session {
 
     playerWon = (socket) => {
         this.state = "Ended"
+
+        this.game.players[socket.id].isWinner = true
 
         socket.broadcast.emit("playerWon")
         this.gameserver.endSession(this)

@@ -3,6 +3,7 @@ export default class Player {
         this.x = x
         this.y = y
         this.hasKey = false
+        this.isWinner = false
         this.spells = []
         this.effects = []
     }

@@ -31,7 +31,7 @@ const Leaderboard = ({ setPath }) => {
                             {leaderboard.length ? (
                                 <>
                                     {leaderboard.map(({ name, score }, i) => (
-                                        <div className="highscore">
+                                        <div className="highscore" key={i}>
                                             <div className="highscore-index">
                                                 {i + 1}.
                                             </div>

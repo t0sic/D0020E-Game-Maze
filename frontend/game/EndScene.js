@@ -17,6 +17,11 @@ export default class EndScene extends Phaser.Scene {
     create = (data) => {
         const { win, playerScore } = data
 
+        eventEmitter.on(
+            "enableLeaderboardEntry",
+            (data) => (this.leaderboardEntry = data)
+        )
+
         setTimeout(() => {
             this.websocketRoom.sendEvent("updateScore", playerScore)
         }, 1000)
@@ -27,7 +32,7 @@ export default class EndScene extends Phaser.Scene {
         background.displayWidth = this.scale.width
         background.displayHeight = this.scale.height
 
-        const playerScoreText = this.add
+        this.add
             .text(
                 this.scale.width / 2,
                 this.scale.height / 4,
@@ -91,7 +96,7 @@ export default class EndScene extends Phaser.Scene {
             .setInteractive()
 
         leaveButton.on("pointerdown", () => {
-            eventEmitter.emit("endGame")
+            eventEmitter.emit("endGame", this.leaderboardEntry)
             console.log("Leave button clicked")
         })
     }
