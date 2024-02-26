@@ -114,6 +114,9 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                 case "keyPickup":
                     handleKeyPickup(data)
                     break
+                case "playerWon":
+                    onSessionEnd()
+                    break
                 case "spellPickup":
                     handleSpellPickup(data.spell, data.id)
                     break

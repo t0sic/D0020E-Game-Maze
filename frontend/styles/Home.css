@@ -47,13 +47,15 @@
     transition: cubic-bezier(0.075, 0.82, 0.165, 1);
     transition-duration: 200ms;
     color: white;
+    width: 100%;
+    cursor: pointer;
 }
 
 .button-primary:hover {
     transform: scale(1.1);
 }
 
-.button:hover,
-.button:active {
+.button:active,
+.button-primary:active {
     opacity: 0.7;
 }

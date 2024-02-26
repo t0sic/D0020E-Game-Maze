@@ -87,7 +87,7 @@ const Guide = () => {
                             </p>
                         </div>
                         <div className="spellinfo spellimage confuse">
-                            <h5>confuse</h5>
+                            <h5>Confuse</h5>
                             <img
                                 src="/assets/ui/confuse.png"
                                 style={{ width: "5rem" }}
@@ -98,7 +98,7 @@ const Guide = () => {
                             </p>
                         </div>
                         <div className="spellinfo spellimage haste">
-                            <h5>haste</h5>
+                            <h5>Haste</h5>
                             <img
                                 src="/assets/ui/haste.png"
                                 style={{ width: "5rem" }}

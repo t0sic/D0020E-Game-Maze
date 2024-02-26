@@ -4,12 +4,21 @@ import Layout from "./components/Layout.jsx"
 import WebsocketRoom from "./websocketRoom.js"
 import Queue from "./components/Queue.jsx"
 import Game from "./components/Game.jsx"
+import Tutorial from "./components/Tutorial.jsx"
 
 const App = () => {
     const [path, setPath] = useState("Home")
     const [queueState, setQueueState] = useState("Error")
     const [websocketRoom, setWebsocketRoom] = useState()
+    const [isPlayerNew, setIsPlayerNew] = useState(true)
     const [sessionId, setSessionId] = useState()
+
+    useEffect(() => {
+        console.log(sessionStorage.getItem("isPlayerNew"))
+        if (sessionStorage.getItem("isPlayerNew") === "false") {
+            setIsPlayerNew(false)
+        }
+    }, [path])
 
     useEffect(() => {
         if (!websocketRoom) return
@@ -51,11 +60,13 @@ const App = () => {
     }
 
     const handleGameEnd = () => {
+        sessionStorage.setItem("isPlayerNew", "false")
         setPath("Home")
     }
 
     const handleSessionEnd = () => {
         setQueueState("ended")
+        sessionStorage.setItem("isPlayerNew", "false")
         setPath("Queue")
     }
 
@@ -64,10 +75,20 @@ const App = () => {
         setPath("SpectateGame")
     }
 
+    const handlePlayClick = () => {
+        if (isPlayerNew) {
+            setPath("Tutorial")
+        } else {
+            handlePlay()
+        }
+    }
+
     return (
         <>
             {path === "Queue" ? (
                 <Queue queueState={queueState} onLeave={handleLeave} />
+            ) : path === "Tutorial" ? (
+                <Tutorial onTutorialExit={handlePlay} />
             ) : path === "Game" ? (
                 <Game
                     sessionId={sessionId}
@@ -83,7 +104,7 @@ const App = () => {
                 <Layout
                     setPath={setPath}
                     path={path}
-                    onPlay={handlePlay}
+                    onPlay={handlePlayClick}
                     handleSetSessionId={handleSetSessionId}
                 />
             )}

@@ -1,0 +1,65 @@
+.tutorial {
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    padding: 15px;
+    background-color: #000017;
+}
+
+.tutorial p {
+    color: gray;
+}
+
+.tutorial-header {
+    width: 100%;
+    border-bottom: 1px solid #7153bf;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.tutorial-container {
+    position: relative;
+    margin-top: 15px;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.tutorial-step {
+    width: 100%;
+    margin-top: 15px;
+    border-top: 1px solid #7153bf;
+}
+
+.tutorial-step p {
+    margin-top: 5px;
+}
+
+.tutorial-step h3 {
+    margin-top: 15px;
+}
+
+.tutorial-sprite {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+.tutorial-skip {
+    padding-top: 15px;
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+}
