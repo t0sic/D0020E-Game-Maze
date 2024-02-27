@@ -82,6 +82,7 @@ export default class Gameserver {
         this.sessions.push(new Session(null, this, id))
         pair.forEach((socket) => {
             socket.emit("callToSession", id)
+            socket.disconnect(true)
             this.onLeaveQueue(socket)
         })
 
