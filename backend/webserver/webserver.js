@@ -56,12 +56,15 @@ export default class Webserver {
             res.json(this.gameserver.leaderboard)
         })
 
-        this.app.post("/api/leaderboard", (req, _res) => {
-            console.log(req, req.body)
-
+        this.app.post("/api/leaderboard", (req, res) => {
             const { name, id } = req.body
 
+            if (!name || !id) {
+                return res.sendStatus(400)
+            }
+
             this.gameserver.addLeaderboardEntry(name, id)
+            res.sendStatus(200)
         })
 
         this.app.get("/api/sessions", (_req, res) => {

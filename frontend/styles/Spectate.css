@@ -58,6 +58,7 @@
     border: none;
     border-radius: 5px;
     transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+    color: white;
     transition-duration: 200ms;
 }
 
@@ -76,7 +77,7 @@
     opacity: 0.8;
 }
 
-.sepctate-session-loader {
+.spectate-session-loader {
     width: 100%;
     padding: 30px;
     text-align: center;

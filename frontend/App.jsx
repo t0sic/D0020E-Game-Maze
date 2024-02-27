@@ -16,7 +16,6 @@ const App = () => {
     const [sessionId, setSessionId] = useState()
 
     useEffect(() => {
-        console.log(sessionStorage.getItem("isPlayerNew"))
         if (sessionStorage.getItem("isPlayerNew") === "false") {
             setIsPlayerNew(false)
         }

@@ -10,6 +10,7 @@ const Spectate = ({ handleSetSessionId }) => {
     }, [])
 
     const fetchSession = () => {
+        setIsLoading(true)
         fetch("/api/sessions")
             .then((res) => res.json())
             .then((data) => {
@@ -40,10 +41,10 @@ const Spectate = ({ handleSetSessionId }) => {
                 </div>
                 <div className="spectate-session-list">
                     {isLoading ? (
-                        <div className="sepctate-session-loader">
+                        <div className="spectate-session-loader">
                             Loading...
                         </div>
-                    ) : (
+                    ) : sessions.length ? (
                         <>
                             {sessions.map((session) => (
                                 <div
@@ -74,6 +75,10 @@ const Spectate = ({ handleSetSessionId }) => {
                                 </div>
                             ))}
                         </>
+                    ) : (
+                        <div className="spectate-session-loader">
+                            No active sessions
+                        </div>
                     )}
                 </div>
             </div>

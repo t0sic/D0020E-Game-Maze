@@ -109,9 +109,6 @@ const Game = ({ sessionId, onSessionEnd, onGameEnd }) => {
                 case "dropKey":
                     eventEmitter.emit("dropKey", data)
                     break
-                case "updateScore":
-                    eventEmitter.emit("updateScore", data)
-                    break
                 case "playerWon":
                     eventEmitter.emit("playerWon", false)
                     break

@@ -74,7 +74,7 @@ export default class EndScene extends Phaser.Scene {
             )
             .setOrigin(0.5)
 
-        const leaveButton = this.add
+        this.add
             .text(
                 this.scale.width / 2,
                 text.y + text.displayHeight / 2 + 200,
@@ -94,10 +94,8 @@ export default class EndScene extends Phaser.Scene {
             )
             .setOrigin(0.5)
             .setInteractive()
-
-        leaveButton.on("pointerdown", () => {
-            eventEmitter.emit("endGame", this.leaderboardEntry)
-            console.log("Leave button clicked")
-        })
+            .on("pointerdown", () => {
+                eventEmitter.emit("endGame", this.leaderboardEntry)
+            })
     }
 }
