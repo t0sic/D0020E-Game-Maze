@@ -72,8 +72,20 @@ export default class SpectateScene extends Phaser.Scene {
         const ids = Object.keys(players)
 
         this.players = {
-            [ids[0]]: new Player(this, players[ids[0]].x, players[ids[0]].y),
-            [ids[1]]: new Player(this, players[ids[1]].x, players[ids[1]].y),
+            [ids[0]]: new Player(
+                this,
+                players[ids[0]].x,
+                players[ids[0]].y,
+                false,
+                "opponent"
+            ),
+            [ids[1]]: new Player(
+                this,
+                players[ids[1]].x,
+                players[ids[1]].y,
+                false,
+                "player"
+            ),
         }
 
         this.players[ids[0]].opponent = this.players[ids[1]]

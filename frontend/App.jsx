@@ -109,6 +109,7 @@ const App = () => {
                 />
             ) : path === "SpectateGame" ? (
                 <SpectateGame
+                    setPath={setPath}
                     sessionId={sessionId}
                     onSessionEnd={handleSessionEnd}
                 />

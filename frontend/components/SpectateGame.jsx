@@ -4,7 +4,7 @@ import WebsocketRoom from "../websocketRoom.js"
 import eventEmitter from "../eventEmitter.js"
 import Phaser from "phaser"
 
-const SpectateGame = ({ sessionId, onSessionEnd }) => {
+const SpectateGame = ({ sessionId, onSessionEnd, setPath }) => {
     const [websocketRoom, setWebsocketRoom] = useState()
     const [sceneCreated, setSceneCreated] = useState(false)
     const [gameData, setGameData] = useState()
@@ -126,6 +126,9 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
                 case "dropKey":
                     handleKeyDrop(data)
                     break
+                case "playerWon":
+                    setPath("Spectate")
+                    break
                 case "endSession":
                     onSessionEnd()
                     break
@@ -136,15 +139,30 @@ const SpectateGame = ({ sessionId, onSessionEnd }) => {
         }
     }, [websocketRoom])
 
+    const width = document.getElementById("phaser-game")
+        ? document.getElementById("phaser-game").clientWidth
+        : 0
+
     return (
         <div>
             <div className="game-container-controlls">
-                <h1>Session ID: {sessionId}</h1>
+                <h3>Session ID: {sessionId}</h3>
+                <div className="game-container-controlls-button">
+                    <button
+                        className="button-primary"
+                        onClick={() => setPath("Spectate")}
+                    >
+                        Leave
+                    </button>
+                </div>
             </div>
             <div className="game-container">
                 <div id="phaser-game" className="game-canvas"></div>
                 {sceneCreated ? (
-                    <div className="game-controlls">
+                    <div
+                        className="game-controlls"
+                        style={{ width: `calc(100% - ${width}px)` }}
+                    >
                         <h1 className="game-controlls-header">Camera Follow</h1>
                         <button
                             className="spectate-button"

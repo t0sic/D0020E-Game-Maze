@@ -48,13 +48,15 @@ class GameScene extends Phaser.Scene {
             this,
             players[this.socketId].x,
             players[this.socketId].y,
-            true
+            true,
+            "player"
         )
         this.opponent = new Player(
             this,
             players[this.opponentId].x,
             players[this.opponentId].y,
-            false
+            false,
+            "opponent"
         )
 
         this.opponent.playIdleAnimation(new Phaser.Math.Vector2(1, 0))

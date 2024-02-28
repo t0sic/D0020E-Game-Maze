@@ -90,10 +90,22 @@
 }
 
 .game-container-controlls {
+    padding: 30px;
     height: 10vh;
     background: #000017;
-    padding: 30px;
     color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-container-controlls-button {
+    max-width: 300px;
+    width: 100%;
+}
+
+.game-container-controlls h3 {
+    width: 100%;
 }
 
 .game-container {
