@@ -31,6 +31,9 @@ const App = () => {
                     websocketRoom.sendEvent("joinQueue")
                     setQueueState("connected")
                     break
+                case "disconnect":
+                    setWebsocketRoom(null)
+                    break
                 case "callToSession":
                     console.log("executing callToSession", data)
                     setSessionId(data)

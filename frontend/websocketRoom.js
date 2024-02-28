@@ -10,6 +10,11 @@ export default class WebsocketRoom {
 
             this.namespace.on("connect", this.onConnect)
 
+            // On disconnect
+            this.namespace.on("disconnect", () => {
+                this.eventHandler("disconnect")
+            })
+
             this.namespace.onAny((event, data) =>
                 this.eventHandler(event, data)
             )
