@@ -192,6 +192,8 @@ class UIScene extends Phaser.Scene {
             50 * 2
         )
         const circle = this.add.circle(0, 0, 50, 0x000f12)
+        // bring circle to top
+
         const key = this.add.image(0, 0, "key")
         key.setAlpha(0.5)
         key.setScale(2)
@@ -204,6 +206,8 @@ class UIScene extends Phaser.Scene {
         exit.setAlpha(0)
         arrow.setScale(0.4)
         arrow.setOrigin(0.5, 1)
+
+        circle.setDepth(1)
 
         const opponent = this.add.image(0, 0, "player")
         opponent.setScale(2)

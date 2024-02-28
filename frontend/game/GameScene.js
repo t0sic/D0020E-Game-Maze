@@ -19,7 +19,7 @@ class GameScene extends Phaser.Scene {
 
     init = () => {
         this.websocketRoom = this.registry.get("websocketRoom")
-        this.socketId = this.websocketRoom.namespace.id
+        this.socketId = this.websocketRoom.socket.id
         this.projectiles = this.add.group()
         this.spells = []
     }

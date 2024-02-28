@@ -6,7 +6,7 @@ export default class Session {
         this.spectator = spectator
         this.gameserver = gameserver
         const io = gameserver.webserver.io
-        this.websocketRoom = new WebsocketRoom(id, this.eventHandler, io) // needs to create websocket room with id
+        this.websocketRoom = new WebsocketRoom(id, this.eventHandler, io)
         this.state = "Not Started"
         this.id = id
         this.users = []
@@ -14,8 +14,8 @@ export default class Session {
         this.time = new Date().getTime()
     }
 
-    eventHandler = (socket, event, data) => {
-        console.log("Session Event", socket.id, event, data)
+    eventHandler = (socket, event, { data }) => {
+        console.log("Session Event", socket.id, event)
 
         switch (event) {
             case "disconnect":
@@ -79,7 +79,7 @@ export default class Session {
         this.game.players[socket.id].isWinner = true
 
         socket.broadcast.emit("playerWon")
-        this.gameserver.endSession(this)
+        this.endSession()
     }
 
     castSpell = (socket, projectile) => {
@@ -130,12 +130,14 @@ export default class Session {
 
         if (!isPlayer) return console.log("Spectator left")
 
-        this.users.forEach((user) => {
-            if (user.id !== socket.id)
-                this.websocketRoom.sendEvent("endSession")
-        })
+        this.endSession()
+    }
 
+    endSession = () => {
         this.gameserver.endSession(this)
+
+        this.websocketRoom.closeRoom()
+        delete this.websocketRoom
     }
 
     updatePlayerPosition = (socket, data) => {
@@ -146,8 +148,6 @@ export default class Session {
             id: socket.id,
         })
     }
-
-    onLeave = () => {}
 
     onPlayerReady = (socket) => {
         // Once both clients have sent a message stating they are ready The game object is created and passed back
