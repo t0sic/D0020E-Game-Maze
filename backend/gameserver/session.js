@@ -19,6 +19,7 @@ export default class Session {
             playerWon: this.playerWon,
             playerLeft: this.onLeave,
             dropKey: this.dropKey,
+            disconnect: this.onDisconnect,
         }
 
         this.sockets.forEach((socket) => {
@@ -30,14 +31,14 @@ export default class Session {
     }
 
     broadcast = (socket, event, data) => {
-        console.log(
+        /*         console.log(
             "Broadcasting to session:",
             this.id,
             "Event:",
             event,
             "Data:",
             data
-        )
+        ) */
         socket.to(this.id).emit(event, data)
     }
 
@@ -64,7 +65,6 @@ export default class Session {
         this.state = "Ended"
 
         this.game.players[socket.id].isWinner = true
-
         this.broadcast(socket, "playerWon")
         this.endSession()
     }
@@ -107,7 +107,20 @@ export default class Session {
         this.broadcast(socket, "keyPickup", socket.id)
     }
 
-    endSession = () => {}
+    endSession = () => {
+        this.sockets.forEach((socket) => {
+            Object.keys(this.events).forEach((event) => {
+                socket.removeAllListeners(event)
+            })
+        })
+        this.namespace.socketsLeave(this.id)
+        this.gameserver.endSession(this)
+    }
+
+    onDisconnect = (socket) => {
+        console.log("Session", this.id, "Socket disconnected: ", socket.id)
+        this.emit("sessionEnded")
+    }
 
     updatePlayerPosition = (socket, coords) => {
         this.game.players[socket.id].x = coords.x

@@ -4,7 +4,7 @@ import GameScene from "../game/GameScene.js"
 import UIScene from "../game/UIScene.js"
 import Phaser from "phaser"
 
-const Game = ({ socket, gameData, onSessionEnd, onGameEnd }) => {
+const Game = ({ socket, gameData, onGameEnd, onSessionEnd }) => {
     const startGame = () => {
         const screenWidth = window.innerWidth
         const screenHeight = window.innerHeight
@@ -56,10 +56,19 @@ const Game = ({ socket, gameData, onSessionEnd, onGameEnd }) => {
             scene: [GameScene, UIScene],
         }
         const game = new Phaser.Game(config)
-        eventEmitter.events = {}
         game.registry.set("socket", socket)
         eventEmitter.on("sceneCreated", () => {
             eventEmitter.emit("setGameData", gameData)
+        })
+        eventEmitter.on("gameEnded", (data) => {
+            game.destroy(true, false)
+            eventEmitter.events = {}
+            onGameEnd(data)
+        })
+        eventEmitter.on("sessionEnded", () => {
+            game.destroy(true, false)
+            eventEmitter.events = {}
+            onSessionEnd()
         })
     }
 

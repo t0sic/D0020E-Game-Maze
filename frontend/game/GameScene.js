@@ -11,6 +11,16 @@ import Map from "./Map.js"
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" })
+        this.socketListeners = [
+            "keyPickup",
+            "spellPickup",
+            "updateScore",
+            "castSpell",
+            "playerWon",
+            "dropKey",
+            "spawnSpell",
+            "sessionEnded",
+        ]
     }
 
     preload = () => {
@@ -77,6 +87,7 @@ class GameScene extends Phaser.Scene {
         this.socket.on("playerWon", this.onPlayerWon)
         this.socket.on("dropKey", this.onKeyDrop)
         this.socket.on("spawnSpell", this.createSpell)
+        this.socket.on("sessionEnded", this.endSession)
         eventEmitter.on(
             "onSpellButtonClicked",
             this.player.onSpellButtonClicked
@@ -91,6 +102,18 @@ class GameScene extends Phaser.Scene {
         spells.forEach((spell) => this.map.createSpell(spell, [this.player]))
 
         this.map.createKey(map.key.x, map.key.y, [this.player])
+    }
+
+    endSession = () => {
+        this.removeAllGameListeners()
+        eventEmitter.emit("sessionEnded")
+    }
+
+    removeAllGameListeners = () => {
+        this.socketListeners.forEach((event) => {
+            // Deregisters All socket listeners related to gamescene for this client.
+            this.socket.off(event)
+        })
     }
 
     createSpell = (spell) => {
@@ -118,14 +141,17 @@ class GameScene extends Phaser.Scene {
 
     handleDoorCollision = (_player, _tile) => {
         if (this.player.hasKey) {
-            console.log("won game, emitting won")
             this.socket.emit("playerWon")
             this.onPlayerWon(true)
         }
     }
 
     onPlayerWon = (isWinner) => {
-        console.log("end")
+        this.socketListeners.forEach((event) => {
+            // Deregisters All socket listeners related to gamescene for this client.
+            this.socket.off(event)
+        })
+        eventEmitter.emit("gameEnded", { isWinner, score: this.player.score })
     }
 }
 

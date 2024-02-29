@@ -4,6 +4,7 @@ import Layout from "./components/Layout.jsx"
 import Queue from "./components/Queue.jsx"
 import Game from "./components/Game.jsx"
 import { io } from "socket.io-client"
+import EndScreen from "./components/EndScreen.jsx"
 
 const App = () => {
     const [queueState, setQueueState] = useState("Error")
@@ -11,6 +12,7 @@ const App = () => {
     const [gameData, setGameData] = useState(null)
     const [socket, setSocket] = useState(null)
     const [path, setPath] = useState("Home")
+    const [endScreenData, setEndScreenData] = useState([])
 
     useEffect(() => {
         if (sessionStorage.getItem("isPlayerNew") === "false") {
@@ -31,6 +33,11 @@ const App = () => {
         })
     }, [])
 
+    const handleLeaveEndScreen = () => {
+        setPath("Home")
+        setEndScreenData(null)
+    }
+
     const handlePlay = () => {
         if (!socket) return
 
@@ -48,10 +55,11 @@ const App = () => {
         setPath("Home")
     }
 
-    const handleGameEnd = (leaderboardEntry) => {
+    const handleGameEnd = (data) => {
+        setEndScreenData(data)
         sessionStorage.setItem("isPlayerNew", "false")
 
-        setPath("Home")
+        setPath("EndScreen")
     }
 
     const handleSessionEnd = () => {
@@ -73,29 +81,37 @@ const App = () => {
         }
     }
 
-    return (
-        <>
-            {path === "Queue" ? (
-                <Queue queueState={queueState} onLeave={handleLeave} />
-            ) : path === "Tutorial" ? (
-                <Tutorial onTutorialExit={handlePlay} />
-            ) : path === "Game" ? (
+    switch (path) {
+        case "Queue":
+            return <Queue queueState={queueState} onLeave={handleLeave} />
+        case "Tutorial":
+            return <Tutorial onTutorialExit={handlePlay} />
+        case "Game":
+            return (
                 <Game
                     socket={socket}
                     gameData={gameData}
                     onGameEnd={handleGameEnd}
                     onSessionEnd={handleSessionEnd}
                 />
-            ) : (
+            )
+        case "EndScreen":
+            return (
+                <EndScreen
+                    endScreenData={endScreenData}
+                    onLeave={handleLeaveEndScreen}
+                />
+            )
+        default:
+            return (
                 <Layout
                     setPath={setPath}
                     path={path}
                     onPlay={handlePlayClick}
                     handleSetSessionId={handleSetSessionId}
                 />
-            )}
-        </>
-    )
+            )
+    }
 }
 
 export default App

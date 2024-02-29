@@ -18,16 +18,17 @@ export default class Gameserver {
         socket.on("joinQueue", () => {
             if (!this.isInQueue(socket)) {
                 this.onJoinQueue(socket)
+                socket.on("disconnect", () => {
+                    if (this.isInQueue(socket)) {
+                        this.leaveQueue(socket)
+                    }
+                })
             }
         })
         socket.on("leaveQueue", () => {
             if (this.isInQueue(socket)) {
                 this.leaveQueue(socket)
-            }
-        })
-        socket.on("disconnect", () => {
-            if (this.isInQueue(socket)) {
-                this.leaveQueue(socket)
+                socket.removeAllListeners("disconnect")
             }
         })
     }
@@ -71,8 +72,8 @@ export default class Gameserver {
 
     createSession = () => {
         const pair = this.getPlayerPair()
-        this.sessions.push(new Session(this, pair))
         pair.forEach(this.leaveQueue)
+        this.sessions.push(new Session(this, pair))
     }
 
     getPlayerPair = () => {
