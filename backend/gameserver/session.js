@@ -120,6 +120,7 @@ export default class Session {
     onDisconnect = (socket) => {
         console.log("Session", this.id, "Socket disconnected: ", socket.id)
         this.emit("sessionEnded")
+        this.endSession()
     }
 
     updatePlayerPosition = (socket, coords) => {

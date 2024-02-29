@@ -13,6 +13,7 @@ const App = () => {
     const [socket, setSocket] = useState(null)
     const [path, setPath] = useState("Home")
     const [endScreenData, setEndScreenData] = useState([])
+    const [sessionId, setSessionId] = useState()
 
     useEffect(() => {
         if (sessionStorage.getItem("isPlayerNew") === "false") {
@@ -71,6 +72,8 @@ const App = () => {
     const handleSetSessionId = (id) => {
         setSessionId(id)
         setPath("SpectateGame")
+        console.log("emitting session id: ", id)
+        socket.emit("spectate", id)
     }
 
     const handlePlayClick = () => {
@@ -109,6 +112,7 @@ const App = () => {
                     path={path}
                     onPlay={handlePlayClick}
                     handleSetSessionId={handleSetSessionId}
+                    socket={socket}
                 />
             )
     }

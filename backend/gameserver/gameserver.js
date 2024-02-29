@@ -31,6 +31,28 @@ export default class Gameserver {
                 socket.removeAllListeners("disconnect")
             }
         })
+
+        socket.on("spectate", (sessionId) => {
+            console.log(
+                "recieved request to spectate from: ",
+                socket.id,
+                " to spectate room ",
+                data
+            )
+            socket.join(sessionId) // joins this socket to the communication for the room they want to spectate
+            socket.on("stopSpectate", (sessionId) => {
+                socket.leave(sessionId)
+            })
+        })
+    }
+
+    onSpectate = (socket, data) => {
+        console.log(
+            "recieved request to spectate game from: ",
+            socket.id,
+            " Wanting to spectate session : ",
+            data
+        )
     }
 
     onConnection = (socket) => {
