@@ -31,14 +31,14 @@ export default class Session {
     }
 
     broadcast = (socket, event, data) => {
-        /*         console.log(
+        console.log(
             "Broadcasting to session:",
             this.id,
             "Event:",
             event,
             "Data:",
             data
-        ) */
+        )
         socket.to(this.id).emit(event, data)
     }
 
@@ -129,6 +129,15 @@ export default class Session {
         this.broadcast(socket, "updatePlayerPosition", {
             coords,
             id: socket.id,
+        })
+    }
+
+    spectate = (socket) => {
+        socket.join(this.id)
+        socket.emit("gameData", this.game)
+
+        socket.on("stopSpectate", () => {
+            socket.leave(this.id)
         })
     }
 }

@@ -13,6 +13,7 @@ export default class SpectateScene extends Phaser.Scene {
         this.spells = []
         this.players = []
         this.projectiles = this.add.group()
+        this.socket = this.registry.get("socket")
     }
 
     preload = () => {
@@ -28,8 +29,8 @@ export default class SpectateScene extends Phaser.Scene {
         eventEmitter.emit("sceneCreated")
     }
 
-    onPlayerMove = (coords, playerId) => {
-        this.players[playerId].updatePlayerPosition(coords)
+    onPlayerMove = (data) => {
+        this.players[data.id].updatePlayerPosition(data)
     }
 
     addCamera = (player) => {
@@ -52,20 +53,39 @@ export default class SpectateScene extends Phaser.Scene {
         this.cameras.main.setZoom(zoom)
     }
 
-    onCastSpell = (spell) => {
-        this.players[spell.id].castSpell(spell)
+    onCastSpell = (data) => {
+        this.gameData.players[data.id].spells = this.gameData.players[
+            data.id
+        ].spells.filter((spell) => spell !== data.spellType)
+        eventEmitter.emit("gameData", this.gameData)
+        this.players[data.id].castSpell(data)
     }
 
-    onKeyDrop = (coords) => {
-        this.map.createKey(coords.x, coords.y, [])
+    onKeyDrop = ({ x, y, id }) => {
+        this.gameData.players[id].hasKey = false
+        eventEmitter.emit("gameData", this.gameData)
+        this.map.createKey(x, y, [])
     }
 
     createSpell = (spell) => {
         this.map.createSpell(spell, [])
     }
 
+    destroySpell = ({ spell, id }) => {
+        this.gameData.players[id].spells.push(spell.spellType)
+        eventEmitter.emit("gameData", this.gameData)
+        this.map.destroySpell(spell)
+    }
+
+    keyPickup = (id) => {
+        this.gameData.players[id].hasKey = true
+        this.map.destroyKey()
+        eventEmitter.emit("gameData", this.gameData)
+    }
+
     setGameData = (gameData) => {
-        const { map, players, spells } = gameData
+        this.gameData = gameData
+        const { map, players, spells } = this.gameData
 
         this.map.createMap(map.name)
 
@@ -100,15 +120,15 @@ export default class SpectateScene extends Phaser.Scene {
             this.map.createKey(map.key.x, map.key.y, [])
         }
 
-        eventEmitter.on("updatePlayerPosition", this.onPlayerMove)
-        eventEmitter.on("castSpell", this.onCastSpell)
-        eventEmitter.on("keyPickup", this.map.destroyKey)
-        eventEmitter.on("spellPickup", this.map.destroySpell)
+        this.socket.on("updatePlayerPosition", this.onPlayerMove)
+        this.socket.on("castSpell", this.onCastSpell)
+        this.socket.on("keyPickup", this.keyPickup)
+        this.socket.on("spellPickup", this.destroySpell)
+        this.socket.on("dropKey", this.onKeyDrop)
+        this.socket.on("spawnSpell", this.createSpell)
+
         eventEmitter.on("cameraFocusPlayer", this.addCamera)
         eventEmitter.on("cameraZoom", this.zoomCamera)
-        eventEmitter.on("dropKey", this.onKeyDrop)
-        eventEmitter.on("spawnSpell", this.createSpell)
-
         this.addCamera()
     }
 }

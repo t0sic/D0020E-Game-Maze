@@ -34,15 +34,16 @@ export default class Gameserver {
 
         socket.on("spectate", (sessionId) => {
             console.log(
-                "recieved request to spectate from: ",
+                "Session spectate request from: ",
                 socket.id,
-                " to spectate room ",
-                data
+                " to room ",
+                sessionId
             )
-            socket.join(sessionId) // joins this socket to the communication for the room they want to spectate
-            socket.on("stopSpectate", (sessionId) => {
-                socket.leave(sessionId)
-            })
+            const session = this.sessions.find(
+                (session) => session.id === sessionId
+            )
+
+            if (session) session.spectate(socket)
         })
     }
 

@@ -1,26 +1,18 @@
 import SpectateScene from "../game/SpectateScene.js"
-import React, { useState, useEffect, useRef } from "react"
-import WebsocketRoom from "../websocketRoom.js"
+import React, { useState, useEffect } from "react"
 import eventEmitter from "../eventEmitter.js"
 import Phaser from "phaser"
 
-const SpectateGame = ({ sessionId, onSessionEnd, setPath }) => {
-    const [websocketRoom, setWebsocketRoom] = useState()
+const SpectateGame = ({ gameData, socket, setGameData }) => {
     const [sceneCreated, setSceneCreated] = useState(false)
-    const [gameData, setGameData] = useState()
     const [focusedPlayer, setFocusedPlayer] = useState()
     const [zoom, setZoom] = useState(1)
-    const gameDataRef = useRef(gameData)
 
     useEffect(() => {
-        gameDataRef.current = gameData
-    }, [gameData])
-
-    useEffect(() => {
-        setWebsocketRoom(new WebsocketRoom(sessionId))
+        startGame()
     }, [])
 
-    const startGame = (gameData) => {
+    const startGame = () => {
         const config = {
             height: 1080,
             width: 1920,
@@ -40,104 +32,18 @@ const SpectateGame = ({ sessionId, onSessionEnd, setPath }) => {
             scene: [SpectateScene],
         }
         const game = new Phaser.Game(config)
+        game.registry.set("socket", socket)
         eventEmitter.events = {}
+
+        eventEmitter.on("gameData", (data) => {
+            setGameData({ ...data })
+        })
+
         eventEmitter.on("sceneCreated", () => {
             setSceneCreated(true)
             eventEmitter.emit("setGameData", gameData)
         })
-        game.registry.set("websocketRoom", websocketRoom)
     }
-
-    const handleSpellPickup = (spell, id) => {
-        eventEmitter.emit("spellPickup", spell, id)
-        let currentGameData = { ...gameDataRef.current }
-
-        if (currentGameData && currentGameData.players[id]) {
-            currentGameData.players[id].spells.push(spell.spellType)
-            setGameData(currentGameData)
-        }
-    }
-
-    const handleSpellCast = (data) => {
-        eventEmitter.emit("castSpell", data)
-
-        let currentGameData = { ...gameDataRef.current }
-
-        if (currentGameData && currentGameData.players[data.id]) {
-            currentGameData.players[data.id].spells = currentGameData.players[
-                data.id
-            ].spells.filter((spell) => spell !== data.spellType)
-            setGameData(currentGameData)
-        }
-    }
-
-    const handleKeyDrop = (data) => {
-        eventEmitter.emit("dropKey", data)
-
-        let currentGameData = { ...gameDataRef.current }
-
-        if (currentGameData && currentGameData.players[data.id]) {
-            currentGameData.players[data.id].hasKey = false
-            setGameData(currentGameData)
-        }
-    }
-
-    const handleKeyPickup = (id) => {
-        eventEmitter.emit("keyPickup", id)
-        let currentGameData = { ...gameDataRef.current }
-
-        if (currentGameData && currentGameData.players[id]) {
-            currentGameData.players[id].hasKey = true
-            setGameData(currentGameData)
-        }
-    }
-
-    useEffect(() => {
-        if (!websocketRoom) return
-
-        websocketRoom.eventHandler = (event, data) => {
-            switch (event) {
-                case "connect":
-                    websocketRoom.sendEvent("spectate")
-                    break
-                case "data":
-                    setGameData(data)
-                    startGame(data)
-                    break
-                case "updatePlayerPosition":
-                    eventEmitter.emit(
-                        "updatePlayerPosition",
-                        data.coords,
-                        data.id
-                    )
-                    break
-                case "keyPickup":
-                    handleKeyPickup(data)
-                    break
-                case "playerWon":
-                    onSessionEnd()
-                    break
-                case "spellPickup":
-                    handleSpellPickup(data.spell, data.id)
-                    break
-                case "castSpell":
-                    handleSpellCast(data)
-                    break
-                case "dropKey":
-                    handleKeyDrop(data)
-                    break
-                case "playerWon":
-                    setPath("Spectate")
-                    break
-                case "endSession":
-                    onSessionEnd()
-                    break
-                case "spawnSpell":
-                    eventEmitter.emit("spawnSpell", data)
-                    break
-            }
-        }
-    }, [websocketRoom])
 
     const width = document.getElementById("phaser-game")
         ? document.getElementById("phaser-game").clientWidth
@@ -146,14 +52,9 @@ const SpectateGame = ({ sessionId, onSessionEnd, setPath }) => {
     return (
         <div>
             <div className="game-container-controlls">
-                <h3>Session ID: {sessionId}</h3>
+                <h3>Spectate Game</h3>
                 <div className="game-container-controlls-button">
-                    <button
-                        className="button-primary"
-                        onClick={() => setPath("Spectate")}
-                    >
-                        Leave
-                    </button>
+                    <button className="button-primary">Leave</button>
                 </div>
             </div>
             <div className="game-container">
@@ -307,7 +208,6 @@ const SpectateGame = ({ sessionId, onSessionEnd, setPath }) => {
                     </div>
                 ) : null}
             </div>
-            <div>HELLO</div>
         </div>
     )
 }

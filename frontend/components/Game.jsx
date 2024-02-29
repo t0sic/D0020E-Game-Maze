@@ -78,49 +78,6 @@ const Game = ({ socket, gameData, onGameEnd, onSessionEnd }) => {
         startGame()
     }, [socket])
 
-    // useEffect(() => {
-    //     if (!websocketRoom) return
-
-    //     websocketRoom.eventHandler = (event, data) => {
-    //         switch (event) {
-    //             case "connect":
-    //                 websocketRoom.sendEvent("playerReady")
-    //                 break
-    //             case "startGame":
-    //                 startGame(data)
-    //                 break
-    //             case "endSession":
-    //                 console.log("end session")
-    //                 onSessionEnd()
-    //                 break
-    //             case "enableLeaderboardEntry":
-    //                 eventEmitter.emit("enableLeaderboardEntry", data)
-    //                 break
-    //             case "updatePlayerPosition":
-    //                 eventEmitter.emit("moveOpponent", data.coords)
-    //                 break
-    //             case "keyPickup":
-    //                 eventEmitter.emit("keyPickup", data)
-    //                 break
-    //             case "spellPickup":
-    //                 eventEmitter.emit("spellPickup", data.spell)
-    //                 break
-    //             case "castSpell":
-    //                 eventEmitter.emit("castSpell", data)
-    //                 break
-    //             case "dropKey":
-    //                 eventEmitter.emit("dropKey", data)
-    //                 break
-    //             case "playerWon":
-    //                 eventEmitter.emit("playerWon", false)
-    //                 break
-    //             case "spawnSpell":
-    //                 eventEmitter.emit("spawnSpell", data)
-    //                 break
-    //         }
-    //     }
-    // }, [websocketRoom])
-
     return <div id="phaser-game"></div>
 }
 

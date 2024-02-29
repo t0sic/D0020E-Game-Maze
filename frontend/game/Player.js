@@ -27,6 +27,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.isStunned = false
         this.stunDuration = spells["stun"]["duration"]
         this.score = 0
+        this.moving = false
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
@@ -543,6 +544,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (joystick.forceX || joystick.forceY) {
+            this.moving = true
+
             const vector = new Phaser.Math.Vector2(
                 joystick.forceX,
                 joystick.forceY
@@ -553,6 +556,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(this.dir.x * this.maxSpeed)
             this.setVelocityY(this.dir.y * this.maxSpeed)
 
+            this.sendPlayerPosition()
+
             this.playAnimation(this.dir)
         } else {
             this.setVelocityX(0)
@@ -562,9 +567,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.dir = this.dir || defaultVector
 
+            if (this.moving) {
+                this.sendPlayerPosition()
+                this.moving = false
+            }
+
             this.playIdleAnimation(this.dir)
         }
-        this.sendPlayerPosition()
     }
 }
 

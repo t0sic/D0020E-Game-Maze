@@ -1,3 +1,4 @@
+import SpectateGame from "./components/SpectateGame.jsx"
 import React, { useState, useEffect } from "react"
 import EndScreen from "./components/EndScreen.jsx"
 import Tutorial from "./components/Tutorial.jsx"
@@ -31,6 +32,11 @@ const App = () => {
         socket.on("startGame", (data) => {
             setGameData(data)
             setPath("Game")
+        })
+
+        socket.on("gameData", (data) => {
+            setGameData(data)
+            setPath("SpectateGame")
         })
     }, [])
 
@@ -84,6 +90,8 @@ const App = () => {
         }
     }
 
+    console.log("renders")
+
     switch (path) {
         case "Queue":
             return <Queue queueState={queueState} onLeave={handleLeave} />
@@ -103,6 +111,18 @@ const App = () => {
                 <EndScreen
                     endScreenData={endScreenData}
                     onLeave={handleLeaveEndScreen}
+                />
+            )
+        case "SpectateGame":
+            if (!socket || !sessionId || !gameData) return
+            return (
+                <SpectateGame
+                    socket={socket}
+                    gameData={gameData}
+                    setGameData={(data) => {
+                        console.log("wat", data)
+                        setGameData(data)
+                    }}
                 />
             )
         default:
