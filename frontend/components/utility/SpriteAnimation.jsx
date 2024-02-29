@@ -3,7 +3,6 @@ import "/frontend/styles/SpriteAnimation.css"
 
 const SpriteAnimation = ({ frameCount, frameWidth }) => {
     const [frame, setFrame] = useState(0)
-    console.log(frameCount, frameWidth)
 
     useEffect(() => {
         const interval = setInterval(() => {

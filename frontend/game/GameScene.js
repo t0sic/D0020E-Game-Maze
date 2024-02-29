@@ -18,8 +18,7 @@ class GameScene extends Phaser.Scene {
     }
 
     init = () => {
-        this.websocketRoom = this.registry.get("websocketRoom")
-        this.socketId = this.websocketRoom.socket.id
+        this.socket = this.registry.get("socket")
         this.projectiles = this.add.group()
         this.spells = []
     }
@@ -40,14 +39,14 @@ class GameScene extends Phaser.Scene {
         const { players, map, spells } = this.gameData
         const ids = Object.keys(players)
 
-        this.opponentId = ids[0] === this.socketId ? ids[1] : ids[0]
+        this.opponentId = ids[0] === this.socket.id ? ids[1] : ids[0]
 
         this.map.createMap(map.name)
 
         this.player = new Player(
             this,
-            players[this.socketId].x,
-            players[this.socketId].y,
+            players[this.socket.id].x,
+            players[this.socket.id].y,
             true,
             "player"
         )
@@ -66,18 +65,22 @@ class GameScene extends Phaser.Scene {
 
         this.map.addCollisions([this.player])
 
-        eventEmitter.on("moveOpponent", this.opponent.updatePlayerPosition)
-        eventEmitter.on("keyPickup", this.onKeyPickup)
-        eventEmitter.on("spellPickup", this.map.destroySpell)
-        eventEmitter.on("updateScore", this.setOpponetScore)
+        this.socket.on(
+            "updatePlayerPosition",
+            this.opponent.updatePlayerPosition
+        )
+        this.socket.on("keyPickup", this.onKeyPickup)
+        this.socket.on("spellPickup", this.map.destroySpell)
+        this.socket.on("updateScore", this.setOpponetScore)
+        //this.socket.on("onSpellButtonClicked", this.player.onSpellButtonClicked)
+        this.socket.on("castSpell", this.opponent.castSpell)
+        this.socket.on("playerWon", this.onPlayerWon)
+        this.socket.on("dropKey", this.onKeyDrop)
+        this.socket.on("spawnSpell", this.createSpell)
         eventEmitter.on(
             "onSpellButtonClicked",
             this.player.onSpellButtonClicked
         )
-        eventEmitter.on("castSpell", this.opponent.castSpell)
-        eventEmitter.on("playerWon", this.onPlayerWon)
-        eventEmitter.on("dropKey", this.onKeyDrop)
-        eventEmitter.on("spawnSpell", this.createSpell)
 
         this.scene
             .get("UIScene")
@@ -113,20 +116,16 @@ class GameScene extends Phaser.Scene {
         camera.setZoom(5)
     }
 
-    handleDoorCollision = (player, tile) => {
+    handleDoorCollision = (_player, _tile) => {
         if (this.player.hasKey) {
-            this.websocketRoom.sendEvent("playerWon")
+            console.log("won game, emitting won")
+            this.socket.emit("playerWon")
             this.onPlayerWon(true)
         }
     }
 
     onPlayerWon = (isWinner) => {
-        this.scene.remove("UIScene")
-
-        this.scene.start("EndScene", {
-            win: isWinner,
-            playerScore: this.player.score,
-        })
+        console.log("end")
     }
 }
 

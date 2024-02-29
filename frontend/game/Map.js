@@ -14,8 +14,8 @@ export default class Map {
         const wallLayer = map.createLayer("Walls", tileset)
         const doorLayer = map.createLayer("Door", tileset)
 
-        const decor = map.addTilesetImage("decorative", "decor")
-        const decorLayer = map.createLayer("Decorative", decor)
+        const decorTileset = map.addTilesetImage("decorative", "decor")
+        const decorLayer = map.createLayer("Decorative", decorTileset)
 
         wallLayer.setCollisionByProperty({ Collision: true })
         doorLayer.setCollisionByProperty({ Collision: true })
@@ -24,8 +24,6 @@ export default class Map {
         this.height = map.heightInPixels
         this.scene.wallLayer = wallLayer
         this.scene.doorLayer = doorLayer
-
-        console.log(this.width, this.height)
     }
 
     createSpell = ({ x, y, spellType }, players) => {
@@ -114,7 +112,7 @@ export default class Map {
                 }
             }
             this.createKey(dropX, dropY, [this.scene.player])
-            this.scene.websocketRoom.sendEvent("dropKey", {
+            this.scene.socket.emit("dropKey", {
                 x: dropX,
                 y: dropY,
             })
@@ -124,7 +122,7 @@ export default class Map {
     destroyKey = () => this.scene.key.destroy()
 
     emitRemoveKey = () => {
-        this.scene.websocketRoom.sendEvent("keyPickup")
+        this.scene.socket.emit("keyPickup")
     }
 
     getDoorCoords = () => {

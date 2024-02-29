@@ -12,6 +12,8 @@ export default class Webserver {
     constructor(port) {
         this.port = port
         this.app = express()
+        this.server = null
+        this.io = null
     }
 
     start = async () => {
@@ -22,7 +24,7 @@ export default class Webserver {
             console.log("Started Webserver on port:", this.port)
             console.log("Starting websocket server...")
             this.io = new Server(this.server)
-            this.gameserver = new Gameserver(this)
+            this.gameserver = new Gameserver(this.io)
         })
         this.generateQr()
     }

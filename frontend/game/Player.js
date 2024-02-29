@@ -9,9 +9,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         const { player, spells } = config
 
-        this.websocketRoom = this.scene.registry.get("websocketRoom")
+        this.socket = this.scene.registry.get("socket")
         this.spritesheet = spritesheet
-        this.opponent
+        this.opponent = null
         this.maxSpeed = player["speed"]
         this.dir = new Phaser.Math.Vector2(1, 0)
         this.isAttacking = false
@@ -272,9 +272,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     onSpellButtonClicked = (spellType) => {
+        console.log("spellbutton clicked in player.js", spellType)
         if (this.isStunned) return
 
-        this.websocketRoom.sendEvent("castSpell", {
+        this.socket.emit("castSpell", {
             spellType,
             direction: this.dir,
         })
@@ -282,12 +283,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     castSpell = (spell) => {
+        console.log("casting spell")
         this.spells = this.spells.filter(
             (spellType) => spellType !== spell.spellType
         )
         if (spell.spellType === "haste") {
             this.applyHasteEffect()
         } else {
+            console.log("spawning projectile,", spell)
             this.spawnProjectile(spell)
         }
     }
@@ -313,7 +316,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     emitRemoveSpell = (spell) => {
-        this.websocketRoom.sendEvent("spellPickup", {
+        this.socket.emit("spellPickup", {
             x: spell.x,
             y: spell.y,
             spellType: spell.spellType,
@@ -394,7 +397,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     emitUIEffect = (effect) => {
         if (this.isClient) {
-            console.log("runs emitUIEffect", effect)
             eventEmitter.emit("onAddEffect", effect)
             setTimeout(() => {
                 eventEmitter.emit("onRemoveEffect", effect)
@@ -423,7 +425,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     sendPlayerPosition = () => {
-        this.websocketRoom.sendEvent("updatePlayerPosition", {
+        this.socket.emit("updatePlayerPosition", {
             x: this.x,
             y: this.y,
             direction: this.dir,
@@ -480,7 +482,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.play(`${animationKey}_animation`, true)
     }
 
-    updatePlayerPosition = ({ x, y, direction, velocity }) => {
+    updatePlayerPosition = ({ coords }) => {
+        const { x, y, direction, velocity } = coords
         const { rules } = config
 
         const resultantVector = new Phaser.Math.Vector2(
@@ -555,11 +558,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(0)
             this.setVelocityY(0)
 
-            this.dir = this.dir || new Phaser.Math.Vector2(1, 0)
+            const defaultVector = new Phaser.Math.Vector2(1, 0)
+
+            this.dir = this.dir || defaultVector
 
             this.playIdleAnimation(this.dir)
         }
-
         this.sendPlayerPosition()
     }
 }

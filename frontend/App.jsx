@@ -1,19 +1,16 @@
-import LeaderboardEntry from "./components/LeaderboardEntry.jsx"
-import SpectateGame from "./components/SpectateGame.jsx"
 import React, { useState, useEffect } from "react"
 import Tutorial from "./components/Tutorial.jsx"
-import WebsocketRoom from "./websocketRoom.js"
 import Layout from "./components/Layout.jsx"
 import Queue from "./components/Queue.jsx"
 import Game from "./components/Game.jsx"
+import { io } from "socket.io-client"
 
 const App = () => {
-    const [path, setPath] = useState("Home")
     const [queueState, setQueueState] = useState("Error")
-    const [websocketRoom, setWebsocketRoom] = useState()
-    const [isPlayerNew, setIsPlayerNew] = useState(true)
-    const [leaderboardEntry, setLeaderboardEntry] = useState()
-    const [sessionId, setSessionId] = useState()
+    const [isPlayerNew, setIsPlayerNew] = useState(false)
+    const [gameData, setGameData] = useState(null)
+    const [socket, setSocket] = useState(null)
+    const [path, setPath] = useState("Home")
 
     useEffect(() => {
         if (sessionStorage.getItem("isPlayerNew") === "false") {
@@ -22,43 +19,31 @@ const App = () => {
     }, [path])
 
     useEffect(() => {
-        if (!websocketRoom) return
+        const socket = io("/gameserver")
 
-        websocketRoom.eventHandler = (event, data) => {
-            switch (event) {
-                case "connect":
-                    console.log("Connection to game server established")
-                    websocketRoom.sendEvent("joinQueue")
-                    setQueueState("connected")
-                    break
-                case "disconnect":
-                    setWebsocketRoom(null)
-                    break
-                case "callToSession":
-                    console.log("executing callToSession", data)
-                    setSessionId(data)
-                    setPath("Game")
-                    break
-            }
-        }
-    }, [websocketRoom])
+        socket.on("connect", () => {
+            setSocket(socket)
+        })
+
+        socket.on("startGame", (data) => {
+            setGameData(data)
+            setPath("Game")
+        })
+    }, [])
 
     const handlePlay = () => {
+        if (!socket) return
+
         setPath("Queue")
 
-        if (!websocketRoom) {
-            setQueueState("connecting")
-            setWebsocketRoom(new WebsocketRoom("gameserver"))
-        } else {
-            setQueueState("connected")
-            websocketRoom.sendEvent("joinQueue")
-        }
+        setQueueState("connected")
+        socket.emit("joinQueue")
     }
 
     const handleLeave = () => {
-        if (websocketRoom) {
-            websocketRoom.sendEvent("leaveQueue")
-        }
+        if (!socket) return
+
+        socket.emit("leaveQueue")
 
         setPath("Home")
     }
@@ -66,12 +51,7 @@ const App = () => {
     const handleGameEnd = (leaderboardEntry) => {
         sessionStorage.setItem("isPlayerNew", "false")
 
-        if (leaderboardEntry) {
-            setLeaderboardEntry(leaderboardEntry)
-            setPath("LeaderboardEntry")
-        } else {
-            setPath("Home")
-        }
+        setPath("Home")
     }
 
     const handleSessionEnd = () => {
@@ -99,21 +79,11 @@ const App = () => {
                 <Queue queueState={queueState} onLeave={handleLeave} />
             ) : path === "Tutorial" ? (
                 <Tutorial onTutorialExit={handlePlay} />
-            ) : path === "LeaderboardEntry" ? (
-                <LeaderboardEntry
-                    leaderboardEntry={leaderboardEntry}
-                    setPath={setPath}
-                />
             ) : path === "Game" ? (
                 <Game
-                    sessionId={sessionId}
+                    socket={socket}
+                    gameData={gameData}
                     onGameEnd={handleGameEnd}
-                    onSessionEnd={handleSessionEnd}
-                />
-            ) : path === "SpectateGame" ? (
-                <SpectateGame
-                    setPath={setPath}
-                    sessionId={sessionId}
                     onSessionEnd={handleSessionEnd}
                 />
             ) : (
