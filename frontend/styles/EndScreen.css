@@ -1,0 +1,49 @@
+.endscreen {
+    width: 100%;
+    min-height: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    padding: 15px;
+    background-color: #000017;
+}
+
+.endscreen-container {
+    margin-top: 15px;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.endscreen-header {
+    width: 100%;
+    border-bottom: 1px solid #7153bf;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.endscreen p {
+    color: gray;
+}
+
+.endscreen-details {
+    position: relative;
+    padding-top: 15px;
+    height: 100%;
+    width: 100%;
+    margin-top: 15px;
+    border-top: 1px solid #7153bf;
+}
+
+.endscreen-details h2 span {
+    color: #7153bf;
+}
+
+.endscreen-details button {
+    position: absolute;
+    bottom: 0;
+}
