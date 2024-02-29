@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react"
+import EndScreen from "./components/EndScreen.jsx"
 import Tutorial from "./components/Tutorial.jsx"
 import Layout from "./components/Layout.jsx"
 import Queue from "./components/Queue.jsx"
 import Game from "./components/Game.jsx"
 import { io } from "socket.io-client"
-import EndScreen from "./components/EndScreen.jsx"
 
 const App = () => {
     const [queueState, setQueueState] = useState("Error")
-    const [isPlayerNew, setIsPlayerNew] = useState(false)
+    const [isPlayerNew, setIsPlayerNew] = useState(true)
     const [gameData, setGameData] = useState(null)
     const [socket, setSocket] = useState(null)
     const [path, setPath] = useState("Home")
-    const [endScreenData, setEndScreenData] = useState([])
+    const [endScreenData, setEndScreenData] = useState()
 
     useEffect(() => {
         if (sessionStorage.getItem("isPlayerNew") === "false") {

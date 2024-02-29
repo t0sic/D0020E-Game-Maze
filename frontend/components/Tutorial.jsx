@@ -17,6 +17,7 @@ const Tutorial = ({ onTutorialExit }) => {
         }
 
         window.addEventListener("orientationchange", handleOrientationChange)
+        window.addEventListener("resize", handleOrientationChange)
         handleOrientationChange()
 
         return () => {
