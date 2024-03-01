@@ -154,7 +154,7 @@ export default class SpectateScene extends Phaser.Scene {
     }
 
     applySpellEffect = ({ spellType, id }) => {
-        const player = players[id]
+        const player = this.players[id]
         player.applySpellEffect(spellType, player)
     }
 
