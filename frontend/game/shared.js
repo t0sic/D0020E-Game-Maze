@@ -71,8 +71,6 @@ export const createKeyAnimations = (scene) => {
 }
 
 export const preload = (scene) => {
-    console.log("config", config)
-
     const { spells, key, player, tiles, maps, ui, opponent } = config
     const { confuse, stun, slow, haste } = spells
 

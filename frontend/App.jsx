@@ -1,3 +1,4 @@
+import LeaderboardEntry from "./components/LeaderboardEntry.jsx"
 import SpectateGame from "./components/SpectateGame.jsx"
 import React, { useState, useEffect } from "react"
 import EndScreen from "./components/EndScreen.jsx"
@@ -8,13 +9,15 @@ import Game from "./components/Game.jsx"
 import { io } from "socket.io-client"
 
 const App = () => {
+    const [leaderboardEntry, setLeaderboardEntry] = useState(false)
     const [queueState, setQueueState] = useState("Error")
+    const [isHorizontal, setIsHorizontal] = useState(false)
     const [isPlayerNew, setIsPlayerNew] = useState(true)
+    const [endScreenData, setEndScreenData] = useState()
     const [gameData, setGameData] = useState(null)
+    const [sessionId, setSessionId] = useState()
     const [socket, setSocket] = useState(null)
     const [path, setPath] = useState("Home")
-    const [endScreenData, setEndScreenData] = useState()
-    const [sessionId, setSessionId] = useState()
 
     useEffect(() => {
         if (sessionStorage.getItem("isPlayerNew") === "false") {
@@ -30,16 +33,43 @@ const App = () => {
         })
 
         socket.on("startGame", (data) => {
+            socket.on("enableLeaderboardEntry", setLeaderboardEntry)
             setGameData(data)
             setPath("Game")
         })
+
+        const handleOrientationChange = () => {
+            if (window.innerWidth < window.innerHeight) {
+                setIsHorizontal(false)
+            } else {
+                setIsHorizontal(true)
+            }
+        }
+
+        window.addEventListener("orientationchange", handleOrientationChange)
+        window.addEventListener("resize", handleOrientationChange)
+        handleOrientationChange()
+
+        return () => {
+            window.removeEventListener(
+                "orientationchange",
+                handleOrientationChange
+            )
+            window.removeEventListener("resize", handleOrientationChange)
+        }
     }, [])
 
     const handleLeaveEndScreen = () => {
+        socket.off("enableLeaderboardEntry")
+
         if (endScreenData.spectator) {
             setPath("Spectate")
         } else {
-            setPath("Home")
+            if (leaderboardEntry) {
+                setPath("LeaderboardEntry")
+            } else {
+                setPath("Home")
+            }
         }
         setEndScreenData(null)
     }
@@ -75,6 +105,11 @@ const App = () => {
         setPath("EndScreen")
     }
 
+    const handleLeaderboardEntryLeave = () => {
+        setLeaderboardEntry(null)
+        setPath("Leaderboard")
+    }
+
     const handleSpectateLeave = () => {
         setGameData(null)
         setSessionId(null)
@@ -84,6 +119,8 @@ const App = () => {
     const handleSessionEnd = () => {
         setQueueState("ended")
         sessionStorage.setItem("isPlayerNew", "false")
+
+        socket.off("enableLeaderboardEntry")
 
         setPath("Queue")
     }
@@ -100,21 +137,34 @@ const App = () => {
     }
 
     const handlePlayClick = () => {
-        if (isPlayerNew) {
+        if (isPlayerNew || !isHorizontal) {
             setPath("Tutorial")
         } else {
             handlePlay()
         }
     }
 
-    console.log("renders")
     console.log("logging registered listeners", socket?._callbacks)
 
     switch (path) {
+        case "LeaderboardEntry":
+            return (
+                <LeaderboardEntry
+                    leaderboardEntry={leaderboardEntry}
+                    onLeave={handleLeaderboardEntryLeave}
+                />
+            )
+
         case "Queue":
             return <Queue queueState={queueState} onLeave={handleLeave} />
         case "Tutorial":
-            return <Tutorial onTutorialExit={handlePlay} />
+            return (
+                <Tutorial
+                    onTutorialExit={handlePlay}
+                    isHorizontal={isHorizontal}
+                    showWarning={!isHorizontal && isPlayerNew}
+                />
+            )
         case "Game":
             return (
                 <Game

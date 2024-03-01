@@ -2,35 +2,12 @@ import SpriteAnimation from "./utility/SpriteAnimation"
 import React, { useState, useEffect } from "react"
 import "../styles/Tutorial.css"
 
-const Tutorial = ({ onTutorialExit }) => {
+const Tutorial = ({ onTutorialExit, isHorizontal, showWarning }) => {
     const [step, setStep] = useState(0)
-    const [isHorizontal, setIsHorizontal] = useState(false)
     const [timer, setTimer] = useState(10)
 
     useEffect(() => {
-        const handleOrientationChange = () => {
-            if (window.innerWidth < window.innerHeight) {
-                setIsHorizontal(false)
-            } else {
-                setIsHorizontal(true)
-            }
-        }
-
-        window.addEventListener("orientationchange", handleOrientationChange)
-        window.addEventListener("resize", handleOrientationChange)
-        handleOrientationChange()
-
-        return () => {
-            window.removeEventListener(
-                "orientationchange",
-                handleOrientationChange
-            )
-            window.removeEventListener("resize", handleOrientationChange)
-        }
-    }, [])
-
-    useEffect(() => {
-        if (step === 2) {
+        if (step === 2 || showWarning) {
             const interval = setInterval(() => {
                 setTimer((prev) => {
                     if (!prev) return clearInterval(interval)
@@ -41,6 +18,10 @@ const Tutorial = ({ onTutorialExit }) => {
             return () => clearInterval(interval)
         }
     }, [step])
+
+    useEffect(() => {
+        if (!isHorizontal) setStep(2)
+    }, [showWarning])
 
     let stepElements = [
         <div className="tutorial-step">

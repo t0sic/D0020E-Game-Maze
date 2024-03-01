@@ -62,8 +62,13 @@ export default class Session {
         this.emit("startGame", this.game)
     }
 
-    playerWon = (socket) => {
+    playerWon = (socket, score) => {
         this.state = "Ended"
+
+        const isLeaderboardEntry = this.gameserver.isLeaderboardEntry(score)
+        if (isLeaderboardEntry) {
+            this.gameserver.enableLeaderboardEntry(socket, score)
+        }
 
         this.game.players[socket.id].isWinner = true
         this.broadcast(socket, "playerWon", socket.id)

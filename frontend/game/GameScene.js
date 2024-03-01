@@ -143,14 +143,13 @@ class GameScene extends Phaser.Scene {
 
     handleDoorCollision = (_player, _tile) => {
         if (this.player.hasKey) {
-            this.socket.emit("playerWon")
+            this.socket.emit("playerWon", this.player.score)
             this.onPlayerWon(true)
         }
     }
 
     onPlayerWon = (isWinner) => {
         this.socketListeners.forEach((event) => {
-            // Deregisters All socket listeners related to gamescene for this client.
             this.socket.off(event)
         })
         eventEmitter.emit("gameEnded", {

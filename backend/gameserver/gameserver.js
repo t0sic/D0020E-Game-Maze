@@ -1,5 +1,5 @@
-import { v4 as uuid } from "uuid"
 import Session from "./session.js"
+import { v4 as uuid } from "uuid"
 
 export default class Gameserver {
     constructor(io) {
@@ -106,5 +106,39 @@ export default class Gameserver {
         }
 
         return this.queue.splice(0, 2)
+    }
+
+    isLeaderboardEntry = (score) => {
+        return this.leaderboard.length < 10 || score > this.leaderboard[9].score
+    }
+
+    enableLeaderboardEntry = (socket, score) => {
+        const id = uuid()
+        const place = this.getLeaderboardPlace(score)
+        const entry = { score, place, id }
+
+        this.newLeaderboardEntries.push(entry)
+
+        socket.emit("enableLeaderboardEntry", entry)
+    }
+
+    getLeaderboardPlace = (score) => {
+        const place = this.leaderboard.findIndex((entry) => entry.score < score)
+        return place === -1 ? this.leaderboard.length + 1 : place + 1
+    }
+
+    addLeaderboardEntry = (name, id) => {
+        const entry = this.newLeaderboardEntries.find(
+            (entry) => entry.id === id
+        )
+        entry.name = name
+        this.newLeaderboardEntries = this.newLeaderboardEntries.filter(
+            (_entry) => entry.id !== _entry.id
+        )
+
+        this.leaderboard.push(entry)
+        this.leaderboard.sort((a, b) => b.score - a.score)
+        this.leaderboard = this.leaderboard.slice(0, 10)
+        console.log("Gameserver Leaderboard updated")
     }
 }
