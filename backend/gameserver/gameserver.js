@@ -16,6 +16,12 @@ export default class Gameserver {
 
     createEventHandlers = (socket) => {
         socket.on("joinQueue", () => {
+            socket.on("leaveQueue", () => {
+                if (this.isInQueue(socket)) {
+                    this.leaveQueue(socket)
+                    socket.removeAllListeners("disconnect")
+                }
+            })
             if (!this.isInQueue(socket)) {
                 this.onJoinQueue(socket)
                 socket.on("disconnect", () => {
@@ -23,12 +29,6 @@ export default class Gameserver {
                         this.leaveQueue(socket)
                     }
                 })
-            }
-        })
-        socket.on("leaveQueue", () => {
-            if (this.isInQueue(socket)) {
-                this.leaveQueue(socket)
-                socket.removeAllListeners("disconnect")
             }
         })
 
@@ -72,6 +72,7 @@ export default class Gameserver {
             "Queue size:",
             this.queue.length
         )
+        socket.removeAllListeners("leaveQueue")
     }
 
     onJoinQueue = (socket) => {

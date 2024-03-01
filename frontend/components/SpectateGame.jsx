@@ -3,7 +3,14 @@ import React, { useState, useEffect } from "react"
 import eventEmitter from "../eventEmitter.js"
 import Phaser from "phaser"
 
-const SpectateGame = ({ gameData, socket, setGameData }) => {
+const SpectateGame = ({
+    gameData,
+    socket,
+    setGameData,
+    onGameEnd,
+    onLeave,
+    onSessionEnd,
+}) => {
     const [sceneCreated, setSceneCreated] = useState(false)
     const [focusedPlayer, setFocusedPlayer] = useState()
     const [zoom, setZoom] = useState(1)
@@ -11,6 +18,10 @@ const SpectateGame = ({ gameData, socket, setGameData }) => {
     useEffect(() => {
         startGame()
     }, [])
+
+    const leaveGame = () => {
+        eventEmitter.emit("leaveGame")
+    }
 
     const startGame = () => {
         const config = {
@@ -43,6 +54,22 @@ const SpectateGame = ({ gameData, socket, setGameData }) => {
             setSceneCreated(true)
             eventEmitter.emit("setGameData", gameData)
         })
+
+        eventEmitter.on("gameEnded", (winner) => {
+            game.destroy(true, false)
+            eventEmitter.events = {}
+            onGameEnd({ winner, spectator: true })
+        })
+        eventEmitter.on("sessionEnded", () => {
+            game.destroy(true, false)
+            eventEmitter.events = {}
+            onSessionEnd()
+        })
+        eventEmitter.on("leftGame", () => {
+            game.destroy(true, false)
+            eventEmitter.events = {}
+            onLeave()
+        })
     }
 
     const width = document.getElementById("phaser-game")
@@ -54,7 +81,9 @@ const SpectateGame = ({ gameData, socket, setGameData }) => {
             <div className="game-container-controlls">
                 <h3>Spectate Game</h3>
                 <div className="game-container-controlls-button">
-                    <button className="button-primary">Leave</button>
+                    <button className="button-primary" onClick={leaveGame}>
+                        Leave
+                    </button>
                 </div>
             </div>
             <div className="game-container">

@@ -20,6 +20,8 @@ class GameScene extends Phaser.Scene {
             "dropKey",
             "spawnSpell",
             "sessionEnded",
+            "updatePlayerPosition",
+            "gameData",
         ]
     }
 
@@ -58,14 +60,14 @@ class GameScene extends Phaser.Scene {
             players[this.socket.id].x,
             players[this.socket.id].y,
             true,
-            "player"
+            ids[0] === this.socket.id ? "opponent" : "player"
         )
         this.opponent = new Player(
             this,
             players[this.opponentId].x,
             players[this.opponentId].y,
             false,
-            "opponent"
+            ids[1] === this.socket.id ? "opponent" : "player"
         )
 
         this.opponent.playIdleAnimation(new Phaser.Math.Vector2(1, 0))
@@ -151,7 +153,10 @@ class GameScene extends Phaser.Scene {
             // Deregisters All socket listeners related to gamescene for this client.
             this.socket.off(event)
         })
-        eventEmitter.emit("gameEnded", { isWinner, score: this.player.score })
+        eventEmitter.emit("gameEnded", {
+            isWinner: isWinner === true,
+            score: this.player.score,
+        })
     }
 }
 

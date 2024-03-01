@@ -33,15 +33,14 @@ const App = () => {
             setGameData(data)
             setPath("Game")
         })
-
-        socket.on("gameData", (data) => {
-            setGameData(data)
-            setPath("SpectateGame")
-        })
     }, [])
 
     const handleLeaveEndScreen = () => {
-        setPath("Home")
+        if (endScreenData.spectator) {
+            setPath("Spectate")
+        } else {
+            setPath("Home")
+        }
         setEndScreenData(null)
     }
 
@@ -57,21 +56,35 @@ const App = () => {
     const handleLeave = () => {
         if (!socket) return
 
-        socket.emit("leaveQueue")
-
-        setPath("Home")
+        if (sessionId) {
+            setSessionId(null)
+            setGameData(null)
+            setPath("Spectate")
+        } else {
+            socket.emit("leaveQueue")
+            setPath("Home")
+        }
     }
 
     const handleGameEnd = (data) => {
         setEndScreenData(data)
+        setGameData(null)
+        setSessionId(null)
         sessionStorage.setItem("isPlayerNew", "false")
 
         setPath("EndScreen")
     }
 
+    const handleSpectateLeave = () => {
+        setGameData(null)
+        setSessionId(null)
+        setPath("Spectate")
+    }
+
     const handleSessionEnd = () => {
         setQueueState("ended")
         sessionStorage.setItem("isPlayerNew", "false")
+
         setPath("Queue")
     }
 
@@ -79,6 +92,10 @@ const App = () => {
         setSessionId(id)
         setPath("SpectateGame")
         console.log("emitting session id: ", id)
+        socket.on("gameData", (data) => {
+            setGameData(data)
+            setPath("SpectateGame")
+        })
         socket.emit("spectate", id)
     }
 
@@ -91,6 +108,7 @@ const App = () => {
     }
 
     console.log("renders")
+    console.log("logging registered listeners", socket?._callbacks)
 
     switch (path) {
         case "Queue":
@@ -119,10 +137,10 @@ const App = () => {
                 <SpectateGame
                     socket={socket}
                     gameData={gameData}
-                    setGameData={(data) => {
-                        console.log("wat", data)
-                        setGameData(data)
-                    }}
+                    setGameData={setGameData}
+                    onGameEnd={handleGameEnd}
+                    onLeave={handleSpectateLeave}
+                    onSessionEnd={handleSessionEnd}
                 />
             )
         default:

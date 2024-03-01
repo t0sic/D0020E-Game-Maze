@@ -1,4 +1,8 @@
-import { preload, createProjectileAnimations } from "./shared.js"
+import {
+    preload,
+    createProjectileAnimations,
+    createKeyAnimations,
+} from "./shared.js"
 import eventEmitter from "../eventEmitter.js"
 import Player from "./Player.js"
 import Phaser from "phaser"
@@ -7,6 +11,17 @@ import Map from "./Map.js"
 export default class SpectateScene extends Phaser.Scene {
     constructor() {
         super("SpectateScene")
+        this.socketListeners = [
+            "updatePlayerPosition",
+            "castSpell",
+            "keyPickup",
+            "spellPickup",
+            "dropKey",
+            "spawnSpell",
+            "playerWon",
+            "gameData",
+            "sessionEnded",
+        ]
     }
 
     init = () => {
@@ -24,6 +39,7 @@ export default class SpectateScene extends Phaser.Scene {
         this.map = new Map(this)
 
         createProjectileAnimations(this)
+        createKeyAnimations(this)
 
         eventEmitter.on("setGameData", this.setGameData)
         eventEmitter.emit("sceneCreated")
@@ -126,9 +142,36 @@ export default class SpectateScene extends Phaser.Scene {
         this.socket.on("spellPickup", this.destroySpell)
         this.socket.on("dropKey", this.onKeyDrop)
         this.socket.on("spawnSpell", this.createSpell)
+        this.socket.on("playerWon", this.onPlayerWon)
+        this.socket.on("sessionEnded", this.endSession)
 
         eventEmitter.on("cameraFocusPlayer", this.addCamera)
         eventEmitter.on("cameraZoom", this.zoomCamera)
+        eventEmitter.on("leaveGame", this.leaveGame)
         this.addCamera()
+    }
+
+    leaveGame = () => {
+        this.removeAllGameListeners()
+        eventEmitter.emit("leftGame")
+    }
+
+    onPlayerWon = (socketId) => {
+        this.removeAllGameListeners()
+        const spritesheet = this.players[socketId].spritesheet
+        const winner = spritesheet === "opponent" ? "red" : "blue"
+        eventEmitter.emit("gameEnded", winner)
+    }
+
+    endSession = () => {
+        this.removeAllGameListeners()
+        eventEmitter.emit("sessionEnded")
+    }
+
+    removeAllGameListeners = () => {
+        this.socketListeners.forEach((event) => {
+            // Deregisters All socket listeners related to gamescene for this client.
+            this.socket.off(event)
+        })
     }
 }

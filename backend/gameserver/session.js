@@ -10,6 +10,7 @@ export default class Session {
         this.state = "Started"
         this.sockets = sockets
         this.id = uuid()
+        this.time = new Date().getTime()
         this.game = new Game(socketIds)
         this.events = {
             updatePlayerPosition: this.updatePlayerPosition,
@@ -65,7 +66,7 @@ export default class Session {
         this.state = "Ended"
 
         this.game.players[socket.id].isWinner = true
-        this.broadcast(socket, "playerWon")
+        this.broadcast(socket, "playerWon", socket.id)
         this.endSession()
     }
 
@@ -112,6 +113,7 @@ export default class Session {
             Object.keys(this.events).forEach((event) => {
                 socket.removeAllListeners(event)
             })
+            console.log(socket.eventNames())
         })
         this.namespace.socketsLeave(this.id)
         this.gameserver.endSession(this)
