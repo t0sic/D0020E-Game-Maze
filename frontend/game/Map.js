@@ -87,6 +87,8 @@ export default class Map {
 
     dropKey = (x, y) => {
         if (this.scene.player.hasKey) {
+            eventEmitter.emit("onObjectiveData", "key")
+
             this.scene.player.hasKey = false
             const distance = 50 // Distance in pixels
             let validPositionFound = false

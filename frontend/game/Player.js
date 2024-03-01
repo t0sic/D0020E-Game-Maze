@@ -262,7 +262,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.emitUIEffect("stun")
         this.maxSpeed = 0
 
-        eventEmitter.emit("onObjectiveData", "key")
         this.scene.map.dropKey(this.x, this.y)
     }
 
@@ -304,7 +303,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         eventEmitter.emit("onSpellData", this.spells)
 
-        //Update score on spell pickup
         this.updateScore(10)
 
         spell.destroy()
