@@ -108,6 +108,13 @@ class UIScene extends Phaser.Scene {
     }
 
     addEffect = (effect) => {
+        if (
+            this.effects.list.find(
+                (image) => image.texture.key === effect + "_button"
+            )
+        )
+            return
+
         if (effect === "stun") {
             this.lockButtons()
         }
