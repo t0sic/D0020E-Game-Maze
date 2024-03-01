@@ -162,7 +162,7 @@ const App = () => {
                 <Tutorial
                     onTutorialExit={handlePlay}
                     isHorizontal={isHorizontal}
-                    showWarning={!isHorizontal && isPlayerNew}
+                    isPlayerNew={isPlayerNew}
                 />
             )
         case "Game":

@@ -2,12 +2,12 @@ import SpriteAnimation from "./utility/SpriteAnimation"
 import React, { useState, useEffect } from "react"
 import "../styles/Tutorial.css"
 
-const Tutorial = ({ onTutorialExit, isHorizontal, showWarning }) => {
+const Tutorial = ({ onTutorialExit, isHorizontal, isPlayerNew }) => {
     const [step, setStep] = useState(0)
     const [timer, setTimer] = useState(10)
 
     useEffect(() => {
-        if (step === 2 || showWarning) {
+        if (step === 2) {
             const interval = setInterval(() => {
                 setTimer((prev) => {
                     if (!prev) return clearInterval(interval)
@@ -20,8 +20,8 @@ const Tutorial = ({ onTutorialExit, isHorizontal, showWarning }) => {
     }, [step])
 
     useEffect(() => {
-        if (!isHorizontal) setStep(2)
-    }, [showWarning])
+        if (!isHorizontal && !isPlayerNew) setStep(2)
+    }, [isHorizontal])
 
     let stepElements = [
         <div className="tutorial-step">
