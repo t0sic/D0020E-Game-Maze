@@ -83,7 +83,7 @@ class GameScene extends Phaser.Scene {
             this.opponent.updatePlayerPosition
         )
         this.socket.on("keyPickup", this.onKeyPickup)
-        this.socket.on("spellPickup", this.map.destroySpell)
+        this.socket.on("spellPickup", this.destroySpell)
         this.socket.on("updateScore", this.setOpponetScore)
         //this.socket.on("onSpellButtonClicked", this.player.onSpellButtonClicked)
         this.socket.on("castSpell", this.opponent.castSpell)
@@ -114,6 +114,10 @@ class GameScene extends Phaser.Scene {
 
     applySpellEffect = (projectile) => {
         console.log("oweeee, i have been hit by", projectile)
+    }
+
+    destroySpell = ({ spell }) => {
+        this.map.destroySpell(spell)
     }
 
     endSession = () => {

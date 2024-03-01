@@ -47,7 +47,7 @@ export default class Map {
         })
     }
 
-    destroySpell = ({ spell }) => {
+    destroySpell = (spell) => {
         this.scene.spells = this.scene.spells.filter((s) => {
             if (!s) return false
             if (s.x === spell.x && s.y === spell.y) {
