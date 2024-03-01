@@ -22,6 +22,7 @@ class GameScene extends Phaser.Scene {
             "sessionEnded",
             "updatePlayerPosition",
             "gameData",
+            "applySpellEffect",
         ]
     }
 
@@ -90,6 +91,11 @@ class GameScene extends Phaser.Scene {
         this.socket.on("dropKey", this.onKeyDrop)
         this.socket.on("spawnSpell", this.createSpell)
         this.socket.on("sessionEnded", this.endSession)
+        this.socket.on("applySpellEffect", ({ spellType }) => {
+            console.log("spelltype : ", spellType)
+            this.player.applySpellEffect(spellType, this.player)
+        })
+
         eventEmitter.on(
             "onSpellButtonClicked",
             this.player.onSpellButtonClicked
@@ -104,6 +110,10 @@ class GameScene extends Phaser.Scene {
         spells.forEach((spell) => this.map.createSpell(spell, [this.player]))
 
         this.map.createKey(map.key.x, map.key.y, [this.player])
+    }
+
+    applySpellEffect = (projectile) => {
+        console.log("oweeee, i have been hit by", projectile)
     }
 
     endSession = () => {

@@ -21,6 +21,7 @@ export default class SpectateScene extends Phaser.Scene {
             "playerWon",
             "gameData",
             "sessionEnded",
+            "applySpellEffect",
         ]
     }
 
@@ -144,11 +145,17 @@ export default class SpectateScene extends Phaser.Scene {
         this.socket.on("spawnSpell", this.createSpell)
         this.socket.on("playerWon", this.onPlayerWon)
         this.socket.on("sessionEnded", this.endSession)
+        this.socket.on("applySpellEffect", this.applySpellEffect)
 
         eventEmitter.on("cameraFocusPlayer", this.addCamera)
         eventEmitter.on("cameraZoom", this.zoomCamera)
         eventEmitter.on("leaveGame", this.leaveGame)
         this.addCamera()
+    }
+
+    applySpellEffect = ({ spellType, id }) => {
+        const player = players[id]
+        player.applySpellEffect(spellType, player)
     }
 
     leaveGame = () => {

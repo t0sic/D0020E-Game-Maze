@@ -4,7 +4,6 @@ import Game from "./game.js"
 export default class Session {
     constructor(gameserver, sockets) {
         const socketIds = sockets.map((socket) => socket.id)
-
         this.gameserver = gameserver
         this.namespace = gameserver.namespace
         this.state = "Started"
@@ -21,6 +20,7 @@ export default class Session {
             playerLeft: this.onLeave,
             dropKey: this.dropKey,
             disconnect: this.onDisconnect,
+            applySpellEffect: this.applySpellEffect,
         }
 
         this.sockets.forEach((socket) => {
@@ -41,6 +41,16 @@ export default class Session {
             data
         )
         socket.to(this.id).emit(event, data)
+    }
+
+    applySpellEffect = (socket, spellType) => {
+        const opponent = this.sockets.find(
+            (_socket) => _socket.id !== socket.id
+        )
+        this.broadcast(socket, "applySpellEffect", {
+            spellType,
+            id: opponent.id,
+        })
     }
 
     emit = (event, data) => {

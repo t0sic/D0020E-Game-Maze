@@ -144,13 +144,9 @@ class UIScene extends Phaser.Scene {
         fullScreenEnter.setScale(0.75)
         fullScreenExit.setScale(0.75)
 
-        // try {
-        //     this.scale.startFullscreen().catch((err) => {
-        //         console.log("Failed to enter fullscreen mode:", err.message)
-        //     })
-        // } catch (error) {
-        //     console.log("Fullscreen denied by browser.", error)
-        // }
+        try {
+            this.scale.startFullscreen().catch((err) => {})
+        } catch (error) {}
 
         this.scale.on("enterfullscreen", () => {
             fullScreenEnter.setAlpha(0)

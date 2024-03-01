@@ -407,12 +407,17 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     handleProjectileCollision = (projectile, player) => {
         if (player === this.scene.opponent) {
+            this.socket.emit("applySpellEffect", projectile.spellType)
             console.log("hitting player", player, this.scene.opponent)
             this.updateScore(50)
         }
         this.createProjectileCollision(projectile)
 
-        switch (projectile.spellType) {
+        this.applySpellEffect(projectile.spellType, player)
+    }
+
+    applySpellEffect = (spellType, player) => {
+        switch (spellType) {
             case "stun":
                 player.applyStunEffect()
                 break
