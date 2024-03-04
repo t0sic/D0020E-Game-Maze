@@ -92,7 +92,6 @@ class GameScene extends Phaser.Scene {
         this.socket.on("spawnSpell", this.createSpell)
         this.socket.on("sessionEnded", this.endSession)
         this.socket.on("applySpellEffect", ({ spellType }) => {
-            console.log("spelltype : ", spellType)
             this.player.applySpellEffect(spellType, this.player)
         })
 
@@ -110,10 +109,6 @@ class GameScene extends Phaser.Scene {
         spells.forEach((spell) => this.map.createSpell(spell, [this.player]))
 
         this.map.createKey(map.key.x, map.key.y, [this.player])
-    }
-
-    applySpellEffect = (projectile) => {
-        console.log("oweeee, i have been hit by", projectile)
     }
 
     destroySpell = ({ spell }) => {
