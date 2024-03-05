@@ -47,15 +47,6 @@ export default class Gameserver {
         })
     }
 
-    onSpectate = (socket, data) => {
-        console.log(
-            "recieved request to spectate game from: ",
-            socket.id,
-            " Wanting to spectate session : ",
-            data
-        )
-    }
-
     onConnection = (socket) => {
         this.createEventHandlers(socket)
     }
