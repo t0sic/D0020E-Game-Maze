@@ -29,6 +29,11 @@ const Home = ({ setPath, onPlay }) => {
                         Spectate
                     </button>
                 )}
+                <img
+                    width="100%"
+                    style={{ marginTop: "30px" }}
+                    src="/assets/qrcode.png"
+                ></img>
             </div>
         </div>
     )
